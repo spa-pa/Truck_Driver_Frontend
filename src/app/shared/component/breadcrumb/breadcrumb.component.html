@@ -1,0 +1,29 @@
+<div class="container-fluid">
+    <div class="row page-title">
+        <div class="col-sm-6">
+            <h3>{{title}}</h3>
+        </div>
+        <div class="col-sm-6">
+            <nav>
+                <ol class="breadcrumb justify-content-sm-end align-items-center">
+                    <li class="breadcrumb-item"> <a [routerLink]="'/dashboard/default'">
+                            <svg class="svg-color">
+                                <use href="assets/svg/iconly-sprite.svg#Home"></use>
+                            </svg>
+                        </a>
+                    </li>
+                    @if(breadcrumbs?.parentBreadcrumb){
+                    <li class="breadcrumb-item">
+                        {{breadcrumbs?.parentBreadcrumb}}
+                    </li>
+                    }
+                    @if(breadcrumbs?.childBreadcrumb){
+                    <li class="breadcrumb-item active">
+                        {{breadcrumbs?.childBreadcrumb}}
+                    </li>
+                    }
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>

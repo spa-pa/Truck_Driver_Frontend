@@ -1,0 +1,410 @@
+::ng-deep .p-datatable .p-datatable-thead>tr>th,
+td {
+  padding: 0.5rem 0.5rem !important;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  /* Enables horizontal scrolling when content overflows */
+  -webkit-overflow-scrolling: touch;
+  /* Smooth scrolling on iOS devices */
+  max-width: 100%;
+  /* Ensures the wrapper does not exceed the viewport width */
+}
+
+.p-table {
+  min-width: 100%;
+  /* Ensures that the table takes up the full width of the container */
+}
+
+::ng-deep .p-paginator {
+  padding: 0%;
+}
+
+::ng-deep .p-datatable .p-datatable-header {
+  padding: 0.7rem 1.5rem;
+  border: 1px solid #f4f5f8;
+  background-color: white;
+  border-radius: 5px;
+}
+
+::ng-deep .p-datatable .p-sortable-column.p-highlight {
+  background: #f9fafb !important;
+  color: #004761 !important;
+}
+
+::ng-deep .p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
+  color: #004761 !important;
+}
+
+input[type="input"] {
+  font-size: 60% !important;
+}
+
+::ng-deep .p-inputtext {
+  padding-bottom: 0.5rem !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+:host ::ng-deep {
+  .p-tag-array {
+    display: inline-block;
+    /* Ensures tags are displayed inline */
+    margin-right: 8px;
+    /* Space between tags */
+    border-radius: 6px;
+  }
+
+  .p-tag-array .p-tag {
+    background: #50b9b4;
+    /* Custom background color */
+    color: white;
+    /* Text color */
+  }
+}
+
+/* Optional: Custom styling for dropdown menu */
+.dropdown-menu {
+  border: none;
+  /* Remove default border */
+}
+
+.card {
+  background-color: #fff;
+  /* White background for card */
+  border: 1px solid #ccc;
+  /* Add border to card */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* Soft shadow effect */
+}
+
+.card-body {
+  padding: 10px;
+  /* Adjust padding inside card body */
+}
+
+.dropdown-item {
+  font-size: 14px;
+  /* Adjust font size */
+  padding: 10px 20px;
+  /* Adjust padding for dropdown items */
+  color: #333;
+  /* Text color */
+  transition: background-color 0.3s ease;
+  /* Smooth transition for background color */
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+  /* Light background color on hover */
+  color: #333;
+  /* Text color on hover */
+}
+
+.cursor-pointer {
+  cursor: pointer;
+  /* Change cursor to pointer on hoverable items */
+}
+
+.custom-right {
+  margin-right: 1% !important;
+}
+
+.btn-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #50b9b3;
+  /* Button color */
+  color: #fff;
+  /* Text color */
+  padding: 8px 16px;
+  /* Padding */
+  border-radius: 50px;
+  /* Rounded corners */
+  font-size: 14px;
+  /* Font size */
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-custom i {
+  margin-right: 8px;
+  /* Space between icon and text */
+  font-size: 16px;
+  /* Icon size */
+}
+
+.btn-custom:hover {
+  background-color: #3a9a8f;
+  /* Darker color on hover */
+}
+
+.btn-custom:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(38, 143, 255, 0.5);
+  /* Focus outline */
+}
+
+/* Success button style */
+.btn-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #28a745;
+  /* Success color */
+  color: #fff;
+  /* Text color */
+  padding: 8px 16px;
+  /* Padding */
+  border-radius: 50px;
+  /* Rounded corners */
+  font-size: 14px;
+  /* Font size */
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success i {
+  margin-right: 8px;
+  /* Space between icon and text */
+  font-size: 16px;
+  /* Icon size */
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  /* Darker green on hover */
+}
+
+.btn-success:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(38, 143, 255, 0.5);
+  /* Focus outline */
+}
+
+.custom-link {
+  color: blue;
+  text-decoration: underline;
+}
+
+.custom-td {
+  text-align: center;
+}
+
+::ng-deep .cdk-overlay-container {
+  position: fixed;
+  z-index: 2000 !important;
+}
+
+.disabled-link {
+  pointer-events: none;
+  /* Prevents click events */
+  color: gray;
+  /* Changes text color to indicate disabled state */
+  cursor: not-allowed;
+  /* Changes cursor to indicate disabled state */
+  opacity: 0.5;
+  /* Makes it look disabled */
+}
+
+.custom-flex {
+  display: flex !important;
+}
+
+.custom-red {
+  color: #F29491 !important;
+}
+
+.custom-green {
+  color: #69EB9D !important;
+}
+
+/* Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+}
+
+/* Container */
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  max-height: 85%;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  z-index: 1001;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+/* Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-weight: 600;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+.close-btn {
+  border: none;
+  background: #f1f5f9;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+/* Body */
+.modal-body {
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+/* Normal Card */
+.card-normal {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+/* OCR = ISSUE (Light Red Card) */
+.card-ocr {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-left: 4px solid #dc2626;
+  /* strong red indicator */
+}
+
+/* Hover effect (keep smooth) */
+.card {
+  transition: all 0.25s ease;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Top */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.port-name {
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Status Pills */
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-pill.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-pill.fail {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Info */
+.info {
+  font-size: 13px;
+  margin-top: 6px;
+  color: #334155;
+}
+
+.link {
+  color: #2563eb;
+}
+
+/* Bottom */
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* Chips */
+.chip {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Port Code */
+.info-chip {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+// /* OCR */
+// .ocr-chip {
+//   background: #fef3c7;
+//   color: #92400e;
+// }
+
+/* OCR = ISSUE (Danger) */
+.ocr-chip {
+  background: #fee2e2;
+  /* soft red */
+  color: #991b1b;
+  /* deep red text */
+  border: 1px solid #fecaca;
+}
+
+/* TEXT */
+.text-chip {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+/* Time */
+.time {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 8px;
+}

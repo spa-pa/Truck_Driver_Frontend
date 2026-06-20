@@ -1,0 +1,23 @@
+::ng-deep .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+    background-color: rgb(0 0 0 / 0%) !important;
+}
+
+::ng-deep .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+    box-shadow: none !important
+}
+
+::ng-deep .p-message .p-message-wrapper {
+    padding: 0.5rem 1rem !important;
+}
+
+::ng-deep .p-message.p-message-info .p-message-icon {
+    display: flex !important;
+    align-items: center !important;
+}
+::ng-deep .p-message.p-message-warn {
+    background: #fff !important;
+}
+
+::ng-deep p-messages .p-message .p-message-detail {
+    font-size: 19px;
+  }

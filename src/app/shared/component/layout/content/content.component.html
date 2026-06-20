@@ -1,0 +1,17 @@
+<div [ngClass]="layout.config.settings.layout_type" [class]="layout.config.settings.layout_version"></div>
+<main class="page-wrapper" id="pageWrapper" [class.sidebar-close]="navmenu.closeSidebar"
+    [ngClass]="layout.config.settings.sidebar_type">
+    <app-header></app-header>
+    <div class="page-body-wrapper">
+        <div class="overlay"></div>
+        <aside class="page-sidebar" [attr.data-layout]="layout.config.settings.icon"
+            [class.iconcolor-sidebar]="layout.config.settings.icon == 'iconcolor-sidebar'">
+            <app-sidebar></app-sidebar>
+        </aside>
+        <div class="page-body">
+            <app-breadcrumb></app-breadcrumb>
+            <router-outlet></router-outlet>
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>

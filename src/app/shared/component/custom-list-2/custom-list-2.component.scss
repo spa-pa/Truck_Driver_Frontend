@@ -1,0 +1,300 @@
+/* ---------------------- Card ---------------------- */
+.neo-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  border: none;
+}
+
+/* Search Input */
+.search-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.search-input.search-big {
+  width: 340px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 2px solid #dfe4ea;
+  background: #ffffff;
+  font-size: 15px;
+  font-weight: 500;
+  transition: 0.25s ease;
+}
+
+.search-input.search-big:hover,
+.search-input.search-big:focus {
+  background: #ffffff;
+  border-color: #50b9b3;
+  box-shadow: 0 0 0 4px rgba(80, 185, 179, 0.18);
+  outline: none;
+}
+
+
+/* ---------------------- Table ---------------------- */
+.modern-table-container {
+  padding: 8px;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
+.modern-row {
+  background: #f7fafc;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.modern-row:hover {
+  transform: scale(1.01);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------------------- Icons ---------------------- */
+.modern-icon {
+  background: linear-gradient(135deg, #50b9b3, #67d7d1);
+  padding: 12px;
+  border-radius: 12px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.4);
+}
+
+.modern-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+}
+
+.modern-meta {
+  font-size: 13px;
+  color: #666;
+}
+
+.modern-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+}
+
+/* ---------------------- Status ---------------------- */
+.status-active {
+  color: #2ecc71;
+  font-weight: 600;
+}
+
+.status-inactive {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+/* ---------------------- Button ---------------------- */
+.modern-btn {
+  background: linear-gradient(135deg, #50b9b3, #40a7a1);
+  border: none;
+  padding: 10px 20px;
+  width: 180px;
+  font-size: 14px;
+  border-radius: 10px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(80, 185, 179, 0.35);
+  transition: 0.25s ease;
+}
+
+.modern-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(80, 185, 179, 0.5);
+}
+
+.modern-btn svg {
+  fill: white;
+}
+
+/* Action column alignment */
+.action-col {
+  text-align: right;
+}
+
+// /* Better spacing inside rows */
+// .modern-row td {
+//   padding: 18px 20px;
+//   vertical-align: top;
+// }
+
+/* Light icon color globally */
+.modern-subtitle app-feathericon,
+.modern-subtitle svg {
+  color: #9aa5b1;
+  /* soft light gray-blue */
+  stroke: #9aa5b1;
+}
+
+/* Exclude map icon */
+.port-icon app-feathericon,
+.port-icon svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+
+.modern-subtitle {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modern-subtitle app-feathericon {
+  margin-top: -1px;
+  /* pixel-perfect alignment */
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Status Cards */
+.status-cards {
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.status-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #f7fafc;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.17);
+  transition: 0.2s ease;
+}
+
+.status-card:hover {
+  transform: translateY(-2px);
+}
+
+.status-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Active */
+.status-card.active .status-icon {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+/* Inactive */
+.status-card.inactive .status-icon {
+  background: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
+}
+
+.status-number {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.status-text {
+  font-size: 13px;
+  color: #666;
+}
+
+.status-text {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.status-text::before {
+  content: "●";
+  margin-right: 6px;
+  font-size: 10px;
+}
+
+.status-card.all .status-icon {
+  background: rgba(80, 185, 179, 0.15);
+  color: #50b9b3;
+}
+
+.status-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #dcdfe6;
+  border-radius: 30px;
+  transition: 0.3s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Active State */
+.switch input:checked+.slider {
+  background: linear-gradient(135deg, #50b9b3, #40a7a1);
+}
+
+.switch input:checked+.slider:before {
+  transform: translateX(22px);
+}
+
+/* Status Label */
+.status-label {
+  font-size: 13px;
+  font-weight: 600;
+}

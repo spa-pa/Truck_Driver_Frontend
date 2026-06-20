@@ -1,0 +1,237 @@
+<div class="container-fluid">
+    <form [formGroup]="dynamicForm">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-center" *ngIf="formTitle">
+                        <h4 class="card-title mb-0">{{formTitle}}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form theme-form">
+                            <div class="row">
+                                <ng-container *ngFor="let control of formConfig">
+                                    <ng-container *ngIf="!control.hiddenControl">
+                                        <div [ngClass]="getColumnSizeClass(control.colsize)">
+                                            <div class="mb-3">
+                                                <ng-container [ngSwitch]="control.type">
+                                                    <ng-container *ngSwitchCase="'text'">
+                                                        <app-input [type]="control.type"
+                                                            [formControl]="getControl(control.name)"
+                                                            [placeholder]="control.placeholder" [label]="control.label"
+                                                            [name]="control.name" ngDefaultControl
+                                                            [required]="control.required ?? false"
+                                                            [minLength]="control.minLength ?? 0"
+                                                            [maxLength]="control.maxLength ?? 500"
+                                                            [isUpperCase]="control.isUpperCase ?? false"
+                                                            [disable]="control.disable"
+                                                            [description]="control?.description"
+                                                            [buttonAddons]="control?.buttonAddons ?? false"
+                                                            [buttonAddonsData]="control?.buttonAddonsData ?? ''"></app-input>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'switch'">
+                                                        <app-switch [type]="control.type"
+                                                            [formControl]="getControl(control.name)"
+                                                            [placeholder]="control.placeholder" [label]="control.label"
+                                                            [name]="control.name" ngDefaultControl
+                                                            [required]="control.required ?? false"
+                                                            [disable]="control.disable"></app-switch>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'editicon'">
+                                                        <app-input [type]="control.type"
+                                                            [formControl]="getControl(control.name)"
+                                                            [placeholder]="control.placeholder" [label]="control.label"
+                                                            [name]="control.name" ngDefaultControl
+                                                            [required]="control.required ?? false"
+                                                            [minLength]="control.minLength ?? 0"
+                                                            [maxLength]="control.maxLength ?? 500"
+                                                            [isUpperCase]="control.isUpperCase ?? false"
+                                                            [disable]="control.disable"
+                                                            (onEditIconClickEmit)="onEditIconClick()"
+                                                            [description]="control?.description"></app-input>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'number'">
+                                                        <app-input [type]="control.type"
+                                                            [formControl]="getControl(control.name)"
+                                                            [placeholder]="control.placeholder" [label]="control.label"
+                                                            [name]="control.name" ngDefaultControl
+                                                            [required]="control.required ?? false"
+                                                            [minLength]="control.minLength ?? 0"
+                                                            [maxLength]="control.maxLength ?? 500"
+                                                            (onInputChangeEmit)="onInputChange($event,control.name,control.checkNumberValidation)"
+                                                            [disable]="control.disable"
+                                                            [description]="control?.description"></app-input>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'date'">
+                                                        <app-date-time [formControl]="getControl(control.name)"
+                                                            [name]="control.name" [placeholder]="control.placeholder"
+                                                            [label]="control.label" ngDefaultControl
+                                                            [required]="control.required ?? false"
+                                                            [disable]="control.disable"
+                                                            [minDate]="control.minDate ?? ''"
+                                                            [maxDate]="control.maxDate ?? ''" [enableTime]="false"
+                                                            [dateFormat]="'Y-m-d'" [altFormat]="'Y-m-d'"
+                                                            (onDateChangeEmit)="onDateChange($event)"></app-date-time>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'date-time'">
+                                                        <app-date-time [formControl]="getControl(control.name)"
+                                                            [name]="control.name" [placeholder]="control.placeholder"
+                                                            [label]="control.label" ngDefaultControl
+                                                            [required]="control.required ?? false"
+                                                            [disable]="control.disable"
+                                                            [minDate]="control.minDate ?? ''"
+                                                            (onDateChangeEmit)="onDateChange($event)"></app-date-time>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'time'">
+                                                        <app-time-picker [formControl]="getControl(control.name)"
+                                                            [name]="control.name" [placeholder]="control.placeholder"
+                                                            [label]="control.label" ngDefaultControl
+                                                            [required]="control.required ?? false"
+                                                            [disable]="control.disable"
+                                                            [minTime]="control.minTime ?? ''"
+                                                            [maxTime]="control.maxTime ?? ''"
+                                                            (onTimeChangeEmit)="onTimeChange($event)">
+                                                        </app-time-picker>
+                                                    </ng-container>
+
+                                                    <ng-container *ngSwitchCase="'select'">
+                                                        <app-select [formControl]="getControl(control.name)"
+                                                            [placeholder]="control.placeholder" [label]="control.label"
+                                                            ngDefaultControl [required]="control.required ?? false"
+                                                            [disable]="control.disable" [listData]="control.listData"
+                                                            [bindLabel]="control.bindLabel ?? 'name'"
+                                                            (optionSelected)="optionSelectedChange($event,control.name)"
+                                                            [bindMultiple]="control.bindMultiple ?? false"
+                                                            [isEditButtonAdd]="control.isEditButtonAdd ?? false"
+                                                            [isAddButtonAdd]="control.isAddButtonAdd ?? false"
+                                                            [bindValue]="control.bindValue ?? 'id'"
+                                                            (onEditIconSelectClickEmit)="onEditIconSelectClick($event)"></app-select>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'dropdown'">
+                                                        <app-select [formControl]="getControl(control.name)"
+                                                            [placeholder]="control.placeholder" [label]="control.label"
+                                                            [name]="control.name" ngDefaultControl
+                                                            [options]="control.options || []"
+                                                            [required]="control.required ?? false"></app-select>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'textarea'">
+                                                        <app-input [type]="control.type"
+                                                            [formControl]="getControl(control.name)"
+                                                            [placeholder]="control.placeholder" [label]="control.label"
+                                                            [name]="control.name" ngDefaultControl
+                                                            [required]="control.required ?? false" [rows]="control.rows"
+                                                            [minLength]="control.minLength ?? 0"
+                                                            [maxLength]="control.maxLength ?? 500"
+                                                            [rows]="control.rows ?? 3"></app-input>
+                                                    </ng-container>
+
+                                                    <ng-container *ngSwitchCase="'fileUpload'">
+                                                        <app-input [type]="'file'"
+                                                            [formControl]="getControl(control.name)"
+                                                            [placeholder]="control.placeholder" [label]="control.label"
+                                                            [name]="control.name" ngDefaultControl
+                                                            (change)="onFileChange($event)"
+                                                            [required]="control.required ?? false"></app-input>
+                                                    </ng-container>
+                                                    <!-- <ng-container *ngSwitchCase="'checkbox'">
+                                                        <app-checkbox-tick [formControl]="getControl(control.name)"
+                                                            [label]="control.label" [name]="control.name"
+                                                            [disable]="control.disable"></app-checkbox-tick>
+                                                    </ng-container> -->
+                                                    <ng-container *ngSwitchCase="'checkboxTable'">
+                                                        <app-checkbox [formControl]="getControl(control.name)"
+                                                            [label]="control.label" [name]="control.name"
+                                                            [disable]="control.disable"
+                                                            [description]="control?.description"
+                                                            (checkboxChange)="handleCheckboxChange($event)"></app-checkbox>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'upload'">
+                                                        <app-upload-file [formControl]="getControl(control.name)"
+                                                            [formConfig]="control.formConfigUpload ?? []"
+                                                            [isUploadMultiDocs]="false"
+                                                            [requireBase64]="control?.requireBase64 ?? false"
+                                                            [isFolderUpload]="control.isFolderUpload ?? false"
+                                                            (photoBase64Uploaded)="handleFileUpload($event,'base64')"
+                                                            (fileUploaded)="handleFileUpload($event)"></app-upload-file>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'header'">
+                                                        <div class="mb-3 mt-3 custom-header">
+                                                            <h3 class="custom-h3">{{control.label}}</h3>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'remove'">
+                                                        <div class="custom-remove">
+                                                            <a class="btn btn-danger custom-remove-padding"
+                                                                (click)="onSubmit('removeitem')">remove</a>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'uploadBtn'">
+                                                        <div class="custom-remove">
+                                                            <a class="btn btn-success custom-remove-padding"
+                                                                (click)="onSubmit('upload')">Upload</a>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="'downloadBtn'">
+                                                        <div class="custom-remove">
+                                                            <a class="btn btn-info custom-remove-padding"
+                                                                [ngClass]="{ 'disabled-link': !isDownloadAvailable}"
+                                                                (click)="onSubmit('download')">
+                                                                <app-feathericon [icon]="'download'"
+                                                                    class="m-r-5"></app-feathericon></a>
+                                                        </div>
+                                                    </ng-container>
+                                                    <!-- <app-sc-custom-file-upload *ngIf="control.type === 'fileUploadV2'" class [label]="control.placeholder"
+                                                    (fileNameEmit)="updateFile($event)" wrapperClass="commonFileUploadWrapper"
+                                                    [formControl]="getControl(control.name)"></app-sc-custom-file-upload> -->
+                                                    <div style="display: flex;justify-content: center;align-items: center;margin-top: 3%;"
+                                                        *ngIf="control.type === 'uploaddownloadbutton'">
+                                                        <button (click)="onSubmit('uploadCustomImage')"
+                                                            class="customuploadbutton mr-4"><app-feathericon
+                                                                [icon]="'save'"
+                                                                class="m-r-5"></app-feathericon></button>
+                                                        <button (click)="onSubmit('downloadCustomImage')"
+                                                            class="customuploadbutton"><app-feathericon
+                                                                [icon]="'download'"
+                                                                class="m-r-5"></app-feathericon></button>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                            <div class="row" *ngIf="actiontype!== 'view'">
+                                <div class="col"
+                                    *ngIf="!isNext && !isSubmit && !isAdd && !isButtonHidden && !isSet && !isGenerate && !isSearch">
+                                    <div class="text-end">
+                                        <a class="btn btn-secondary me-3" *ngIf="isComplete"
+                                            (click)="onSubmit('complete')">Complete</a>
+                                        <a class="btn btn-success me-3" (click)="onSubmit('submit')">{{actiontype ===
+                                            'edit' ? 'Update' : 'Create' }}</a>
+                                        <a class="btn btn-danger" (click)="onCancle()">Cancel</a>
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: end;">
+                                    <button *ngIf="isBack" class="btn btn-primary w-10"
+                                        (click)="onSubmit('back')">Back</button>
+                                    <button *ngIf="isSearch" class="btn btn-primary w-10"
+                                        (click)="onSubmit('search')">Search</button>
+                                    <button *ngIf="isNext" class="btn btn-primary w-10"
+                                        (click)="onSubmit('next')">Next</button>
+                                    <button *ngIf="isSubmit" class="btn btn-primary w-10"
+                                        (click)="onSubmit('submit')">Submit</button>
+                                    <button *ngIf="isSet" class="btn btn-success w-10"
+                                        (click)="onSubmit('submit')">Set</button>
+                                    <button *ngIf="isAdd" class="btn btn-success w-10"
+                                        (click)="onSubmit('submit')">Add</button>
+                                    <button *ngIf="isGenerate" class="btn btn-success w-10"
+                                        (click)="onSubmit('submit')">Generate</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

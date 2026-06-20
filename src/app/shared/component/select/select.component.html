@@ -1,0 +1,86 @@
+<!-- Label with required indicator -->
+<label [ngClass]="{ 'text-danger': required }">{{ label }}</label>
+
+<!-- Single select mode -->
+<div *ngIf="!bindMultiple">
+  <!-- Select with Edit/Add buttons -->
+  <div class="input-group" *ngIf="isEditButtonAdd || isAddButtonAdd">
+    <ng-select
+      class="form-control"
+      [items]="listData"
+      [bindLabel]="bindLabel"
+      [bindValue]="bindValue"
+      [placeholder]="placeholder"
+      [formControl]="formControl"
+      [multiple]="bindMultiple"
+      [disabled]="disable"
+      [virtualScroll]="true"
+      [(ngModel)]="selectedCity"
+      notFoundText="No Data Available"
+      (change)="onSelectionChange($event)"
+      (blur)="onBlurCheck()"
+      style="overflow: visible;"
+    ></ng-select>
+
+    <!-- Edit icon button -->
+    <span
+      class="input-group-text list-light-primary custom-cursor-pointer"
+      *ngIf="isEditButtonAdd && editicon"
+      (click)="onEditIconClick(label)"
+    >
+      <i class="icofont icofont-pencil-alt-5 font-primary"></i>
+    </span>
+
+    <!-- Add icon button -->
+    <span
+      class="input-group-text list-light-primary custom-cursor-pointer"
+      *ngIf="isAddButtonAdd"
+      (click)="onEditIconClick(label)"
+    >
+      <i class="icofont icofont-pencil-alt-5 font-primary"></i>
+    </span>
+  </div>
+
+  <!-- Regular select without icon buttons -->
+  <ng-select
+    *ngIf="!isEditButtonAdd && !isAddButtonAdd"
+    [items]="listData"
+    [bindLabel]="bindLabel"
+    [bindValue]="bindValue"
+    [placeholder]="placeholder"
+    [formControl]="formControl"
+    [multiple]="bindMultiple"
+    [disabled]="disable"
+    [virtualScroll]="true"
+    [(ngModel)]="selectedCity"
+    notFoundText="No Data Available"
+    (change)="onSelectionChange($event)"
+    (blur)="onBlurCheck()"
+    style="overflow: visible;"
+  ></ng-select>
+</div>
+
+<!-- Multi-select mode -->
+<div *ngIf="bindMultiple">
+  <ng-select
+    [items]="listData"
+    [bindLabel]="bindLabel"
+    [bindValue]="bindValue"
+    [placeholder]="placeholder"
+    [formControl]="formControl"
+    [multiple]="bindMultiple"
+    [closeOnSelect]="false"
+    [disabled]="disable"
+    [virtualScroll]="true"
+    [(ngModel)]="selectedCity"
+    notFoundText="No Data Available"
+    (change)="onSelectionChange($event)"
+  ></ng-select>
+</div>
+
+<!-- Validation error messages -->
+<div class="text text-danger mt-1" *ngIf="formControl?.touched && formControl?.invalid">
+  <div *ngIf="formControl?.errors?.['required']">
+    {{ label }} is required.
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="container-fluid p-0">
+    <div class="row m-0">
+        <div class="col-12 p-0">
+            <div class="login-card login-dark">
+                <div>
+                    <div>
+                        <a class="logo" [routerLink]="['/dashboard/default']">
+                            <img class="img-fluid for-light" src="assets/images/logo/logo.png" alt="looginpage">
+                            <img class="img-fluid for-dark m-auto" src="assets/images/logo/logo.png" alt="logo">
+                        </a>
+                    </div>
+                    <div class="login-main">
+                        <form class="theme-form" [formGroup]="loginForm">
+                            <h2 class="text-center">Sign in to account</h2>
+                            <p class="text-center">Enter your username &amp; password to login</p>
+                            <div class="form-group">
+                                <label class="col-form-label">User Name</label>
+                                <input class="form-control" type="user_name" required="" placeholder="User Name"
+                                    formControlName="user_name">
+                                <div
+                                    *ngIf="loginForm.controls['user_name'].touched && loginForm.controls['user_name'].errors?.['required']">
+                                    <div class="text text-danger mt-1"> Username is required</div>
+                                </div>
+                                <div
+                                    *ngIf="loginForm.controls['user_name'].touched && loginForm.controls['user_name'].errors?.['user_name']">
+                                    <div class="text text-danger mt-1">Invalid Username</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Password</label>
+                                <div class="form-input position-relative">
+                                    <input class="form-control" [type]="show ? 'text' : 'password'" type="password"
+                                        name="login[password]" required="" placeholder="*********"
+                                        formControlName="password">
+                                    <div class="show-hide" (click)="showPassword()">
+                                        <span *ngIf="!show" class="show"></span>
+                                        <span *ngIf="show" class="hide"></span>
+                                    </div>
+                                    <div
+                                        *ngIf="loginForm.controls['password'].touched && loginForm.controls['password'].errors?.['required']">
+                                        <div class="text text-danger mt-1">Password is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-0 checkbox-checked">
+                                <div class="form-check checkbox-solid-info">
+                                    <input class="form-check-input" id="solid6" type="checkbox">
+                                    <label class="form-check-label" for="solid6">Remember password</label>
+                                </div>
+                                <!-- <a class="link-two" (click)="forgotPaassword()">Forgot password?</a> -->
+                            </div>
+                            <div class="text-end mt-3">
+                                <button class="btn btn-primary btn-block w-100 text-white" [disabled]="!loginForm.valid"
+                                    (click)="login()">Sign in</button>
+                            </div>
+                            <!-- <p class="mt-4 mb-0 text-center">Don't have an account?
+                                <a class="ms-2" (click)="createAccount()">Create Account</a>
+                            </p> -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

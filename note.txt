@@ -1,0 +1,3 @@
+ng g m port-master --routing;
+ng g c port-master/port-master --flat;
+ng g c port-master/cuv-port-master;

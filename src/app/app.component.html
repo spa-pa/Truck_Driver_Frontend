@@ -1,0 +1,6 @@
+<app-loader></app-loader>
+<div  *ngIf="isLoading$ | async">
+    <app-spinner></app-spinner>
+</div>
+<router-outlet></router-outlet>
+<app-tap-to-top></app-tap-to-top>

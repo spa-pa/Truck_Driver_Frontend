@@ -1,0 +1,128 @@
+<div class="card neo-card">
+    <div class="card-body pt-0 task-table">
+        <!-- Search -->
+        <div class="search-wrapper mb-3">
+
+            <!-- Status Counters -->
+            <div class="status-cards">
+                <div class="status-card all" (click)="filterStatus('all')">
+                    <div class="status-icon">
+                        <app-feathericon icon="layers"></app-feathericon>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-number">{{pageData.length}}</span>
+                        <span class="status-text">All</span>
+                    </div>
+                </div>
+
+                <div class="status-card active" (click)="filterStatus('active')">
+                    <div class="status-icon">
+                        <app-feathericon icon="check-circle"></app-feathericon>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-number">{{activeCount}}</span>
+                        <span class="status-text">Active</span>
+                    </div>
+                </div>
+
+                <div class="status-card inactive" (click)="filterStatus('inactive')">
+                    <div class="status-icon">
+                        <app-feathericon icon="x-circle"></app-feathericon>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-number">{{inactiveCount}}</span>
+                        <span class="status-text">Inactive</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <input type="text" class="search-input search-big" placeholder="Search by port name, code, status..."
+                [(ngModel)]="searchText" (input)="applySearch()" />
+        </div>
+
+        <div class="table-responsive modern-table-container">
+            <table class="table modern-table">
+                <tbody>
+                    <ng-container *ngIf="pageDetails.length > 0; else norecord">
+                        <tr *ngFor="let port of pageDetails; let i = index" class="modern-row">
+                            <td class="port-col">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="port-icon modern-icon">
+                                        <div>{{i+1}}</div>
+                                        <app-feathericon icon="map-pin"></app-feathericon>
+                                    </div>
+                                    <div>
+                                        <h6 class="port-title modern-title">Port: {{ port.port_name }}</h6>
+                                        <p class="port-meta modern-meta">Code: <span>{{ port.port_code }}</span></p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="port-col">
+                                <h6 class="port-subtitle modern-subtitle">
+                                    <app-feathericon icon="message-square" class="me-1"></app-feathericon>
+                                    Description: <span>{{ port.description ?? '' }}</span>
+                                </h6>
+                                <h6 class="port-subtitle modern-subtitle">
+                                    <app-feathericon icon="paperclip" class="me-1"></app-feathericon>
+                                    Keys: <span>{{ port.config_key ?? '' }}</span>
+                                </h6>
+                            </td>
+
+                            <td class="port-col">
+                                <h6 class="port-subtitle modern-subtitle">
+                                    <app-feathericon icon="calendar" class="me-1"></app-feathericon>
+                                    Created: {{ port.created_at | date:'d MMM yyyy, h:mm a' }}
+                                </h6>
+                                <h6 class="port-subtitle modern-subtitle">
+                                    <app-feathericon icon="tag" class="me-1"></app-feathericon>
+                                    Status:
+                                    <!-- <span [ngClass]="port.is_active == 1 ? 'status-active' : 'status-inactive'">
+                                        {{ port.is_active == 1 ? 'Active' : 'Inactive' }}
+                                    </span> -->
+                                    <div class="status-toggle">
+                                        <label class="switch">
+                                            <input type="checkbox" [checked]="port.is_active == 1"
+                                                (change)="togglePortStatus(port)">
+                                            <span class="slider round"></span>
+                                        </label>
+
+                                        <span class="status-label"
+                                            [ngClass]="port.is_active == 1 ? 'status-active' : 'status-inactive'">
+                                            {{ port.is_active == 1 ? 'Active' : 'Inactive' }}
+                                        </span>
+                                    </div>
+                                </h6>
+                            </td>
+
+                            <td class="action-col">
+                                <button class="btn modern-btn" (click)="viewDetails(port.port_config_id)" [ngClass]="{ 'disabled-link': !canViewDetails }">
+                                    <span>View Details</span>
+                                    <svg class="svg-w-19">
+                                        <use xlink:href="assets/svg/iconly-sprite.svg#Right-arrow"></use>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                    <ng-template #norecord>
+                        <tr>
+                            <td colspan="12">
+                                <app-no-record-found></app-no-record-found>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+
+            <div class="d-flex align-items-center justify-content-center mt-3">
+                <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
+                    [totalRecords]="pageData.length" [rowsPerPageOptions]="[10, 15, 20, 50 ,100,150,200]">
+                </p-paginator>
+            </div>
+
+        </div>
+    </div>
+</div>

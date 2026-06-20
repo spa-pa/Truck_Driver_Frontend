@@ -1,0 +1,357 @@
+<p-table #dt2 [value]="jsonData.data" [scrollable]="jsonData.scrollable" [dataKey]="jsonData.dataKey" [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [paginator]="true"
+    [globalFilterFields]="jsonData.filterfields" [tableStyle]="{ 'min-width': '75rem' }" class="table-hover">
+    <ng-template pTemplate="caption"
+        *ngIf="jsonData.exportExcel || jsonData.isSearch || jsonData.button || jsonData.secondbutton || jsonData.buttonAction">
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-primary d-flex align-items-center custom-right" *ngIf="jsonData.thirdbutton"
+                (click)="buttonClick('createthird')">
+                <app-feathericon [icon]="'plus-square'" class="m-r-5"></app-feathericon>
+                {{jsonData.thirdbuttonname}}
+            </a>
+            <a class="btn btn-primary d-flex align-items-center custom-right" *ngIf="jsonData.secondbutton"
+                (click)="buttonClick('createsecond')">
+                <app-feathericon [icon]="'plus-square'" class="m-r-5"></app-feathericon>
+                {{jsonData.secondbuttonname}}
+            </a>
+            <a class="btn btn-primary d-flex align-items-center m-r-15" *ngIf="jsonData.button"
+                [ngClass]="{ 'disabled-link': !canCreate }" (click)="buttonClick('create')">
+                <app-feathericon [icon]="'plus-square'" class="m-r-5"></app-feathericon>
+                {{jsonData.buttonname}}
+            </a>
+            <a class="btn btn-primary d-flex align-items-center custom-right"
+                *ngFor="let button of jsonData.buttonActionList" (click)="buttonOptionalClick(button.action)">
+                <app-feathericon [icon]="button.icon" class="m-r-5"></app-feathericon>
+                {{button.name}}
+            </a>
+            <div class="custom-right" *ngIf="jsonData.exportExcel">
+                <button class="btn btn-outline-primary" (click)="buttonClick('export')">
+                    Export Excel
+                </button>
+            </div>
+            <div class="m-r-5" *ngIf="jsonData.isSearch">
+                <p-iconField iconPosition="left">
+                    <p-inputIcon class="d-flex">
+                        <i class="icofont icofont-search"></i>
+                    </p-inputIcon>
+                    <input #searchInput pInputText type="text" placeholder="Search..."
+                        (input)="dt2.filterGlobal(searchInput.value, 'contains')" />
+                </p-iconField>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+            <ng-container *ngFor="let header of jsonData.headers">
+                <ng-container *ngIf="header.key == 'SR.NO' || header.key == 'action'; else sortHeader">
+                    <th [style.min-width]="header.minSize || '100px'"
+                        [style.width]="calculateHeaderSize(jsonData.headers.length, header.size)">
+                        {{ header.label }}
+                    </th>
+                </ng-container>
+                <ng-template #sortHeader>
+                    <th [pSortableColumn]="header.key" [style.min-width]="header.minSize || '100px'"
+                        [style.width]="calculateHeaderSize(jsonData.headers.length, header.size)">
+                        {{ header.label }}<p-sortIcon [field]="header.key" />
+                    </th>
+                </ng-template>
+            </ng-container>
+        </tr>
+        <tr *ngIf="!jsonData.isSearchIndividual">
+            <ng-container *ngFor="let header of jsonData.headers">
+                <th>
+                    <p-columnFilter type="text" [field]="header.key" [placeholder]="'Search'" ariaLabel="Filter Name"
+                        *ngIf="header.type != 'autoIncrementNumber' && header.type != 'action'" matchMode="contains" />
+                </th>
+            </ng-container>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+        <tr (click)="buttonClick('selectrow', data[jsonData.dataKey], $event)" class="cursor-pointer"
+            [ngStyle]="data[jsonData.isWarningRowKey] == 0 ? {'background-color': '#ffdddd', 'color': '#a94442'} : {}">
+            <ng-container *ngFor="let header of jsonData.headers; let colIndex = index" [ngSwitch]="header.type">
+                <td *ngSwitchCase="'active&inactive'">
+                    <ng-container [ngSwitch]="data[header.key]">
+                        <p-tag *ngSwitchCase="1" value="Active" severity="success"></p-tag>
+                        <p-tag *ngSwitchCase="0" value="INActive" severity="danger"></p-tag>
+                    </ng-container>
+                </td>
+                <td *ngSwitchCase="'statuses'">
+                    <p-tag *ngIf="data[header.key]" [value]="data[header.key]"
+                        [severity]="getSeverity(data[header.key])"></p-tag>
+                </td>
+                <td *ngSwitchCase="'checkExpired'">
+                    <p-tag *ngIf="data[header.key]" [value]="checkValidity(data[header.key])"
+                        [severity]="getDateSeverity(data[header.key])"></p-tag>
+                </td>
+                <td *ngSwitchCase="'diff'">
+                    {{ getObjectsDiff(data[header?.firstkey ?? ''], data[header?.secondKey ?? '']) | json }}
+                </td>
+                <td *ngSwitchCase="'arrayTags'">
+                    <p-tag class="p-tag-array" *ngFor="let tag of data[header.key] || []; let last = last"
+                        [value]="tag[header.bindTagName]" [style.margin-right.px]="last ? 0 : 8" />
+                </td>
+                <td *ngSwitchCase="'statusesYesNo'">
+                    <ng-container [ngSwitch]="data[header.key]">
+                        <p-tag *ngSwitchCase="1" value="Yes" severity="success"></p-tag>
+                        <p-tag *ngSwitchCase="0" value="No" severity="warning"></p-tag>
+                        <p-tag *ngSwitchDefault value="-" severity="info"></p-tag>
+                    </ng-container>
+                </td>
+                <td *ngSwitchCase="'convertboolean'">
+                    <ng-container [ngSwitch]="data[header.key]">
+                        <p-tag *ngSwitchCase="1" value="True" severity="success"></p-tag>
+                        <p-tag *ngSwitchCase="0" value="False" severity="warning"></p-tag>
+                        <p-tag *ngSwitchDefault value="-" severity="info"></p-tag>
+                    </ng-container>
+                </td>
+                <td *ngSwitchCase="'date&time'">
+                    <div class="flex-grow-1">
+                        <a>
+                            <h6 class="f-w-500">{{ data[header.key] ? (data[header.key] | date:'d MMMM yyyy') : '-' }}
+                            </h6>
+                            <span class="font-light f-w-400 f-13">{{ data[header.key] ? (data[header.key] | date:'h:mm
+                                a') : '-' }}</span>
+                        </a>
+                    </div>
+                </td>
+                <td *ngSwitchCase="'date'">
+                    <div class="flex-grow-1">
+                        <a>
+                            <h6 class="f-w-500">{{ data[header.key] ? (data[header.key] | date:'d MMMM yyyy') : '-' }}
+                            </h6>
+                        </a>
+                    </div>
+                </td>
+                <td *ngSwitchCase="'dateFormat'">
+                    <div class="flex-grow-1">
+                        <a>
+                            <h6 class="f-w-500">
+                                {{ data[header.key] ? (data[header.key] | date:'d/M/yyyy') : '-' }}
+                            </h6>
+                        </a>
+                    </div>
+                </td>
+                <td *ngSwitchCase="'autoIncrementNumber'">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="flex-shrink-0" *ngIf="jsonData.bgset && jsonData.bgsetKey">
+                            <i class="fa fa-flag mr-1"
+                                [ngClass]="{'custom-green': jsonData.bgset && jsonData.bgsetKey && data[jsonData.bgsetKey] === 0,'custom-red': jsonData.bgset && jsonData.bgsetKey && data[jsonData.bgsetKey] === 1}"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            {{ rowIndex + 1 }}
+                        </div>
+                    </div>
+                </td>
+                <td *ngSwitchCase="'json'">
+                    {{ data[header.key] | json }}
+                </td>
+                <td *ngSwitchCase="'json_beautify'">
+
+                    <button class="btn btn-sm btn-primary" (click)="openJsonPopup(data)">
+                        👁 Show Details
+                    </button>
+
+                </td>
+                <td *ngSwitchDefault>
+                    <ng-container *ngIf="data[header.key]; else dash">
+                        {{ data[header.key] }}
+                    </ng-container>
+                    <ng-template #dash>-</ng-template>
+                </td>
+                <td *ngSwitchCase="'urlLink'" class="custom-td">
+                    <!-- Open Eye -->
+                    <a class="custom-link" *ngIf="data[header.key]" (click)="viewImage(data[jsonData.dataKey],data)"><i
+                            class="fa fa-eye" style="color: #50b9b3;" placement="top"
+                            ngbTooltip="Click To See Image"></i></a>
+                    <!-- <a class="custom-link" *ngIf="data[header.key]" (click)="openDetailDialog(data[header.key])"><i
+                            class="fa fa-eye" style="color: #50b9b3;" placement="top"
+                            ngbTooltip="Click To See Image"></i></a> -->
+
+                    <!-- Closed Eye -->
+                    <i class="fa fa-eye-slash" *ngIf="!data[header.key]" style="color: red;" placement="top"
+                        ngbTooltip="Not Uploaded"></i>
+                </td>
+                <td *ngSwitchCase="'action'" class="action-button">
+                    <a (click)="buttonClick('edit', data[jsonData.dataKey])"
+                        [ngClass]="{ 'disabled-link': actiontype === 'view' || !canEdit }" placement="top"
+                        ngbTooltip="Edit" class="icon-class" *ngIf="header.buttonNames.includes('edit')">
+                        <app-feathericon [icon]="'edit-2'"></app-feathericon>
+                    </a>
+                    <a (click)="buttonClick('view', data[jsonData.dataKey])"
+                        [ngClass]="{ 'disabled-link': actiontype === 'view'  || !canView }" placement="top"
+                        ngbTooltip="View" class="icon-class" *ngIf="header.buttonNames.includes('view')">
+                        <app-feathericon [icon]="'eye'"></app-feathericon>
+                    </a>
+                    <a (click)="buttonClick('delete', data[jsonData.dataKey], $event, isValidDataKey(jsonData.operationId) ? data[jsonData.operationId] : null,data)"
+                        [ngClass]="{ 'disabled-link': actiontype === 'view'  || !canDelete }" placement="top"
+                        ngbTooltip="Delete" class="icon-class" *ngIf="header.buttonNames.includes('delete')">
+                        <app-feathericon [icon]="'trash-2'"></app-feathericon>
+                    </a>
+                    <a (click)="buttonClick('approve',data[jsonData.dataKey])" placement="top"
+                        [ngClass]="{ 'disabled-link': actiontype === 'view' }" ngbTooltip="Approve" class="icon-class"
+                        *ngIf="header.buttonNames.includes('correct')">
+                        <app-feathericon [icon]="'check-circle'"></app-feathericon>
+                    </a>
+                    <a (click)="buttonClick('corss',data[jsonData.dataKey])" placement="top" ngbTooltip="Reject"
+                        class="icon-class" *ngIf="header.buttonNames.includes('corss')">
+                        <app-feathericon [icon]="'x-circle'"></app-feathericon>
+                    </a>
+                    <ng-container *ngIf="header?.buttonMenuNames">
+                        <span *ngSwitchCase="'action'" class="action-button">
+                            <div class="dropdown icon-dropdown">
+                                <app-feathericon [icon]="'more-vertical'" type="button"
+                                    (click)="openMenu(rowIndex)"></app-feathericon>
+                                <div class="dropdown-menu dropdown-menu-end shadow-sm"
+                                    [class.show]="openmenu == rowIndex">
+                                    <div class="card border-0 rounded-3">
+                                        <div class="card-body p-2">
+                                            <a (click)="buttonClick('track', data[jsonData.dataKey], $event, isValidDataKey(jsonData.operationId) ? data[jsonData.operationId] : null)"
+                                                [ngClass]="{ 'disabled-link': actiontype === 'view'}" placement="top"
+                                                ngbTooltip="track" class="dropdown-item cursor-pointer"
+                                                *ngIf="header.buttonMenuNames.includes('track')">
+                                                <app-feathericon [icon]="'map-pin'"></app-feathericon>{{'Track'}}
+                                            </a>
+                                            <a (click)="buttonClickDataFull('hub', data)"
+                                                [ngClass]="{ 'disabled-link': actiontype === 'view'}" placement="top"
+                                                ngbTooltip="hub" class="dropdown-item cursor-pointer"
+                                                *ngIf="header.buttonMenuNames.includes('hub')">
+                                                <app-feathericon [icon]="'home'"></app-feathericon>{{'Mark as out for
+                                                hub'}}
+                                            </a>
+                                            <a (click)="buttonClickDataFull('clone', data)"
+                                                [ngClass]="{ 'disabled-link': actiontype === 'view'}" placement="top"
+                                                ngbTooltip="clone" class="dropdown-item cursor-pointer"
+                                                *ngIf="header.buttonMenuNames.includes('clone')">
+                                                <app-feathericon [icon]="'copy'"></app-feathericon>{{'Create
+                                                Clone'}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </ng-container>
+                </td>
+            </ng-container>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="12"><app-no-record-found></app-no-record-found></td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<ng-template #DeleteConfirmation let-modal>
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="modal-toggle-wrapper">
+                <ul class="modal-img">
+                    <li><img src="assets/images/gif/danger.gif" alt="error"></li>
+                </ul>
+                <h4 class="text-center pb-2">Confirm Delete!</h4>
+                <p class="text-center">Are you sure you want to delete this item? This action cannot be undone.</p>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" type="button" (click)="confirmDelete()">Delete</button>
+                    <button class="btn btn-secondary" type="button"
+                        (click)="modal.dismiss('Close click')">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<!-- Modal -->
+<div class="modern-modal" *ngIf="showJsonModal">
+
+    <!-- Overlay -->
+    <div class="modal-overlay" (click)="closeJsonPopup()"></div>
+
+    <!-- Content -->
+    <div class="modal-container">
+
+        <!-- Header -->
+        <div class="modal-header">
+
+            <div>
+                <h4 class="title">JSON Insights</h4>
+                <!-- <p class="subtitle">
+                    Total: {{ selectedJson?.length || 0 }} records
+                </p> -->
+            </div>
+
+            <button class="close-btn" (click)="closeJsonPopup()">✕</button>
+
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+
+            <div class="grid">
+
+                <div class="card" *ngFor="let item of selectedJson;" [ngClass]="item.doc_is_ocr ? 'card-ocr' : 'card-normal'">
+
+                    <!-- Top Row -->
+                    <div class="card-top">
+
+                        <h6 class="port-name">
+                            {{ item.port_name || 'Unknown Port' }}
+                        </h6>
+
+                        <!-- 🔥 Modern Status -->
+                        <span class="status-pill"
+                              [ngClass]="item.status === 'Matched' ? 'success' : 'fail'">
+                            {{ item.status }}
+                        </span>
+
+                    </div>
+
+                    <!-- File -->
+                    <div class="info">
+                        📄 {{ item.file_name }}
+                    </div>
+
+                    <!-- Website -->
+                    <div class="info link" *ngIf="item.website_url">
+                        🌐 {{ item.website_url }}
+                    </div>
+
+                    <!-- Sender -->
+                    <div class="info" *ngIf="item.sender">
+                        👤 {{ item.sender }}
+                    </div>
+
+                    <!-- Bottom Row -->
+                    <div class="card-bottom">
+
+                        <span class="chip info-chip">
+                            📍 {{ item.port_code || '-' }}
+                        </span>
+
+                        <!-- 🔥 OCR / TEXT STYLE -->
+                        <span class="chip"
+                              [ngClass]="item.doc_is_ocr ? 'ocr-chip' : 'text-chip'">
+                            {{ item.doc_is_ocr ? 'OCR ISSUE' : 'TEXT' }}
+                        </span>
+
+                    </div>
+
+                    <!-- Timestamp -->
+                    <div class="time">
+                        🕒 {{ item.timestamp | date:'medium' }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

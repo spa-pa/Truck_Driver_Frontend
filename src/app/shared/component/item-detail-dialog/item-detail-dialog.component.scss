@@ -1,0 +1,67 @@
+.dialog-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #707575; /* Change to any color you like */
+  text-align: center;
+  margin-bottom: 16px;
+  position: relative; /* Ensure it is positioned relative to the dialog container */
+}
+
+.dialog-content {
+  text-align: center;
+  padding: 16px; /* Add padding for better spacing */
+  overflow: auto; /* Ensure content is scrollable if it overflows */
+  position: relative; /* Make it relative to adjust content if needed */
+}
+
+.dialog-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 16px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px;
+  position: absolute; /* Fix to the bottom of the dialog */
+  bottom: 0;
+  width: 100%; /* Full width of the dialog */
+  background-color: #f5f5f5; /* Optional: Background color to match design */
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Optional: Box shadow for separation */
+}
+
+.close-button {
+  background-color: #50b9b3; /* Primary color for the button */
+  color: white;
+  font-weight: bold;
+  border-radius: 4px; /* Rounded corners */
+  padding: 8px 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  border: none; /* Remove default border */
+}
+
+.close-button:hover {
+  background-color: #303f9f; /* Darker shade on hover */
+}
+
+.dialog-content {
+  transition: opacity 0.3s ease;
+}
+
+.dialog-content.ng-enter {
+  opacity: 0;
+}
+
+.dialog-content.ng-enter-active {
+  opacity: 1;
+}
+
+::ng-deep .mat-dialog-container {
+  z-index: 1000; /* Adjust as needed */
+}
+
+.custom-height {
+  height: calc(80vh - 50px); /* Adjust the height minus the header height */
+  width: 100%; /* Full width of its container */
+}

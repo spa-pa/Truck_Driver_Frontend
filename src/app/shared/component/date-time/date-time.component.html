@@ -1,0 +1,8 @@
+<div class="date-picker">
+  <label [ngClass]="{'text-danger': required}">{{ label }}</label>
+  <div class="input-group">
+      <input #dateInput class="form-control" [name]="name" type="text" mwlFlatpickr [disabled]="disable" [altInput]="true"
+          [convertModelValue]="true" [enableTime]="enableTime" [dateFormat]="dateFormat" [altFormat]="altFormat"
+          [placeholder]="placeholder" [formControl]="formControl" [minDate]="minDate" [maxDate]="maxDate" />
+  </div>
+</div>

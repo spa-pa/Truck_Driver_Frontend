@@ -1,0 +1,44 @@
+/* no-record-found.component.css */
+
+.no-record-found {
+    text-align: center;
+    margin: 20px;
+    padding: 20px; /* Add padding for better spacing */
+    background-color: #f8f9fa; /* Light background color */
+    border: 1px solid #dee2e6; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Drop shadow for depth */
+  }
+  
+  .no-record-found img {
+    max-width: 100%; /* Ensure image does not exceed container width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Remove any extra space under the image */
+    margin: 0 auto 10px; /* Center image and add spacing below */
+  }
+  
+  @media (min-width: 576px) {
+    .no-record-found {
+      max-width: 400px; /* Limit width on smaller screens */
+      margin: 20px auto; /* Center horizontally */
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .no-record-found {
+      max-width: 390px; /* Adjust max width for medium screens */
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .no-record-found {
+      max-width: 390px; /* Adjust max width for large screens */
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .no-record-found {
+      max-width: 390px; /* Adjust max width for extra-large screens */
+    }
+  }
+  

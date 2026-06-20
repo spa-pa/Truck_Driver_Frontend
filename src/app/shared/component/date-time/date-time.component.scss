@@ -1,0 +1,9 @@
+.date-picker input.form-control:disabled {
+    background-color: #e8e8e8; /* Dark Gray */
+    cursor: not-allowed; /* Optional: change cursor to not-allowed */
+  }
+  /* Ensure the flatpickr calendar appears above other modal elements */
+.flatpickr-calendar {
+  z-index: 1050 !important;  /* Higher than modal z-index */
+  position: absolute !important;  /* Ensure it is positioned correctly */
+}

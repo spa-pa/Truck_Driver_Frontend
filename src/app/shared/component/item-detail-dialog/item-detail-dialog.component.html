@@ -1,0 +1,23 @@
+<h1 mat-dialog-title class="dialog-title" *ngIf="data.value">
+  {{data.key}} : <span>{{ data.value }}</span>
+</h1>
+<div mat-dialog-content class="dialog-content">
+  <!-- Check if the data.img is an image or PDF -->
+  <ng-container *ngIf="isImageLink(data.img); else imgContent">
+    <img [src]="data.img" alt="{{ data.img_name }}" class="dialog-image" />
+  </ng-container>
+  <ng-template #imgContent>
+    <ng-container *ngIf="isImage(data.img); else pdfContent">
+      <img [src]="data.img" alt="{{ data.img_name }}" class="dialog-image" />
+    </ng-container>
+  </ng-template>
+  <ng-template #pdfContent>
+    <ng-container *ngIf="isPDF(data.img)">
+      <pdf-viewer #pdfViewer [src]="data.img" class="custom-height"></pdf-viewer>
+    </ng-container>
+  </ng-template>
+  <p>{{ data?.description }}</p>
+</div>
+<div mat-dialog-actions class="dialog-actions">
+  <button mat-button class="close-button" (click)="onClose()">Close</button>
+</div>

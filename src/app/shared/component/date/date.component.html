@@ -1,0 +1,32 @@
+<!-- Date Picker Component -->
+<div class="date-picker">
+    <!-- Label -->
+    <label [ngClass]="{ 'text-danger': required }">{{ label }}</label>
+  
+    <!-- Input with calendar button -->
+    <div class="input-group">
+      <!-- Date input field using NgbDatepicker -->
+      <input
+        class="form-control"
+        [placeholder]="placeholder"
+        [name]="name"
+        ngbDatepicker
+        #d3="ngbDatepicker"
+        [positionTarget]="calendarButton"
+        [disabled]="disable"
+        [formControl]="formControl"
+      />
+  
+      <!-- Calendar toggle button -->
+      <button
+        #calendarButton
+        class="btn btn-primary calendar"
+        type="button"
+        (click)="d3.toggle()"
+        [disabled]="disable"
+      >
+        <app-feathericon icon="calendar"></app-feathericon>
+      </button>
+    </div>
+  </div>
+  

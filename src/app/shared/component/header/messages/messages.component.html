@@ -1,0 +1,53 @@
+<a href="javascript:void(0)" (clickOutside)="clickOutside()">
+    <svg class="svg-color" (click)="message()">
+        <use href="assets/svg/iconly-sprite.svg#Message"></use>
+    </svg>
+</a>
+<span class="badge rounded-pill badge-tertiary">3</span>
+<div class="custom-menu message-dropdown py-0 overflow-hidden" [class.show]="messages">
+    <h5 class="title bg-primary-light">Messages</h5>
+    <ul>
+        <li class="d-flex b-t-primary">
+            <div class="d-block"><a [routerLink]="'/letter-box'">
+                    <h5>Design meeting</h5>
+                </a>
+                <h6>
+                    <app-feathericon [icon]="'clock'" class="feather me-1"></app-feathericon>
+                    <span>Just Now</span>
+                </h6>
+            </div>
+            <div class="badge badge-light-danger">
+                <app-feathericon [icon]="'clock'" class="feather me-1"></app-feathericon>
+                <span>Open</span>
+            </div>
+        </li>
+        <li class="d-flex b-t-secondary">
+            <div class="d-block"><a [routerLink]="'/letter-box'">
+                    <h5>Weekly scurm Meeting</h5>
+                </a>
+                <h6>
+                    <app-feathericon [icon]="'clock'" class="feather me-1"></app-feathericon>
+                    <span>1 Hour Ago</span>
+                </h6>
+            </div>
+            <div class="badge badge-light-danger">
+                <app-feathericon [icon]="'clock'" class="feather me-1"></app-feathericon>
+                <span>Open</span>
+            </div>
+        </li>
+        <li class="d-flex b-t-tertiary">
+            <div class="d-block"><a [routerLink]="'/letter-box'">
+                    <h5>Check your login page</h5>
+                </a>
+                <h6>
+                    <app-feathericon [icon]="'clock'" class="feather me-1"></app-feathericon>
+                    <span>2 Hour Ago</span>
+                </h6>
+            </div>
+            <div class="badge badge-light-success">
+                <app-feathericon [icon]="'clock'" class="feather me-1"></app-feathericon>
+                <span>Closed</span>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,38 @@
+.custom-remove {
+    margin-top: 26.50%;
+}
+
+.custom-remove-padding {
+    padding: 4px 15px !important;
+}
+
+.custom-header {
+    justify-content: center !important;
+    align-items: center !important;
+    display: flex !important;
+    background-color: #8cd3d0 !important;
+    margin-bottom: 2% !important;
+}
+
+.custom-h3 {
+    font-weight: 600 !important;
+    color: white !important;
+    padding: 0.2% !important;
+}
+
+.disabled-link {
+    pointer-events: none;
+    /* Prevents click events */
+    color: gray;
+    /* Changes text color to indicate disabled state */
+    cursor: not-allowed;
+    /* Changes cursor to indicate disabled state */
+    opacity: 0.5;
+    /* Makes it look disabled */
+}
+
+.customuploadbutton {
+    background: none;
+    border: none;
+    color: gray;
+}

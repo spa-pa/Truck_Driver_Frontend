@@ -1,0 +1,115 @@
+<!-- Label with optional 'required' class -->
+<label [ngClass]="{ 'text-danger': required }">{{ label }}</label>
+&nbsp;&nbsp;
+
+<!-- Description badge (if provided) -->
+<span *ngIf="description" class="f-12 w-10 btn-light-danger"> *({{ description }})</span>
+
+<!-- Input field rendering based on 'type' (if no button addons are used) -->
+<ng-container [ngSwitch]="type" *ngIf="!buttonAddons">
+
+    <!-- Textarea input -->
+    <ng-container *ngSwitchCase="'textarea'">
+        <textarea
+            class="form-control"
+            [formControl]="formControl"
+            [placeholder]="placeholder"
+            [name]="name"
+            [rows]="rows"
+            [cols]="cols"
+            (input)="autoResize($event)"
+            (keydown.enter)="$event.preventDefault()">
+        </textarea>
+    </ng-container>
+
+    <!-- Input with edit icon (type='editicon') -->
+    <ng-container *ngSwitchCase="'editicon'">
+        <div class="input-group">
+            <input
+                (wheel)="$event.preventDefault()"
+                class="form-control"
+                [type]="type"
+                [formControl]="formControl"
+                [placeholder]="placeholder"
+                [name]="name"
+                [attr.disabled]="disable"
+                (input)="onInputChange($event)"
+                (keyup)="isUpperCase ? toUppercase($event) : null"
+                (keydown.enter)="$event.preventDefault()">
+            <span class="input-group-text list-light-primary custom-cursor-pointer" (click)="onEditIconClick()">
+                <i class="icofont icofont-sub-listing font-primary"></i>
+            </span>
+        </div>
+    </ng-container>
+
+    <!-- Default input type -->
+    <ng-container *ngSwitchDefault>
+        <input
+            (wheel)="$event.preventDefault()"
+            class="form-control"
+            [type]="type"
+            [formControl]="formControl"
+            [placeholder]="placeholder"
+            [name]="name"
+            [attr.disabled]="disable"
+            (input)="onInputChange($event)"
+            (keyup)="isUpperCase ? toUppercase($event) : null"
+            (keydown.enter)="$event.preventDefault()">
+    </ng-container>
+</ng-container>
+
+<!-- Input field with button addon prefix (if buttonAddons is true) -->
+<ng-container *ngIf="buttonAddons">
+    <div class="input-group">
+        <span class="input-group-text" id="basic-addon1">{{ buttonAddonsData }}</span>
+        <input
+            (wheel)="$event.preventDefault()"
+            class="form-control"
+            [type]="type"
+            [formControl]="formControl"
+            [placeholder]="placeholder"
+            [name]="name"
+            [attr.disabled]="disable"
+            (input)="onInputChange($event)"
+            (keyup)="isUpperCase ? toUppercase($event) : null"
+            (keydown.enter)="$event.preventDefault()">
+    </div>
+</ng-container>
+
+<!-- Validation messages -->
+<div class="text text-danger mt-1" *ngIf="formControl?.touched && formControl?.invalid">
+
+    <!-- Required validation -->
+    <div *ngIf="formControl?.errors?.['required']">
+        {{ label }} is required.
+    </div>
+
+    <!-- Email validation -->
+    <div *ngIf="formControl?.errors?.['email']">
+        Invalid email format.
+    </div>
+
+    <!-- Minimum length validation -->
+    <div *ngIf="formControl?.errors?.['minlength']">
+        Minimum length is {{ minLength }} characters.
+    </div>
+
+    <!-- Maximum length validation -->
+    <div *ngIf="formControl?.errors?.['maxlength']">
+        Maximum length is {{ maxLength }} characters.
+    </div>
+
+    <!-- Custom validations -->
+    <div *ngIf="formControl?.errors?.['invalidContactNumber']">
+        Contact number must be 10 digits.
+    </div>
+    <div *ngIf="formControl?.errors?.['invalidPancard']">
+        Invalid pan-card format.
+    </div>
+    <div *ngIf="formControl?.errors?.['invalidAdharcard']">
+        Invalid Aadhaar card format.
+    </div>
+    <div *ngIf="formControl?.errors?.['invalidPassport']">
+        Invalid passport-no format.
+    </div>
+</div>

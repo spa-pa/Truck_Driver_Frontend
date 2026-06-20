@@ -1,0 +1,46 @@
+<div class="row mt-2">
+    <ng-container *ngFor="let control of formConfig; let i = index">
+      <div class="mb-3 col-sm-{{ calculateColumnsPerRow(formConfig.length) }}">
+        <div *ngIf="!isFolderUpload" class="dropzone border-0 dropzone-bg customize-dropzone">
+          <dropzone 
+            [config]="control.dropzoneConfig"
+            (error)="onUploadError($event)"
+            (success)="onUploadSuccess($event, i)"
+            [message]="control.text ?? 'Drop files here or click to upload'">
+          </dropzone>
+          <div class="mt-4" *ngIf="this.formControl?.value">
+            <div class="d-flex flex-wrap justify-content-center">
+              <!-- <a (click)="viewImages(formControl.value)" class="view-link">View</a> -->
+              <button class="btn btn-primary btn-sm" (click)="viewImages(formControl.value)" class="view-link">{{ 'View' }}</button>
+            </div>
+          </div>
+          <div class="mt-4" *ngIf="isUploadMultiDocs">
+            <div class="d-flex flex-wrap justify-content-start">
+              <!-- Display buttons -->
+              <ng-container *ngFor="let imageUrl of [control.upload_page_1_file, control.upload_page_2_file]; let i2 = index">
+                <div *ngIf="imageUrl" class="button-container">
+                  <button (click)="viewImages(imageUrl)" class="view-button">{{ i2 === 0 ? 'View 1' : 'View 2' }}</button>
+                  <button (click)="removeImage(i,i2)" class="remove-button">×</button>
+                </div>
+              </ng-container>
+              <div *ngIf="!control.upload_page_1_file && !control.upload_page_2_file" class="text-muted">
+                No preloaded images available.
+              </div>
+            </div>
+          </div>
+          
+
+        </div>
+        <div *ngIf="isFolderUpload">
+          <div class="input-group">
+          <input class="form-control" type="file" (change)="handleFolderInput($event)" webkitdirectory directory multiple accept=".zip">
+
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+
+
+

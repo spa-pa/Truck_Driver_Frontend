@@ -1,0 +1,103 @@
+<div class="card modern-card">
+    <div class="card-body pt-0 task-table">
+
+        <!-- Search -->
+        <div class="search-wrapper mb-3">
+            <input type="text" class="search-input search-big" placeholder="Search by port name, code, status..."
+                [(ngModel)]="searchText" (input)="applySearch()" />
+        </div>
+
+        <div class="table-responsive">
+            <table class="table custom-table">
+                <tbody>
+
+                    <ng-container *ngIf="pageDetails.length > 0; else norecord">
+                        <tr *ngFor="let port of pageDetails; let i = index" class="modern-row">
+
+                            <!-- Port Info -->
+                            <td class="port-col">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="port-icon-box">
+                                        <app-feathericon [icon]="'map-pin'"></app-feathericon>
+                                    </div>
+                                    <div>
+                                        <h6 class="port-title">Port: {{ port.port_name }}</h6>
+                                        <p class="port-meta">
+                                            Code: <span>{{ port.port_code }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- EBMS Status -->
+                            <td class="port-col">
+                                <h6 class="port-subtitle d-flex align-items-center">
+                                    <app-feathericon [icon]="'upload'" class="me-2"></app-feathericon>
+                                    Ebms Upload Status:
+                                    <span class="status-badge ms-2"
+                                        [ngClass]="port.is_ebs_uploaded == 1 ? 'badge-success' : 'badge-failed'">
+                                        {{ port.is_ebs_uploaded == 1 ? 'Uploaded' : 'Not Uploaded' }}
+                                    </span>
+                                </h6>
+
+                                <ul class="port-list" *ngIf="port.ebs_error">
+                                    <li class="error-chip" [title]="port.ebs_error">
+                                        <app-feathericon icon="alert-circle" class="error-icon"></app-feathericon>
+                                        <span class="error-label">EBMS Error:</span>
+                                        <span class="error-text">{{ port.ebs_error }}</span>
+                                    </li>
+                                </ul>
+
+
+
+                            </td>
+
+                            <!-- Dates -->
+                            <td class="port-col">
+                                <h6 class="port-subtitle">
+                                    <app-feathericon [icon]="'calendar'" class="me-2"></app-feathericon>
+                                    Effective Date:
+                                    {{ port.effective_date ?? '' | date: 'd MMM yyyy' }}
+                                </h6>
+
+                                <h6 class="port-subtitle dateportal">
+                                    <app-feathericon [icon]="'calendar'" class="me-2"></app-feathericon>
+                                    Date:
+                                    {{ port.created_at | date: 'd MMM yyyy, h:mm a' }}
+                                    <!-- {{ port.history_datetime | date: 'd MMM yyyy, h:mm a' }} -->
+                                </h6>
+                            </td>
+
+                            <!-- View Button -->
+                            <td>
+                                <button class="btn view-btn-large" (click)="viewDetails(port.port_history_id)" [ngClass]="{ 'disabled-link': !canViewDetails }">
+                                    <span>View Details</span>
+                                    <svg class="svg-w-19 ms-2">
+                                        <use xlink:href="assets/svg/iconly-sprite.svg#Right-arrow"></use>
+                                    </svg>
+                                </button>
+                            </td>
+
+                        </tr>
+                    </ng-container>
+
+                    <ng-template #norecord>
+                        <tr>
+                            <td colspan="12"><app-no-record-found></app-no-record-found></td>
+                        </tr>
+                    </ng-template>
+
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="d-flex align-items-center justify-content-center mt-3">
+                <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
+                    [totalRecords]="filteredData.length" [rowsPerPageOptions]="[10, 15, 20, 50]">
+                </p-paginator>
+            </div>
+
+        </div>
+
+    </div>
+</div>

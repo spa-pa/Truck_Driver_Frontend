@@ -1,0 +1,744 @@
+[
+    {
+        "id": 1,
+        "img": "assets/images/ecommerce/01.jpg",
+        "name": "Women's Top",
+        "note": "Regular Flare Fit Women's white Top",
+        "discription": "Rock Paper Scissors Women Tank Top High Neck Cotton Top Stylish Women Top..",
+        "discountPrice": 35.00,
+        "status": "none",
+        "price": 50.00,
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "Man",
+        "rating": 3,
+        "colors": [
+            "White",
+            "gray"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Diesel",
+            "Hudson",
+            "Lee"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "img": "assets/images/ecommerce/02.jpg",
+        "name": "Men's Jacket",
+        "note": "Regular Flare Fit men's white Top",
+        "discription": "Lorate Solid Men's Fashion Full Sleeves Latest Jacket for Men With Button Closure Long Sleeve Casual Torn Lycra Denim Jacket.",
+        "discountPrice": 50.00,
+        "status": "sale",
+        "price": 45.00,
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "Woman",
+        "rating": 5,
+        "colors": [
+            "green",
+            "gray"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Levis",
+            "Hudson",
+            "Lee"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "img": "assets/images/ecommerce/03.jpg",
+        "name": "Black, White Dress",
+        "note": "White Cotton Regular Fabric Fit Dress",
+        "discription": "Ravaiyaa - Attitude is everything Cotton Women's Dresses One Top Button T-Shirt.",
+        "discountPrice": 52.00,
+        "price": 87.00,
+        "status": "none",
+        "stock": "Out of stock",
+        "review": "(250 review)",
+        "category": "Woman",
+        "rating": 2,
+        "colors": [
+            "White",
+            "gray",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Diesel",
+            "Spykar",
+            "Lee"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "img": "assets/images/ecommerce/04.jpg",
+        "name": "Denim Jacket",
+        "note": "Men's Regular Blue Denim Jacket.",
+        "discription": "It is a long established fact that a reader will be distracted bythe readable content of a page when looking at its layout.",
+        "discountPrice": 45.00,
+        "price": 56.00,
+        "status": "50%",
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "Man",
+        "rating": 5,
+        "colors": [
+            "red",
+            "gray",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Levis",
+            "Lee",
+            "Hudson"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "img": "assets/images/ecommerce/05.jpg",
+        "name": "Black, White Dress.",
+        "note": "Women's Black &amp; White Collection Dress.",
+        "discription": "Lorate Solid women's Fashion red winter Latest collection forwomen blazer.",
+        "discountPrice": 45.00,
+        "price": 25.00,
+        "stock": "In stock",
+        "status": "50%",
+        "review": "(250 review)",
+        "category": "women",
+        "rating": 4,
+        "colors": [
+            "green",
+            "gray",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Denien",
+            "Diesel",
+            "Spykar"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "img": "assets/images/ecommerce/06.jpg",
+        "name": "Women's Jacket",
+        "note": "Solid Denim Jacket",
+        "discription": "Glamcci Women's Cotton Blend Printed One Piece Party Dress.",
+        "discountPrice": 35.00,
+        "price": 36.00,
+        "status": "none",
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "Woman",
+        "rating": 3,
+        "colors": [
+            "purple",
+            "orange",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Lee",
+            "Lifestyle",
+            "Nike"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "img": "assets/images/ecommerce/07.jpg",
+        "name": "Men Formal Wear",
+        "note": "Denim Regular Men's Jacket",
+        "discription": "Full Sleeves Latest Jacket for Men With Button Closure Long Sleeve Casual Torn Lycra Denim Jacket.",
+        "discountPrice": 63.00,
+        "price": 60.00,
+        "status": "sale",
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "man",
+        "rating": 4,
+        "colors": [
+            "orange",
+            "pink",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Lee"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "img": "assets/images/ecommerce/08.jpg",
+        "name": "Men's Formal shirt",
+        "note": "Regular Men's Denim Shirt.",
+        "discription": "Ravaiyaa - Attitude is everything Cotton Men's Formal One Top Shirt.",
+        "discountPrice": 95.00,
+        "price": 78.00,
+        "status": "none",
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "Man",
+        "rating": 3,
+        "colors": [
+            "purple",
+            "pink",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Hudson",
+            "Lee"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "img": "assets/images/ecommerce/04.jpg",
+        "name": "Denim Jacket",
+        "note": "Men's Regular Blue Denim Jacket.",
+        "discription": "It is a long established fact that a reader will be distracted bythe readable content of a page when looking at its layout.",
+        "discountPrice": 90.00,
+        "price": 85.00,
+        "status": "none",
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "Man",
+        "rating": 5,
+        "colors": [
+            "red",
+            "gray",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Levis",
+            "Lee",
+            "Hudson"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 10,
+        "img": "assets/images/ecommerce/03.jpg",
+        "name": "Black, White Dress",
+        "note": "White Cotton Regular Fabric Fit Dress",
+        "discription": "Ravaiyaa - Attitude is everything Cotton Women's Dresses One Top Button T-Shirt.",
+        "discountPrice": 45.00,
+        "price": 38.00,
+        "status": "50%",
+        "stock": "Out of stock",
+        "review": "(250 review)",
+        "category": "Woman",
+        "rating": 2,
+        "colors": [
+            "White",
+            "gray",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Diesel",
+            "Spykar",
+            "Lee"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "img": "assets/images/ecommerce/02.jpg",
+        "name": "Men's Jacket",
+        "note": "Regular Flare Fit men's white Top",
+        "discription": "Lorate Solid Men's Fashion Full Sleeves Latest Jacket for Men With Button Closure Long Sleeve Casual Torn Lycra Denim Jacket.",
+        "discountPrice": 35.00,
+        "price": 96.00,
+        "status": "none",
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "Woman",
+        "rating": 5,
+        "colors": [
+            "green",
+            "gray"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Levis",
+            "Hudson",
+            "Lee"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 12,
+        "img": "assets/images/ecommerce/01.jpg",
+        "name": "Women's Top",
+        "note": "Regular Flare Fit Women's white Top",
+        "discription": "Rock Paper Scissors Women Tank Top High Neck Cotton Top Stylish Women Top..",
+        "discountPrice": 45.00,
+        "status": "sale",
+        "price": 70.00,
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "Man",
+        "rating": 3,
+        "colors": [
+            "White",
+            "gray"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Diesel",
+            "Hudson",
+            "Lee"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 13,
+        "img": "assets/images/ecommerce/08.jpg",
+        "name": "Men's Formal shirt",
+        "note": "Gray Denim Regular Men's Denim Shirt.",
+        "discription": "Ravaiyaa - Attitude is everything Cotton Men's Formal One Top Shirt.",
+        "discountPrice": 100.00,
+        "price": 80.00,
+        "status": "sale",
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "Man",
+        "rating": 3,
+        "colors": [
+            "purple",
+            "pink",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Hudson",
+            "Lee"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "img": "assets/images/ecommerce/07.jpg",
+        "name": "Men Formal Wear",
+        "note": "Men's Business Formal Suit Wear.",
+        "discription": "Full Sleeves Latest Jacket for Men With Button Closure Long Sleeve Casual Torn Lycra Denim Jacket.",
+        "discountPrice": 60.00,
+        "price": 55.00,
+        "status": "none",
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "man",
+        "rating": 4,
+        "colors": [
+            "orange",
+            "pink",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Lee"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 15,
+        "img": "assets/images/ecommerce/06.jpg",
+        "name": "Women's Jacket",
+        "note": "Solid Denim Jacket",
+        "discription": "Glamcci Women's Cotton Blend Printed One Piece Party Dress.",
+        "discountPrice": 45.00,
+        "price": 38.00,
+        "status": "50%",
+        "stock": "In stock",
+        "review": "(250 review)",
+        "category": "Woman",
+        "rating": 3,
+        "colors": [
+            "purple",
+            "orange",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Lee",
+            "Lifestyle",
+            "Nike"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    },
+    {
+        "id": 16,
+        "img": "assets/images/ecommerce/05.jpg",
+        "name": "Black, White Dress.",
+        "note": "Women's Black &amp; White Collection Dress.",
+        "discription": "Lorate Solid women's Fashion red winter Latest collection forwomen blazer.",
+        "discountPrice": 35.00,
+        "price": 45.00,
+        "stock": "In stock",
+        "status": "none",
+        "review": "(250 review)",
+        "category": "women",
+        "rating": 4,
+        "colors": [
+            "green",
+            "gray",
+            "blue"
+        ],
+        "size": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "tags": [
+            "Denien",
+            "Diesel",
+            "Spykar"
+        ],
+        "variants": [
+            {
+                "color": "White",
+                "images": "assets/images/ecommerce/01.jpg"
+            },
+            {
+                "color": "gray",
+                "images": "assets/images/ecommerce/02.jpg"
+            },
+            {
+                "color": "black",
+                "images": "assets/images/ecommerce/03.jpg"
+            },
+            {
+                "color": "pink",
+                "images": "assets/images/ecommerce/04.jpg"
+            }
+        ]
+    }
+]

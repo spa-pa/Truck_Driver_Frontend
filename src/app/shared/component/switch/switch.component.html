@@ -1,0 +1,8 @@
+<div class="form-check form-switch" [class.form-check-reverse]="isReversed">
+  <input class="form-check-input" type="checkbox" role="switch" [formControl]="formControl" [checked]="checked"
+    [disabled]="disable" (change)="onChange($event)" />
+    
+  <label class="form-check-label">
+    {{ label }}
+  </label>
+</div>

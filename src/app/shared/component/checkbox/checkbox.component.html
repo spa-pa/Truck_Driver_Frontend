@@ -1,0 +1,45 @@
+<ul>
+    <li class="list-item">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="row align-items-center">
+  
+            <!-- Checkbox and Label -->
+            <div class="col-md-6">
+              <div class="d-flex align-items-center">
+                <div class="form-check checkbox checkbox-solid-primary">
+                  <input
+                    class="form-check-input big-checkbox"
+                    type="checkbox"
+                    [id]="name"
+                    [checked]="value"
+                    [disabled]="disable"
+                    (change)="onCheckboxChange($event, name)"
+                  />
+                  <label class="form-check-label" [for]="name"></label>
+                </div>
+                <h5 class="f-w-500 ms-2">{{ label }}</h5>
+              </div>
+            </div>
+  
+            <!-- Optional Description Button -->
+            <div class="col-md-4" *ngIf="description">
+              <button class="btn edge-btn f-12 w-100 btn-light-primary">
+                {{ description }}
+              </button>
+            </div>
+  
+          </div>
+  
+          <!-- Validation Message -->
+          <div class="text text-danger mt-1" *ngIf="formControl?.touched && formControl?.invalid">
+            <div *ngIf="formControl?.errors?.['required']">
+              {{ label }} is required.
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </li>
+  </ul>
+  

@@ -1,0 +1,22 @@
+<div class="time-picker">
+  <label [ngClass]="{'text-danger': required}">{{ label }}</label>
+  <div class="input-group">
+    <input
+      #timeInput
+      class="form-control"
+      [name]="name"
+      type="text"
+      mwlFlatpickr
+      [disabled]="disable"
+      [altInput]="true"
+      [enableTime]="true"
+      [noCalendar]="true"
+      [dateFormat]="timeFormat"
+      [altFormat]="altFormat"
+      [placeholder]="placeholder"
+      [formControl]="formControl"
+      [minTime]="minTime"
+      [maxTime]="maxTime"
+    />
+  </div>
+</div>
