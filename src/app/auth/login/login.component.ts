@@ -71,6 +71,7 @@ export class LoginComponent {
         new EncryptedStorage().setItem(config.userDetails, JSON.stringify(user), false);
         new EncryptedStorage().setItem(config.roleId, JSON.stringify(user.role_id), false);
         new EncryptedStorage().setItem(config.userName, JSON.stringify(user.name), false);
+        new EncryptedStorage().setItem(config.menu, JSON.stringify(AdminMenu.menu), false);
         this.navmenu.intializeMenu(AdminMenu.menu);
         new EncryptedStorage().setItem(config.menu, JSON.stringify(AdminMenu.menu), false);
         this.router.navigate([config.dashboardRoute]);

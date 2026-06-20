@@ -134,12 +134,23 @@ export const AdminMenu = {
     },
     {
       "active": false,
+      "children": [
+        {
+          "path": "/terminal",
+          "title": "Vedio Configuration",
+          "type": "link"
+        },
+        {
+          "path": "/country",
+          "title": "Quize Configuration",
+          "type": "link"
+        }
+      ],
       "icon": "Swap",
       "id": 6,
       "level": 1,
-      "path": "/report",
       "title": "Training Configuration",
-      "type": "link"
+      "type": "sub"
     },
     {
       "active": false,

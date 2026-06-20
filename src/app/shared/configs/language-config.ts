@@ -3,9 +3,9 @@ import { RowData } from "@shared/models/table";
 
 export const LanguageDetailsData: RowData = {
     "headers": [{ label: "Sr.No", key: "SR.NO", type: 'autoIncrementNumber', size: '4%' },
-    { label: "Language Name", key: "languageName", type: '' },
-    { label: "Language Code", key: "languageCode", type: '' },
-    { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }],
+    { label: "Language Name", key: "language_name", type: '' },
+    { label: "Language Code", key: "language_code", type: '' },
+    { label: "Action", key: "action", type: 'action', size: '10%', buttonNames: ['edit', 'view', 'delete'] }],
     "data": [],
     "dataKey": 'language_id',
     "buttonname": 'Create Language',
@@ -14,7 +14,7 @@ export const LanguageDetailsData: RowData = {
         { label: 'false', value: 'danger' },
         { label: 'true', value: 'success' },
     ],
-    "filterfields": ['languageName'],
+    "filterfields": ['language_name'],
     "isSearch": false
 }
 
