@@ -1,0 +1,262 @@
+<!-- Trigger Button -->
+<a class="custom-qr" (click)="openModal()">
+    <i class="fa fa-qrcode"></i>
+</a>
+
+<!-- Modal Template -->
+<ng-template #qrModal let-modal>
+    <div class="modal-content border-0 shadow-lg rounded-4">
+        <!-- Modal Header -->
+        <div class="modal-header modern-header">
+            <div class="header-content">
+                <div class="header-icon">
+                    <i class="fa fa-qrcode"></i>
+                </div>
+                <div class="header-text">
+                    <h5 class="modal-title">QR Code Generator</h5>
+                    <p class="header-subtitle">Generate and customize QR codes</p>
+                </div>
+            </div>
+            <button class="close-btn" (click)="closeModal()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body p-4">
+            <div class="qr-modal-grid">
+                <!-- Left Panel - Controls -->
+                <div class="qr-controls">
+                    <!-- Terminal ID -->
+                    <div class="control-group">
+                        <label>
+                            <i class="fa fa-terminal"></i>
+                            Terminal ID
+                        </label>
+                        <input type="number" class="control-input" [(ngModel)]="config.terminalId"
+                            (change)="updateConfig()" min="1" placeholder="Enter terminal ID" />
+                    </div>
+
+                    <!-- QR Data -->
+                    <div class="control-group">
+                        <label>
+                            <i class="fa fa-code"></i>
+                            QR Data
+                        </label>
+                        <div class="textarea-wrapper">
+                            <textarea class="control-textarea" rows="3" [(ngModel)]="config.data"
+                                (input)="updateConfig()" placeholder='{"key": "value"}'></textarea>
+                            <button class="btn-format" (click)="formatJSON()">
+                                <i class="fa fa-magic"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- QR Color -->
+                    <div class="control-group color-group">
+                        <label>
+                            <i class="fa fa-palette"></i>
+                            QR Color
+                        </label>
+                        <div class="color-input-wrapper">
+                            <input type="color" class="color-picker" [(ngModel)]="config.qrColor"
+                                (change)="updateConfig()" />
+                            <span class="color-hex">{{ config.qrColor }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Background Color -->
+                    <div class="control-group color-group">
+                        <label>
+                            <i class="fa fa-circle"></i>
+                            Background Color
+                        </label>
+                        <div class="color-input-wrapper">
+                            <input type="color" class="color-picker" [(ngModel)]="config.bgColor"
+                                (change)="updateConfig()" />
+                            <span class="color-hex">{{ config.bgColor }}</span>
+                        </div>
+                    </div>
+
+                    <!-- QR Size -->
+                    <div class="control-group">
+                        <label>
+                            <i class="fa fa-arrows-alt"></i>
+                            QR Size
+                        </label>
+                        <div class="range-wrapper">
+                            <input type="range" class="control-range" min="150" max="500" step="10"
+                                [(ngModel)]="config.qrSize" (change)="updateConfig()" />
+                            <span class="range-value">{{ config.qrSize }}px</span>
+                        </div>
+                    </div>
+
+                    <!-- Pattern -->
+                    <div class="control-group">
+                        <label>
+                            <i class="fa fa-th"></i>
+                            Pattern
+                        </label>
+                        <select class="control-select" [(ngModel)]="config.dotType" (change)="updateConfig()">
+                            <option value="square">Square</option>
+                            <option value="dots">Dots</option>
+                            <option value="rounded">Rounded</option>
+                            <option value="extra-rounded">Extra Rounded</option>
+                            <option value="classy">Classy</option>
+                            <option value="classy-rounded">Classy Rounded</option>
+                        </select>
+                    </div>
+
+                    <!-- Logo Upload -->
+                    <div class="control-group">
+                        <label>
+                            <i class="fa fa-image"></i>
+                            Logo
+                        </label>
+                        <div class="logo-upload-wrapper">
+                            <input type="file" class="control-file" accept="image/*" (change)="onLogoUpload($event)"
+                                #logoInput />
+                            <button class="btn-upload" (click)="logoInput.click()">
+                                <i class="fa fa-upload"></i>
+                                Upload Logo
+                            </button>
+                            <button class="btn-remove-logo" *ngIf="config.logoUrl" (click)="removeLogo()">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="logo-preview" *ngIf="config.logoUrl">
+                            <img [src]="config.logoUrl" alt="Logo" />
+                        </div>
+                    </div>
+
+                    <!-- Bottom Text -->
+                    <div class="control-group">
+                        <label>
+                            <i class="fa fa-text-width"></i>
+                            Bottom Text
+                        </label>
+                        <input type="text" class="control-input" [(ngModel)]="config.bottomText"
+                            (input)="updateConfig()" placeholder="Scan to Connect" />
+                    </div>
+
+                    <!-- Text Size -->
+                    <div class="control-group">
+                        <label>
+                            <i class="fa fa-font"></i>
+                            Text Size
+                        </label>
+                        <div class="range-wrapper">
+                            <input type="range" class="control-range" min="10" max="50" [(ngModel)]="config.textSize"
+                                (change)="updateConfig()" />
+                            <span class="range-value">{{ config.textSize }}px</span>
+                        </div>
+                    </div>
+
+                    <!-- Text Color -->
+                    <div class="control-group color-group">
+                        <label>
+                            <i class="fa fa-pencil"></i>
+                            Text Color
+                        </label>
+                        <div class="color-input-wrapper">
+                            <input type="color" class="color-picker" [(ngModel)]="config.textColor"
+                                (change)="updateConfig()" />
+                            <span class="color-hex">{{ config.textColor }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Font Family -->
+                    <div class="control-group">
+                        <label>
+                            <i class="fa fa-font"></i>
+                            Font Family
+                        </label>
+                        <select class="control-select" [(ngModel)]="config.fontFamily" (change)="updateConfig()">
+                            <option value="Inter, system-ui, sans-serif">Inter</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Courier New', monospace">Courier</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Right Panel - Preview -->
+                <div class="qr-preview">
+                    <div class="preview-card">
+                        <app-qr-display #qrDisplay [config]="config" size="medium" [showText]="true"></app-qr-display>
+                    </div>
+
+                    <!-- Download Options -->
+                    <div class="download-options">
+                        <button class="btn-download png" (click)="downloadPNG()">
+                            <i class="fa fa-file-image-o"></i>
+                            PNG
+                        </button>
+                        <button class="btn-download jpg" (click)="downloadJPG()">
+                            <i class="fa fa-file-image-o"></i>
+                            JPG
+                        </button>
+                        <button class="btn-download pdf" (click)="downloadPDF()">
+                            <i class="fa fa-file-pdf-o"></i>
+                            PDF
+                        </button>
+                        <button class="btn-download svg" (click)="downloadSVG()">
+                            <i class="fa fa-file-code-o"></i>
+                            SVG
+                        </button>
+                        <button class="btn-download print" (click)="printQR()">
+                            <i class="fa fa-print"></i>
+                            Print
+                        </button>
+                        <button class="btn-download copy" (click)="copyQR()">
+                            <i class="fa fa-clipboard"></i>
+                            Copy
+                        </button>
+                    </div>
+
+                    <!-- Response Display -->
+                    <div class="response-card">
+                        <div class="response-header">
+                            <h6>
+                                <i class="fa fa-server"></i>
+                                Backend Response
+                            </h6>
+                            <span class="status-badge" *ngIf="response">
+                                <span class="status-dot"></span>
+                                Active
+                            </span>
+                        </div>
+                        <div class="response-content">
+                            <pre>{{ getResponseJSON() }}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer modern-footer">
+            <div class="footer-left">
+                <button class="btn-reset" (click)="resetConfig()">
+                    <i class="fa fa-refresh"></i>
+                    Reset
+                </button>
+                <button class="btn-export" (click)="exportConfig()">
+                    <i class="fa fa-download"></i>
+                    Export Config
+                </button>
+            </div>
+            <div class="footer-right">
+                <button class="btn-cancel" (click)="closeModal()">
+                    <i class="fa fa-times"></i>
+                    Close
+                </button>
+                <button class="btn-apply" (click)="applyConfig()">
+                    <i class="fa fa-check"></i>
+                    Apply
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

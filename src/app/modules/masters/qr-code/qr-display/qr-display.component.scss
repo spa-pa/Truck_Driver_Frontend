@@ -1,0 +1,166 @@
+// src/app/components/qr-display/qr-display.component.scss
+
+.qr-display-wrapper {
+    display: inline-block;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 4px;
+}
+
+.qr-display-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 16px;
+
+    .qr-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+
+        .qr-frame {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid #004761;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 71, 97, 0.08);
+
+            &:hover {
+                transform: scale(1.02);
+                box-shadow: 0 8px 32px rgba(0, 71, 97, 0.15);
+            }
+
+            .qr-element-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 180px;
+                min-width: 180px;
+
+                canvas,
+                img {
+                    display: block !important;
+                    margin: 0 auto !important;
+                    max-width: 100%;
+                    height: auto;
+                }
+
+                // Ensure logo is centered
+                img[src*="data:image"] {
+                    position: relative !important;
+                    left: 50% !important;
+                    transform: translateX(-50%) !important;
+                }
+            }
+        }
+
+        .qr-text {
+            margin-top: 16px;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            word-break: break-word;
+            max-width: 100%;
+        }
+    }
+
+    // Size variants based on config.qrSize
+    &.size-small {
+        .qr-frame {
+            padding: 12px;
+
+            .qr-element-container {
+                min-height: 180px;
+                min-width: 180px;
+
+                canvas,
+                img {
+                    width: 180px !important;
+                    height: 180px !important;
+                }
+            }
+        }
+    }
+
+    &.size-medium {
+        .qr-frame {
+            padding: 20px;
+
+            .qr-element-container {
+                min-height: 250px;
+                min-width: 250px;
+
+                canvas,
+                img {
+                    width: 250px !important;
+                    height: 250px !important;
+                }
+            }
+        }
+    }
+
+    &.size-large {
+        .qr-frame {
+            padding: 28px;
+
+            .qr-element-container {
+                min-height: 350px;
+                min-width: 350px;
+
+                canvas,
+                img {
+                    width: 350px !important;
+                    height: 350px !important;
+                }
+            }
+        }
+    }
+}
+
+// Ensure logo is centered
+.qr-element-container {
+    position: relative;
+
+    canvas {
+        position: relative !important;
+        z-index: 1;
+    }
+
+    img {
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 2;
+        border-radius: 50%;
+        background: #ffffff;
+        padding: 4px;
+    }
+}
+
+// Print styles
+@media print {
+    .qr-display-wrapper {
+        background: #ffffff !important;
+        border: none !important;
+    }
+
+    .qr-display-container {
+        padding: 20px !important;
+    }
+
+    .qr-frame {
+        border-width: 2px !important;
+        box-shadow: none !important;
+    }
+
+    .qr-frame:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+}

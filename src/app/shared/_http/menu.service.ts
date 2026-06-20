@@ -16,6 +16,6 @@ export class MenuService {
     }
 
     getAllMenu(): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}menuMaster/GetAll`);
+        return this.httpClient.get(`${this.baseUrl}menuMaster/`);
     }
 }

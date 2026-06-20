@@ -60,7 +60,18 @@ const mastersData: Routes = [
         },
         loadChildren: () => import('../../modules/masters/terminal/terminal.module').then(r => r.TerminalModule),
         // canActivate: [PermissionGuard]
+    },
+    {
+        path: 'qr-code-config',
+        data: {
+            title: "QR Code Config",
+            breadcrumb: "QR Code Config",
+            pageId: 2
+        },
+        loadComponent: () => import('../../modules/masters/qr-code/qr-editor/qr-editor.component').then(r => r.QREditorComponent),
+        // canActivate: [PermissionGuard]
     }
+    
 ]
 
 

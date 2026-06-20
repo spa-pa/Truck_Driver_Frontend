@@ -3,8 +3,8 @@ import { RowData } from "@shared/models/table";
 
 export const CountryDetailsData: RowData = {
     "headers": [{ label: "Sr.No", key: "SR.NO", type: 'autoIncrementNumber', size: '4%' },
-    { label: "Country Name", key: "countryName", type: '' },
-    { label: "Country Code", key: "countryCode", type: '' },
+    { label: "Country Name", key: "country_name", type: '' },
+    { label: "Country Code", key: "country_code", type: '' },
     { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }],
     "data": [],
     "dataKey": 'country_id',

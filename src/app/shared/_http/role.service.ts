@@ -22,7 +22,7 @@ export class RoleService {
    * @returns Observable containing role list
    */
   getAllRoles(): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}RoleMaster/GetAll`);
+    return this.httpClient.get(`${this.baseUrl}RoleMaster/`);
   }
 
   /**
@@ -31,7 +31,7 @@ export class RoleService {
    * @returns Observable containing role data
    */
   getRole(id: any): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}RoleMaster/GetById/${id}`);
+    return this.httpClient.get(`${this.baseUrl}RoleMaster/${id}`);
   }
 
   /**
@@ -40,7 +40,7 @@ export class RoleService {
    * @returns Observable of server response
    */
   createRole(payload: any): Observable<any> {
-    return this.httpClient.post(`${this.baseUrl}RoleMaster/Insert`, payload);
+    return this.httpClient.post(`${this.baseUrl}RoleMaster/`, payload);
   }
 
   /**
@@ -50,7 +50,7 @@ export class RoleService {
    * @returns Observable of server response
    */
   updateRole(payload: any, id: any): Observable<any> {
-    return this.httpClient.put(`${this.baseUrl}RoleMaster/Update`, payload);
+    return this.httpClient.put(`${this.baseUrl}RoleMaster/${id}`, payload);
   }
 
   /**
@@ -59,7 +59,7 @@ export class RoleService {
    * @returns Observable of server response
    */
   deleteRole(id: any): Observable<any> {
-    return this.httpClient.delete(`${this.baseUrl}RoleMaster/Delete/${id}`);
+    return this.httpClient.delete(`${this.baseUrl}RoleMaster/${id}`);
   }
 
 }
