@@ -28,6 +28,43 @@
 @import "primeng/resources/primeng.css";
 
 .form-control:disabled {
-    background-color: #e8e8e8; /* Dark Gray */
-    cursor: not-allowed; /* Optional: change cursor to not-allowed */
+    background-color: #e8e8e8;
+    /* Dark Gray */
+    cursor: not-allowed;
+    /* Optional: change cursor to not-allowed */
+}
+
+// src/styles.scss
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: #f4f7fa;
+    color: #004761;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f4f7fa;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 71, 97, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 71, 97, 0.3);
 }

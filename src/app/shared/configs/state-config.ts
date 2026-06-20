@@ -3,9 +3,10 @@ import { RowData } from "@shared/models/table";
 
 export const StateDetailsData: RowData = {
     "headers": [{ label: "Sr.No", key: "SR.NO", type: 'autoIncrementNumber', size: '4%' },
-    { label: "State Name", key: "stateName", type: '' },
-    { label: "State Code", key: "stateCode", type: '' },
-    { label: "Country", key: "countryName", type: '' }, { label: "Country Code", key: "country_code", type: '' },
+    { label: "State Name", key: "state_name", type: '' },
+    { label: "State Code", key: "state_code", type: '' },
+    { label: "Country", key: "country_name", type: '' }, 
+    { label: "Country Code", key: "country_code", type: '' },
     { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }],
     "data": [],
     "dataKey": 'state_id',

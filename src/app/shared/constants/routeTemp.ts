@@ -157,7 +157,7 @@ export const AdminMenu = {
       "icon": "Swap",
       "id": 7,
       "level": 1,
-      "path": "/report",
+      "path": "/qr-code-config",
       "title": "QR Configuration",
       "type": "link"
     }
