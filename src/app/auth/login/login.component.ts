@@ -10,6 +10,7 @@ import { EncryptedStorage } from '@shared/utils/encrypted-storage';
 import { GlobalConfig } from '@shared/configs/global-config';
 import { NavmenuService } from '@shared/services/navmenu.service';
 import { PermissionsService } from '@shared/services/PermissionsService';
+import { AdminMenu } from '@shared/constants/routeTemp';
 
 @Component({
   selector: 'app-login',
@@ -63,44 +64,55 @@ export class LoginComponent {
     this.loginService.login(this.loginForm.value).subscribe({
       next: (value) => {
 
+        const config = new GlobalConfig();
+        const user = value.user;
+        new EncryptedStorage().clearAll();
+        new EncryptedStorage().setItem(config.authToken, value.token, false);
+        new EncryptedStorage().setItem(config.userDetails, JSON.stringify(user), false);
+        new EncryptedStorage().setItem(config.roleId, JSON.stringify(user.role_id), false);
+        new EncryptedStorage().setItem(config.userName, JSON.stringify(user.name), false);
+        this.navmenu.intializeMenu(AdminMenu.menu);
+        new EncryptedStorage().setItem(config.menu, JSON.stringify(AdminMenu.menu), false);
+        this.router.navigate([config.dashboardRoute]);
+
         this.toastService.open("Login Successful", "success");
 
-        this.encryptedStorage.clearAll();
-        const menuData = JSON.parse(value.user.menus);
+        // this.encryptedStorage.clearAll();
+        // const menuData = JSON.parse(value.user.menus);
 
-        // const permissions = value.role_page_permission;
-        // new EncryptedStorage().setItem(new GlobalConfig().pagePermissions, JSON.stringify(permissions), false);
+        // // const permissions = value.role_page_permission;
+        // // new EncryptedStorage().setItem(new GlobalConfig().pagePermissions, JSON.stringify(permissions), false);
 
-        this.encryptedStorage.setItem(this.globalConfig.authToken, value.token, false);
-        if (value.user.role_id === 1) {
-          // new EncryptedStorage().setItem(new GlobalConfig().pagePermissions, JSON.stringify(permissions), false);
-          this.encryptedStorage.setItem(this.globalConfig.userDetails, JSON.stringify(value.user), false)
-          this.encryptedStorage.setItem(this.globalConfig.menu, JSON.stringify(menuData), false);
-          this.navmenu.intializeMenu(menuData);
-          this.router.navigate([this.globalConfig.dashboardRoute]);
-        } else {
-          // const filteredMenu = this.filterMenuByPermissions(menuData, permissions);
-          const filteredMenu = menuData;
+        // this.encryptedStorage.setItem(this.globalConfig.authToken, value.token, false);
+        // if (value.user.role_id === 1) {
+        //   // new EncryptedStorage().setItem(new GlobalConfig().pagePermissions, JSON.stringify(permissions), false);
+        //   this.encryptedStorage.setItem(this.globalConfig.userDetails, JSON.stringify(value.user), false)
+        //   this.encryptedStorage.setItem(this.globalConfig.menu, JSON.stringify(menuData), false);
+        //   this.navmenu.intializeMenu(menuData);
+        //   this.router.navigate([this.globalConfig.dashboardRoute]);
+        // } else {
+        //   // const filteredMenu = this.filterMenuByPermissions(menuData, permissions);
+        //   const filteredMenu = menuData;
 
-          new EncryptedStorage().setItem(new GlobalConfig().menu, JSON.stringify(filteredMenu), false);
-          new EncryptedStorage().setItem(new GlobalConfig().userDetails, JSON.stringify({
-            ...value.user,
-            menu: JSON.stringify(filteredMenu)  // Update with filtered menu
-          }), false);
-          this.navmenu.intializeMenu(filteredMenu);
-          // this.permissionsService.loadPermissions();
-          // if (permissions && permissions.length > 0) {
-          //   const sortedPermissions = permissions.sort((a: any, b: any) => a.role_page_permission_id - b.role_page_permission_id);
-          //   const firstRoute = sortedPermissions[0]?.page_url;
-          //   this.router.navigate([firstRoute]);
-          // } else {
-          //   new EncryptedStorage().clearAll();
-          //   this.router.navigate(['/auth/login'])
-          //   this.toastService.open('Permission not granted. Please contact the administrator.', "error");
-          //   return;
-          // }
-        }
-        this.router.navigate([this.globalConfig.dashboardRoute]);
+        //   new EncryptedStorage().setItem(new GlobalConfig().menu, JSON.stringify(filteredMenu), false);
+        //   new EncryptedStorage().setItem(new GlobalConfig().userDetails, JSON.stringify({
+        //     ...value.user,
+        //     menu: JSON.stringify(filteredMenu)  // Update with filtered menu
+        //   }), false);
+        //   this.navmenu.intializeMenu(filteredMenu);
+        //   // this.permissionsService.loadPermissions();
+        //   // if (permissions && permissions.length > 0) {
+        //   //   const sortedPermissions = permissions.sort((a: any, b: any) => a.role_page_permission_id - b.role_page_permission_id);
+        //   //   const firstRoute = sortedPermissions[0]?.page_url;
+        //   //   this.router.navigate([firstRoute]);
+        //   // } else {
+        //   //   new EncryptedStorage().clearAll();
+        //   //   this.router.navigate(['/auth/login'])
+        //   //   this.toastService.open('Permission not granted. Please contact the administrator.', "error");
+        //   //   return;
+        //   // }
+        // }
+        // this.router.navigate([this.globalConfig.dashboardRoute]);
       },
       error: (err: HttpErrorResponse) => {
         this.toastService.open(err.message, "error");

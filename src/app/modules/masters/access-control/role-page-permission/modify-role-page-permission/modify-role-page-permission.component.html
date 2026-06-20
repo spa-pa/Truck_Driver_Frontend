@@ -1,0 +1,7 @@
+<app-form 
+  [formConfig]="roleSearchGroupStructure" 
+  [actiontype]="routeName" 
+  (emitData)="handleSubmit($event)"
+  [formData]="roleDetailsData.data"
+  (selectValueChangeChange)="handleSelectValueChange($event)">
+</app-form>

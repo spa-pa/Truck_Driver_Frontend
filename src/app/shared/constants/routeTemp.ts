@@ -16,114 +16,6 @@ export const superAdminMenu = {
         "path": "/dashboard",
         "title": "Dashboard",
         "type": "link"
-      },
-      {
-        "active": false,
-        "icon": "Paper",
-        "id": 2,
-        "level": 1,
-        "path": "/project-history",
-        "title": "Project History",
-        "type": "link"
-      },
-      {
-        "active": false,
-        "icon": "Swap",
-        "id": 3,
-        "level": 1,
-        "path": "/project-config",
-        "title": "Project Config",
-        "type": "link"
-      },
-      {
-        "active": false,
-        "children": [
-          {
-            "path": "/scheduler",
-            "title": "Scheduler Config",
-            "type": "link"
-          },
-          {
-            "path": "/scheduler/logs",
-            "title": "Scheduler Logs",
-            "type": "link"
-          }
-        ],
-        "icon": "Activity",
-        "id": 4,
-        "level": 1,
-        "title": "Scheduler",
-        "type": "sub"
-      },
-      {
-        "active": false,
-        "children": [
-          {
-            "path": "/email",
-            "title": "Email Master",
-            "type": "link"
-          },
-          {
-            "path": "/website",
-            "title": "Website Master",
-            "type": "link"
-          },
-          {
-            "path": "/port",
-            "title": "Port Master",
-            "type": "link"
-          },
-          {
-            "path": "/charge",
-            "title": "Charge Master",
-            "type": "link"
-          },
-          {
-            "path": "/unit",
-            "title": "Unit Master",
-            "type": "link"
-          },
-          {
-            "path": "/vessel",
-            "title": "Vessel Master",
-            "type": "link"
-          },
-          {
-            "path": "/vendor",
-            "title": "Vendor Master",
-            "type": "link"
-          },
-          {
-            "path": "/berth",
-            "title": "Berth Master",
-            "type": "link"
-          },
-          {
-            "path": "/pilotage",
-            "title": "Pilotage Master",
-            "type": "link"
-          },
-          {
-            "path": "/anchorage",
-            "title": "Anchorage Master",
-            "type": "link"
-          },
-          {
-            "path": "/commoditygroup",
-            "title": "Commoditygroup Master",
-            "type": "link"
-          },
-          // {
-          //   "path": "/notify-email-config",
-          //   "title": "Notify Email Master",
-          //   "type": "link"
-          // }
-        ],
-        "icon": "Document",
-        "id": 5,
-        "level": 1,
-        "title": "Master",
-        "type": "sub"
       }
     ]
 };
@@ -142,7 +34,121 @@ export const customerMenu = {
  */
 export const AdminMenu = {
   menu: [
-    { level: 1, id: 2, path: '/dashboard', title: "Dashboard", icon: "Home", active: true, type: "link" },
-    { level: 1, id: 2, path: '/sample-operation', title: "Sample-operation", icon: "Work", active: true, type: "link" },
+    {
+      "active": false,
+      "icon": "Home",
+      "id": 1,
+      "level": 1,
+      "path": "/dashboard",
+      "title": "Dashboard",
+      "type": "link"
+    },
+    {
+      "active": false,
+      "badge": true,
+      "children": [
+        {
+          "path": "/permission",
+          "title": "Permission",
+          "type": "link"
+        },
+        {
+          "path": "/pages",
+          "title": "Pages",
+          "type": "link"
+        },
+        {
+          "path": "/page-permission",
+          "title": "Pages Permission",
+          "type": "link"
+        },
+        {
+          "path": "/role",
+          "title": "Role",
+          "type": "link"
+        },
+        {
+          "path": "/role-permission",
+          "title": "Role Page permission",
+          "type": "link"
+        }
+      ],
+      "icon": "Filter",
+      "id": 21,
+      "level": 1,
+      "title": "Access Control",
+      "type": "sub"
+    },
+    {
+      "active": false,
+      "children": [
+        {
+          "path": "/language",
+          "title": "Language",
+          "type": "link"
+        },
+        {
+          "path": "/terminal",
+          "title": "Terminal",
+          "type": "link"
+        },
+        {
+          "path": "/country",
+          "title": "Country",
+          "type": "link"
+        },
+        {
+          "path": "/state",
+          "title": "State",
+          "type": "link"
+        },
+        {
+          "path": "/city",
+          "title": "City",
+          "type": "link"
+        }
+      ],
+      "icon": "Document",
+      "id": 3,
+      "level": 1,
+      "title": "Master",
+      "type": "sub"
+    },
+    {
+      "active": false,
+      "icon": "Activity",
+      "id": 4,
+      "level": 1,
+      "path": "/report",
+      "title": "Training",
+      "type": "link"
+    },
+    {
+      "active": false,
+      "icon": "Activity",
+      "id": 5,
+      "level": 1,
+      "path": "/report",
+      "title": "Training Results",
+      "type": "link"
+    },
+    {
+      "active": false,
+      "icon": "Swap",
+      "id": 6,
+      "level": 1,
+      "path": "/report",
+      "title": "Training Configuration",
+      "type": "link"
+    },
+    {
+      "active": false,
+      "icon": "Swap",
+      "id": 7,
+      "level": 1,
+      "path": "/report",
+      "title": "QR Configuration",
+      "type": "link"
+    }
   ]
 };

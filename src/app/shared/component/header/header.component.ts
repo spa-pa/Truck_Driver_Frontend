@@ -17,7 +17,7 @@ import { QrComponent } from './qr/qr.component';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    SearchComponent,
+    // SearchComponent,
     QrComponent,
     ProfileComponent,
     SvgIconComponent],
