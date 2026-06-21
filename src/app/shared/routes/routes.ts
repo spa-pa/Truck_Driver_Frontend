@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 
 const mastersData: Routes = [
     {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+    },
+    {
         path: 'dashboard',
         data: {
             title: "Dashboard",

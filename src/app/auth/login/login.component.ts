@@ -40,7 +40,6 @@ export class LoginComponent {
     private permissionsService: PermissionsService
   ) {
     const userData = localStorage.getItem(this.globalConfig.authToken);
-
     if (userData?.length) {
       this.navmenu.intializeMenu(JSON.parse(this.globalConfig.menu));
       this.router.navigate([this.globalConfig.dashboardRoute]);
