@@ -136,13 +136,13 @@ export const AdminMenu = {
       "active": false,
       "children": [
         {
-          "path": "/terminal",
-          "title": "Vedio Configuration",
+          "path": "/video-configuration",
+          "title": "Video Configuration",
           "type": "link"
         },
         {
-          "path": "/country",
-          "title": "Quize Configuration",
+          "path": "/quiz-configuration",
+          "title": "Quiz Configuration",
           "type": "link"
         }
       ],

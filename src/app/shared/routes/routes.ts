@@ -60,6 +60,30 @@ const mastersData: Routes = [
         },
         loadChildren: () => import('../../modules/masters/terminal/terminal.module').then(r => r.TerminalModule),
         // canActivate: [PermissionGuard]
+    },
+    {
+        path: 'video-configuration',
+        data: {
+            title: "Video Configuration",
+            breadcrumb: "Video Configuration",
+            pageId: 2
+        },
+        loadComponent: () => import('../../modules/video-config/video-config.component').then(r => r.VideoConfigComponent),
+        //loadChildren: () => import('../../modules/video-config/video-config.module').then(r => r.VideoConfigModule),
+        //loadChildren: () => import('../../modules/video-config/video-config-routing.module').then(r => r.VideoConfigRoutingModule),
+        // canActivate: [PermissionGuard]
+    },
+    {
+        path: 'quiz-configuration',
+        data: {
+            title: "Quiz Configuration",
+            breadcrumb: "Quiz Configuration",
+            pageId: 2
+        },
+        loadComponent: () => import('../../modules/quiz-config/quiz-config.component').then(r => r.QuizConfigComponent)
+        //loadChildren: () => import('../../modules/quiz-config/quiz-config.module').then(r => r.QuizConfigModule),
+        //loadChildren: () => import('../../modules/quiz-config/quiz-config-routing.module').then(r => r.QuizConfigRoutingModule),
+        // canActivate: [PermissionGuard]
     }
 ]
 
