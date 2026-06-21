@@ -1,0 +1,119 @@
+<div class="certification-container" *ngIf="certification">
+    <!-- Certification Card -->
+    <div class="certification-card" #certificationCard>
+        <!-- Header -->
+        <div class="cert-header">
+            <div class="cert-header-left">
+                <div class="cert-logo">
+                    <i class="fa fa-id-card"></i>
+                </div>
+                <div class="cert-title">
+                    <h1>Driver Certification</h1>
+                    <span class="cert-badge" [class.active]="certification.is_active">
+                        <i class="fa" [class.fa-check-circle]="certification.is_active"
+                            [class.fa-times-circle]="!certification.is_active"></i>
+                        {{ certification.is_active ? 'ACTIVE' : 'INACTIVE' }}
+                    </span>
+                </div>
+            </div>
+            <div class="cert-header-right">
+                <button class="btn-download-pdf" (click)="downloadPDF()">
+                    <i class="fa fa-file-pdf-o"></i>
+                    Download PDF
+                </button>
+                <button class="btn-print" (click)="printCertification()">
+                    <i class="fa fa-print"></i>
+                    Print
+                </button>
+            </div>
+        </div>
+
+        <!-- QR Code Section -->
+        <div class="cert-qr-section">
+            <div class="qr-wrapper">
+                <app-qr-display [config]="certificationDetailsId" size="medium" [showText]="true"></app-qr-display>
+            </div>
+            <div class="qr-info">
+                <div class="qr-info-item">
+                    <span class="label">Certification ID</span>
+                    <span class="value">{{ certification.certification_id }}</span>
+                </div>
+                <div class="qr-info-item">
+                    <span class="label">Status</span>
+                    <span class="value status-badge" [class.active]="certification.is_active">
+                        {{ certification.is_active ? 'Active' : 'Inactive' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver Details -->
+        <div class="cert-details">
+            <h2>
+                <i class="fa fa-user"></i>
+                Driver Information
+            </h2>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Full Name</span>
+                    <span class="detail-value">{{ certification.full_name }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Mobile Number</span>
+                    <span class="detail-value">{{ certification.mobile_number }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Driver ID</span>
+                    <span class="detail-value">#{{ certification.driver_id }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">License Number</span>
+                    <span class="detail-value">{{ certification.driving_license_number }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">License Expiry</span>
+                    <span class="detail-value">{{ certification.driving_license_expiry_date | date:'dd MMM yyyy'
+                        }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Certification Expiry</span>
+                    <span class="detail-value">{{ certification.expiry_date | date:'dd MMM yyyy' }}</span>
+                </div>
+                <div class="detail-item full-width">
+                    <span class="detail-label">Certification ID</span>
+                    <span class="detail-value highlight">{{ certification.certification_id }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="cert-footer">
+            <div class="footer-left">
+                <span>
+                    <i class="fa fa-calendar"></i>
+                    Issued: {{ certification.created_at | date:'dd MMM yyyy, hh:mm a' }}
+                </span>
+            </div>
+            <div class="footer-right">
+                <span class="cert-version">v1.0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Loading certification details...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-state" *ngIf="error">
+        <i class="fa fa-exclamation-circle"></i>
+        <h3>Error Loading Certification</h3>
+        <p>{{ error }}</p>
+        <button class="btn-retry" (click)="loadCertification()">
+            <i class="fa fa-refresh"></i>
+            Retry
+        </button>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+// .custom-qr {
+//     font-size: 30px !important;
+//     cursor: pointer;
+// }
+
+.custom-qr {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    background: #004761;
+    color: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+
+    i {
+        font-size: 20px;
+    }
+
+    &:hover {
+        background: #003a50;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 71, 97, 0.3);
+        color: #ffffff;
+        text-decoration: none;
+    }
+}

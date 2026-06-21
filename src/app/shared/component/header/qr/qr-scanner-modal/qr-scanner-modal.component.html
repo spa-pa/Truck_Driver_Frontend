@@ -1,0 +1,52 @@
+<!-- src/app/components/qr-scanner-modal/qr-scanner-modal.component.html -->
+
+<!-- Modal Template -->
+<ng-template #qrscanModal let-modal>
+    <div class="modal-content border-0 shadow-lg rounded-4">
+        <!-- Modal Header -->
+        <div class="modal-header modern-header">
+            <div class="header-content">
+                <div class="header-icon">
+                    <i class="fa fa-qrcode"></i>
+                </div>
+                <div class="header-text">
+                    <h5 class="modal-title">QR Code Scanner</h5>
+                    <p class="header-subtitle">Scan QR codes to send data to backend</p>
+                </div>
+            </div>
+            <button class="close-btn" (click)="closeModal()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body p-4">
+            <app-qr-scanner (scanComplete)="onScanComplete($event)" (close)="closeModal()"></app-qr-scanner>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer modern-footer">
+            <div class="footer-left">
+                <span class="footer-text">
+                    <i class="fa fa-info-circle"></i>
+                    Position QR code within the frame
+                </span>
+            </div>
+            <div class="footer-right">
+                <button class="btn-close-modal" (click)="closeModal()">
+                    <i class="fa fa-times"></i>
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Trigger Button -->
+<!-- <a href="javascript:void(0)" class="custom-qr scanner" (click)="openModal()">
+    <i class="fa fa-camera"></i>
+</a> -->
+
+<a href="javascript:void(0)" class="custom-qr" (click)="openModal()">
+    <i class="fa fa-camera"></i>
+</a>

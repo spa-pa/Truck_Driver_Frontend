@@ -9,6 +9,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { currentUser } from '@shared/utils/current-user';
 import { QrComponent } from './qr/qr.component';
+import { QrScannerComponent } from './qr/qr-scanner/qr-scanner.component';
+import { QRScannerModalComponent } from './qr/qr-scanner-modal/qr-scanner-modal.component';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +22,9 @@ import { QrComponent } from './qr/qr.component';
     // SearchComponent,
     QrComponent,
     ProfileComponent,
-    SvgIconComponent],
+    SvgIconComponent,
+    // QRScannerModalComponent,
+    QrScannerComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
