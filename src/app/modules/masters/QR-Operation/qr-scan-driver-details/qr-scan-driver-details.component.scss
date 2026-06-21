@@ -1,5 +1,8 @@
-// src/app/modules/masters/qr-scan-driver-details/qr-scan-driver-details.component.scss
+// src/app/modules/masters/QR-Operation/qr-scan-driver-details/qr-scan-driver-details.component.scss
 
+// ============================================
+// VARIABLES
+// ============================================
 $primary: #004761;
 $secondary: #f25f36;
 $white: #ffffff;
@@ -7,6 +10,9 @@ $light-bg: #f0f2f5;
 $border-color: rgba($primary, 0.08);
 $text-secondary: rgba($primary, 0.6);
 $shadow: 0 20px 60px rgba($primary, 0.08);
+$success: #10b981;
+$warning: #f59e0b;
+$danger: #ef4444;
 
 // ============================================
 // PAGE CONTAINER
@@ -122,6 +128,40 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
         }
 
         .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+
+            .btn-scan {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 20px;
+                background: $primary;
+                color: $white;
+                border: none;
+                border-radius: 10px;
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.25s ease;
+
+                i {
+                    font-size: 16px;
+                }
+
+                &:hover {
+                    background: darken($primary, 5%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba($primary, 0.3);
+                }
+
+                &:active {
+                    transform: translateY(0);
+                }
+            }
+
             .status-indicator {
                 display: flex;
                 align-items: center;
@@ -137,7 +177,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
                     background: $text-secondary;
 
                     &.active {
-                        background: #4caf50;
+                        background: $success;
                         animation: pulse-dot 2s ease-in-out infinite;
                     }
                 }
@@ -146,6 +186,35 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
                     font-size: 13px;
                     font-weight: 500;
                     color: $primary;
+                }
+            }
+
+            .btn-rescan {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 20px;
+                background: $secondary;
+                color: $white;
+                border: none;
+                border-radius: 10px;
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.25s ease;
+
+                i {
+                    font-size: 16px;
+                }
+
+                &:hover {
+                    background: darken($secondary, 5%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba($secondary, 0.3);
+                }
+
+                &:active {
+                    transform: translateY(0);
                 }
             }
         }
@@ -329,8 +398,8 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
                     align-items: center;
                     gap: 6px;
                     padding: 4px 14px;
-                    background: rgba(76, 175, 80, 0.1);
-                    color: #4caf50;
+                    background: rgba($success, 0.1);
+                    color: $success;
                     border-radius: 20px;
                     font-size: 12px;
                     font-weight: 600;
@@ -497,6 +566,12 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     }
 }
 
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 // ============================================
 // RESPONSIVE
 // ============================================
@@ -545,6 +620,12 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
                         font-size: 12px;
                     }
                 }
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
             }
         }
     }
@@ -627,6 +708,29 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
                 .header-text {
                     h1 {
                         font-size: 16px;
+                    }
+                }
+            }
+
+            .header-right {
+
+                .btn-scan,
+                .btn-rescan {
+                    padding: 6px 14px;
+                    font-size: 12px;
+
+                    i {
+                        font-size: 14px;
+                    }
+                }
+
+                .status-indicator {
+                    padding: 4px 12px;
+                    font-size: 12px;
+
+                    .status-dot {
+                        width: 6px;
+                        height: 6px;
                     }
                 }
             }

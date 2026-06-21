@@ -1,8 +1,7 @@
-// src/app/components/driver-certification/driver-certification.component.ts
+// src/app/modules/masters/driver-certification/driver-certification.component.ts
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { DriverCertification } from '@shared/models/driver-certification.model';
@@ -18,6 +17,7 @@ import { DriverCertificationService } from '@shared/_http/driver-certification.s
   styleUrls: ['./driver-certification.component.scss']
 })
 export class DriverCertificationComponent implements OnInit, OnDestroy {
+  @ViewChild('certificationCard') certificationCard!: ElementRef;
   @Input() certificationId: string = '';
   @Input() autoLoad: boolean = true;
 
@@ -31,18 +31,18 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     data: '',
     qrColor: '#004761',
     bgColor: '#ffffff',
-    qrSize: 180,
+    qrSize: 150,
     dotType: 'rounded',
     bottomText: 'Driver Certification',
-    textSize: 14,
+    textSize: 12,
     textColor: '#004761',
     fontFamily: 'Inter, sans-serif',
     fontWeight: 'normal'
   };
 
-  private apiUrl: string = 'https://your-api-url.com'; // Replace with your API URL
-
-  constructor(private http: HttpClient, private driverCertificationService: DriverCertificationService) { }
+  constructor(
+    private driverCertificationService: DriverCertificationService
+  ) { }
 
   ngOnInit(): void {
     this.subs = new Subscription();
@@ -52,7 +52,9 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Cleanup
+    if (this.subs) {
+      this.subs.unsubscribe();
+    }
   }
 
   loadCertification(): void {
@@ -64,23 +66,25 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.error = null;
 
-    this.subs.add(this.driverCertificationService.getDriverCertificationByCertificationId(this.certificationId).subscribe({
-      next: (value) => {
-        this.certification = value.data;
-        this.isLoading = false;
-        this.updateQRCode();
-      }, error: (err) => {
-        console.error('Error loading certification:', err);
-        this.isLoading = false;
-        this.error = 'Failed to load certification details. Please try again.';
-      }
-    }));
+    this.subs.add(
+      this.driverCertificationService.getDriverCertificationByCertificationId(this.certificationId).subscribe({
+        next: (value) => {
+          this.certification = value.data;
+          this.isLoading = false;
+          this.updateQRCode();
+        },
+        error: (err) => {
+          console.error('Error loading certification:', err);
+          this.isLoading = false;
+          this.error = err.error?.message || 'Failed to load certification details. Please try again.';
+        }
+      })
+    );
   }
 
   private updateQRCode(): void {
     if (!this.certification) return;
 
-    // Create QR data with certification info
     const qrData = {
       certification_id: this.certification.certification_id,
       driver_id: this.certification.driver_id,
@@ -98,14 +102,48 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     };
 
     this.certificationDetailsId = {
-      certification_id: this.certification.certification_id,
-    }
+      ...this.qrConfig,
+      certification_id: this.certification.certification_id
+    };
+  }
+
+  // ============ EXPIRY HELPERS ============
+
+  isExpired(): boolean {
+    if (!this.certification) return false;
+    const expiryDate = new Date(this.certification.expiry_date);
+    return expiryDate < new Date();
+  }
+
+  isExpiringSoon(): boolean {
+    if (!this.certification) return false;
+    const days = this.getDaysUntilExpiry(this.certification.expiry_date);
+    return days !== null && days <= 30 && days > 0;
+  }
+
+  getDaysUntilExpiry(dateString: string): number | null {
+    if (!dateString) return null;
+    const expiry = new Date(dateString);
+    const today = new Date();
+    const diffTime = expiry.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
+
+  getExpiryProgress(): number {
+    if (!this.certification) return 0;
+    const expiry = new Date(this.certification.expiry_date);
+    const today = new Date();
+    const totalDays = 365;
+    const daysLeft = this.getDaysUntilExpiry(this.certification.expiry_date) || 0;
+    const progress = ((totalDays - daysLeft) / totalDays) * 100;
+    return Math.min(Math.max(progress, 0), 100);
   }
 
   // ============ DOWNLOAD METHODS ============
 
   async downloadPDF(): Promise<void> {
-    const element = document.querySelector('.certification-card') as HTMLElement;
+    const element = this.certificationCard?.nativeElement;
     if (!element) return;
 
     try {
@@ -138,7 +176,7 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
   }
 
   printCertification(): void {
-    const element = document.querySelector('.certification-card') as HTMLElement;
+    const element = this.certificationCard?.nativeElement;
     if (!element) return;
 
     const printWindow = window.open('', '_blank', 'width=800,height=600');
@@ -147,6 +185,10 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const styles = Array.from(document.querySelectorAll('style'))
+      .map(style => style.innerHTML)
+      .join('');
+
     const html = `
       <!DOCTYPE html>
       <html>
@@ -154,28 +196,17 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
           <title>Driver Certification</title>
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
           <style>
-            body {
-              margin: 0;
-              padding: 20px;
-              font-family: Arial, sans-serif;
-              background: #ffffff;
-            }
-            .print-container {
-              max-width: 900px;
-              margin: 0 auto;
-            }
-            ${document.querySelector('style')?.innerHTML}
+            body { margin: 0; padding: 20px; background: #ffffff; font-family: Arial, sans-serif; }
+            .print-container { max-width: 900px; margin: 0 auto; }
+            ${styles}
+            .certification-card { box-shadow: none !important; border: 2px solid #004761 !important; }
+            .btn-download, .btn-print { display: none !important; }
           </style>
         </head>
         <body>
-          <div class="print-container">
-            ${element.outerHTML}
-          </div>
+          <div class="print-container">${element.outerHTML}</div>
           <script>
-            window.onload = function() {
-              window.print();
-              window.close();
-            };
+            window.onload = function() { window.print(); window.close(); };
           <\/script>
         </body>
       </html>
@@ -185,16 +216,12 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     printWindow.document.close();
   }
 
-  // ============ PUBLIC METHODS ============
-
-  setCertificationId(id: string): void {
-    this.certificationId = id;
-    if (this.autoLoad) {
-      this.loadCertification();
-    }
-  }
-
   refresh(): void {
     this.loadCertification();
+  }
+
+  getDaysUntilExpirySafe(dateString: string): number {
+    const days = this.getDaysUntilExpiry(dateString);
+    return days !== null ? days : 0;
   }
 }

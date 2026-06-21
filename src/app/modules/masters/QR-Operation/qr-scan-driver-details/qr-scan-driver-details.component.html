@@ -25,6 +25,10 @@
                     <span class="status-dot active"></span>
                     <span class="status-text">Connected</span>
                 </div>
+                <button class="btn-rescan" (click)="rescan()" *ngIf="certificationId">
+                    <i class="fa fa-qrcode"></i>
+                    Rescan
+                </button>
             </div>
         </div>
     </div>
@@ -32,7 +36,7 @@
     <!-- Main Content -->
     <div class="page-content">
         <!-- Scan Section -->
-        <div class="scan-section" [class.scanned]="certificationId">
+        <div class="scan-section" [class.scanned]="certificationId" *ngIf="!certificationId">
             <div class="scan-card">
                 <div class="scan-card-content">
                     <div class="scan-icon-wrapper">

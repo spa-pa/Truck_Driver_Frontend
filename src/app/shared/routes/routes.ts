@@ -93,7 +93,20 @@ const mastersData: Routes = [
         },
         loadComponent: () => import('../../modules/masters/QR-Operation/qr-scan-driver-details/qr-scan-driver-details.component').then(r => r.QRScanDriverDetailsComponent),
         // canActivate: [PermissionGuard]
+    },
+    {
+        path: 'qr-code-config',
+        data: {
+            title: "QR Code Config",
+            breadcrumb: "QR Code Config",
+            pageId: 2
+        },
+        loadComponent: () => import('../../modules/masters/QR-Operation/qr-code/qr-editor/qr-editor.component').then(r => r.QREditorComponent),
+        // canActivate: [PermissionGuard]
     }
+
+
+
 
 ]
 

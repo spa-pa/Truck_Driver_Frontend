@@ -11,7 +11,7 @@ import { QRScannerModalComponent } from '@shared/component/header/qr/qr-scanner-
 })
 export class QRScanDriverDetailsComponent {
   @ViewChild('certification') certificationComponent!: DriverCertificationComponent;
-  
+  @ViewChild('qrScannerModal') qrScannerModal!: QRScannerModalComponent;
   certificationId: string = '';
 
   onScanComplete(data: any): void {
@@ -20,7 +20,7 @@ export class QRScanDriverDetailsComponent {
     // Check if scanned data has certification_id
     if (data.parsed && data.parsed.certification_id) {
       this.certificationId = data.parsed.certification_id;
-      
+
       // Scroll to certification section
       setTimeout(() => {
         const element = document.querySelector('.certification-section');
@@ -41,5 +41,39 @@ export class QRScanDriverDetailsComponent {
     this.certificationId = '';
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /**
+   * Rescan - Clear current certification and open scanner
+   */
+  rescan(): void {
+    // Clear current certification
+    this.certificationId = '';
+
+    // Clear the certification component
+    if (this.certificationComponent) {
+      this.certificationComponent.certification = null;
+      this.certificationComponent.error = null;
+      this.certificationComponent.isLoading = false;
+    }
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Open scanner modal
+    if (this.qrScannerModal) {
+      setTimeout(() => {
+        this.qrScannerModal.openModal();
+      }, 300);
+    }
+  }
+
+  /**
+   * Open QR Scanner Modal
+   */
+  openQRModal(): void {
+    if (this.qrScannerModal) {
+      this.qrScannerModal.openModal();
+    }
   }
 }
