@@ -1,0 +1,406 @@
+// src/app/components/qr-viewer-modal/qr-viewer-modal.component.scss
+
+$primary: #004761;
+$white: #ffffff;
+$light-bg: #f8f9fa;
+$border-color: rgba($primary, 0.1);
+$text-secondary: rgba($primary, 0.7);
+$shadow: 0 20px 60px rgba($primary, 0.15);
+
+// ============ MODAL STYLES ============
+
+.modal-content {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    max-height: 90vh;
+
+    .modern-header {
+        padding: 20px 28px;
+        background: $white;
+        border-bottom: 2px solid $border-color;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+            .header-icon {
+                width: 42px;
+                height: 42px;
+                background: rgba($primary, 0.08);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                i {
+                    font-size: 22px;
+                    color: $primary;
+                }
+            }
+
+            .header-text {
+                .modal-title {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: $primary;
+                    margin: 0;
+                    letter-spacing: -0.3px;
+                }
+
+                .header-subtitle {
+                    font-size: 13px;
+                    color: $text-secondary;
+                    margin: 0;
+                    margin-top: 2px;
+
+                    strong {
+                        color: $primary;
+                    }
+                }
+            }
+        }
+
+        .close-btn {
+            width: 38px;
+            height: 38px;
+            border: none;
+            border-radius: 50%;
+            background: rgba($primary, 0.06);
+            color: $text-secondary;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            i {
+                font-size: 18px;
+            }
+
+            &:hover {
+                background: rgba($primary, 0.12);
+                color: $primary;
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    .modal-body {
+        padding: 28px;
+        background: $light-bg;
+        max-height: calc(90vh - 150px);
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: $border-color;
+            border-radius: 4px;
+        }
+    }
+
+    .modern-footer {
+        padding: 14px 28px;
+        background: $white;
+        border-top: 2px solid $border-color;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .footer-left {
+            .footer-text {
+                font-size: 13px;
+                color: $text-secondary;
+
+                i {
+                    margin-right: 6px;
+                    color: $primary;
+                }
+            }
+        }
+
+        .footer-right {
+            .btn-close-modal {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 20px;
+                border: none;
+                border-radius: 10px;
+                background: rgba($primary, 0.06);
+                color: $text-secondary;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.25s ease;
+
+                i {
+                    font-size: 14px;
+                }
+
+                &:hover {
+                    background: rgba($primary, 0.12);
+                    color: $primary;
+                }
+            }
+        }
+    }
+}
+
+// ============ QR VIEWER CONTAINER ============
+.qr-viewer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+
+    .qr-display-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+        .qr-card {
+            background: $white;
+            border-radius: 20px;
+            padding: 32px;
+            border: 2px solid $border-color;
+            box-shadow: $shadow;
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 24px 72px rgba($primary, 0.12);
+            }
+
+            app-qr-display {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+
+    .download-section {
+        width: 100%;
+        max-width: 500px;
+
+        .download-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: $primary;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            i {
+                font-size: 16px;
+            }
+        }
+
+        .download-options {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+
+            .btn-download {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                padding: 10px 6px;
+                border: none;
+                border-radius: 10px;
+                font-size: 11px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.25s ease;
+                color: $white;
+
+                i {
+                    font-size: 14px;
+                }
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                }
+
+                &:active {
+                    transform: translateY(0);
+                }
+
+                &.png {
+                    background: #004761;
+                }
+
+                &.jpg {
+                    background: #e65100;
+                }
+
+                &.pdf {
+                    background: #c62828;
+                }
+
+                &.svg {
+                    background: #f57c00;
+                }
+
+                &.print {
+                    background: #2e7d32;
+                }
+
+                &.copy {
+                    background: #1565c0;
+                }
+            }
+
+            @media (max-width: 768px) {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            @media (max-width: 480px) {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    }
+
+    .qr-info {
+        width: 100%;
+        max-width: 500px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 16px;
+        background: $white;
+        border-radius: 12px;
+        border: 2px solid $border-color;
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+
+            .info-label {
+                font-size: 11px;
+                font-weight: 500;
+                color: $text-secondary;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .info-value {
+                font-size: 14px;
+                font-weight: 600;
+                color: $primary;
+            }
+        }
+
+        @media (max-width: 480px) {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+    }
+
+    .response-card {
+        width: 100%;
+        max-width: 500px;
+        background: rgba($primary, 0.02);
+        border-radius: 12px;
+        border: 2px solid $border-color;
+        overflow: hidden;
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: $white;
+            border-bottom: 2px solid $border-color;
+
+            h6 {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                color: $primary;
+                margin: 0;
+
+                i {
+                    font-size: 14px;
+                }
+            }
+
+            .status-badge {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 11px;
+                font-weight: 500;
+                color: $text-secondary;
+
+                .status-dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: #4caf50;
+                    animation: pulse 2s infinite;
+                }
+            }
+        }
+
+        .response-content {
+            padding: 12px 16px;
+            overflow-x: auto;
+
+            pre {
+                font-family: 'Courier New', monospace;
+                font-size: 12px;
+                color: $primary;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                margin: 0;
+                line-height: 1.6;
+            }
+        }
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+// ============ GLOBAL MODAL STYLES ============
+::ng-deep .qr-viewer-modal-window .modal-dialog {
+    max-width: 700px;
+    margin: 20px auto;
+
+    @media (max-width: 768px) {
+        max-width: 95%;
+        margin: 10px auto;
+    }
+}
+
+::ng-deep .qr-viewer-modal-window .modal-content {
+    border-radius: 20px;
+}

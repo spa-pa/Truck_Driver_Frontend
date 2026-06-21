@@ -16,22 +16,22 @@ export class LanguageService {
     }
 
     getAllLanguages(): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}languageMaster/getAllLanguages`);
+        return this.httpClient.get(`${this.baseUrl}languageMaster`);
     }
 
     getByLanguageId(id: any): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}languageMaster/getLanguageById/${id}`);
+        return this.httpClient.get(`${this.baseUrl}languageMaster/${id}`);
     }
 
     createLanguage(payload: any): Observable<any> {
-        return this.httpClient.post(`${this.baseUrl}languageMaster/createLanguage/`, payload);
+        return this.httpClient.post(`${this.baseUrl}languageMaster/`, payload);
     }
 
     updateLanguage(payload: any, id: any): Observable<any> {
-        return this.httpClient.put(`${this.baseUrl}languageMaster/updateLanguage/${id}`, payload);
+        return this.httpClient.put(`${this.baseUrl}languageMaster/${id}`, payload);
     }
 
     deleteLanguage(id: any): Observable<any> {
-        return this.httpClient.delete(`${this.baseUrl}languageMaster/deleteLanguage/${id}`);
+        return this.httpClient.delete(`${this.baseUrl}languageMaster/${id}`);
     }
 }

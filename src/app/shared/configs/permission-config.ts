@@ -48,7 +48,7 @@ export const RoleDetails: RowData = {
     "headers": [
         { label: "SR.NO", key: "SR.NO", type: 'autoIncrementNumber', size: '1rem' },
         // { label: "ID", key: "role_id", type: '',size: '2rem' }, 
-        { label: "Role Name", key: "roleName", type: '', size: '13rem' },
+        { label: "Role Name", key: "role", type: '', size: '13rem' },
         // { label: "Action", type: "button", key: "delete" }
         { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }
     ],
@@ -87,7 +87,7 @@ export const PagePermissionDetails: RowData = {
 
 export const RoleFormGroup: IFormStructure[] = [
     {
-        name: "roleId",
+        name: "role_id",
         label: "Role ID",
         placeholder: "Role ID",
         type: "text",
@@ -96,7 +96,7 @@ export const RoleFormGroup: IFormStructure[] = [
         hiddenControl: true,
     },
     {
-        name: "roleName",
+        name: "role",
         label: "Role",
         placeholder: "Role",
         type: "text",
@@ -106,13 +106,13 @@ export const RoleFormGroup: IFormStructure[] = [
         colsize: "col-6"
     },
     {
-        name: "menuId",
+        name: "menu_id",
         label: "Based On",
         placeholder: "Based On",
         type: "select",
         value: "",
-        bindValue: 'menuId',
-        bindLabel: 'menu',
+        bindValue: 'menu_id',
+        bindLabel: 'menu_id',
         listName: 'menu-set',
         required: true,
         disable: false,

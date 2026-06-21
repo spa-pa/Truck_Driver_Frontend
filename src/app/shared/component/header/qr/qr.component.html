@@ -1,3 +1,8 @@
-<a class="custom-qr">
+<a href="javascript:void(0)" class="custom-qr" (click)="openQRModal()">
    <i class="fa fa-qrcode"></i>
 </a>
+
+<!-- <app-qr-modal #qrModal></app-qr-modal> -->
+
+<!-- Add the modal component -->
+<app-qr-viewer-modal #qrModal [terminalId]="terminalId" [qrData]="qrDataString"></app-qr-viewer-modal>

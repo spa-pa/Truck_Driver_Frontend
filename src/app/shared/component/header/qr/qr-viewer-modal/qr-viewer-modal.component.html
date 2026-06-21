@@ -1,0 +1,111 @@
+<!-- Modal Template -->
+<ng-template #qrModal let-modal>
+    <div class="modal-content border-0 shadow-lg rounded-4">
+        <!-- Modal Header -->
+        <div class="modal-header modern-header">
+            <div class="header-content">
+                <div class="header-icon">
+                    <i class="fa fa-qrcode"></i>
+                </div>
+                <div class="header-text">
+                    <h5 class="modal-title">QR Code</h5>
+                    <p class="header-subtitle">Terminal ID: <strong>{{ config.terminalId || 'N/A' }}</strong></p>
+                </div>
+            </div>
+            <button class="close-btn" (click)="closeModal()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body - Only QR Code and Download Options -->
+        <div class="modal-body p-4">
+            <div class="qr-viewer-container">
+                <!-- QR Code Display -->
+                <div class="qr-display-wrapper">
+                    <div class="qr-card">
+                        <app-qr-display #qrDisplay [config]="config" size="large" [showText]="true"></app-qr-display>
+                    </div>
+                </div>
+
+                <!-- Download Options -->
+                <div class="download-section">
+                    <h6 class="download-title">
+                        <i class="fa fa-download"></i>
+                        Download Options
+                    </h6>
+                    <div class="download-options">
+                        <button class="btn-download png" (click)="downloadPNG()" title="Download as PNG">
+                            <i class="fa fa-file-image-o"></i>
+                            PNG
+                        </button>
+                        <button class="btn-download jpg" (click)="downloadJPG()" title="Download as JPG">
+                            <i class="fa fa-file-image-o"></i>
+                            JPG
+                        </button>
+                        <button class="btn-download pdf" (click)="downloadPDF()" title="Download as PDF">
+                            <i class="fa fa-file-pdf-o"></i>
+                            PDF
+                        </button>
+                        <button class="btn-download svg" (click)="downloadSVG()" title="Download as SVG">
+                            <i class="fa fa-file-code-o"></i>
+                            SVG
+                        </button>
+                        <button class="btn-download print" (click)="printQR()" title="Print QR Code">
+                            <i class="fa fa-print"></i>
+                            Print
+                        </button>
+                        <button class="btn-download copy" (click)="copyQR()" title="Copy to Clipboard">
+                            <i class="fa fa-clipboard"></i>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+
+                <!-- QR Info -->
+                <!-- <div class="qr-info">
+                    <div class="info-item">
+                        <span class="info-label">Terminal ID</span>
+                        <span class="info-value">{{ config.terminalId || 'N/A' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Generated</span>
+                        <span class="info-value">{{ config.createdAt || (currentDate | date:'medium') }}</span>
+                    </div>
+                </div> -->
+
+                <!-- Response Display -->
+                <!-- <div class="response-card" *ngIf="response">
+                    <div class="response-header">
+                        <h6>
+                            <i class="fa fa-server"></i>
+                            Backend Response
+                        </h6>
+                        <span class="status-badge">
+                            <span class="status-dot"></span>
+                            Active
+                        </span>
+                    </div>
+                    <div class="response-content">
+                        <pre>{{ getResponseJSON() }}</pre>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer modern-footer">
+            <div class="footer-left">
+                <span class="footer-text">
+                    <i class="fa fa-info-circle"></i>
+                    Scan to connect
+                </span>
+            </div>
+            <div class="footer-right">
+                <button class="btn-close-modal" (click)="closeModal()">
+                    <i class="fa fa-times"></i>
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

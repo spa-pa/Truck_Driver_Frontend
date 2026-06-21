@@ -1,0 +1,676 @@
+// src/app/components/qr-modal/qr-modal.component.scss
+
+$primary: #004761;
+$white: #ffffff;
+$light-bg: #f8f9fa;
+$border-color: rgba($primary, 0.1);
+$text-secondary: rgba($primary, 0.7);
+$shadow: 0 20px 60px rgba($primary, 0.15);
+
+// ============ MODAL STYLES ============
+:host {
+    display: inline;
+}
+
+.custom-qr {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    background: $primary;
+    color: $white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+
+    i {
+        font-size: 18px;
+    }
+
+    &:hover {
+        background: darken($primary, 5%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($primary, 0.3);
+        color: $white;
+        text-decoration: none;
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// ============ MODAL CONTENT ============
+.modal-content {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    max-height: 90vh;
+
+    .modern-header {
+        padding: 20px 28px;
+        background: $white;
+        border-bottom: 2px solid $border-color;
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+            .header-icon {
+                width: 42px;
+                height: 42px;
+                background: rgba($primary, 0.08);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                i {
+                    font-size: 22px;
+                    color: $primary;
+                }
+            }
+
+            .header-text {
+                .modal-title {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: $primary;
+                    margin: 0;
+                    letter-spacing: -0.3px;
+                }
+
+                .header-subtitle {
+                    font-size: 13px;
+                    color: $text-secondary;
+                    margin: 0;
+                    margin-top: 2px;
+                }
+            }
+        }
+
+        .close-btn {
+            width: 38px;
+            height: 38px;
+            border: none;
+            border-radius: 50%;
+            background: rgba($primary, 0.06);
+            color: $text-secondary;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            i {
+                font-size: 18px;
+            }
+
+            &:hover {
+                background: rgba($primary, 0.12);
+                color: $primary;
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    .modal-body {
+        padding: 24px 28px;
+        background: $light-bg;
+        max-height: calc(90vh - 150px);
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: $border-color;
+            border-radius: 4px;
+        }
+    }
+
+    .modern-footer {
+        padding: 16px 28px;
+        background: $white;
+        border-top: 2px solid $border-color;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .footer-left {
+            display: flex;
+            gap: 10px;
+
+            button {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 10px;
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.25s ease;
+
+                i {
+                    font-size: 14px;
+                }
+
+                &:hover {
+                    transform: translateY(-1px);
+                }
+            }
+
+            .btn-reset {
+                background: rgba($primary, 0.06);
+                color: $text-secondary;
+
+                &:hover {
+                    background: rgba($primary, 0.12);
+                }
+            }
+
+            .btn-export {
+                background: rgba($primary, 0.08);
+                color: $primary;
+
+                &:hover {
+                    background: rgba($primary, 0.15);
+                }
+            }
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 10px;
+
+            button {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 20px;
+                border: none;
+                border-radius: 10px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.25s ease;
+
+                i {
+                    font-size: 14px;
+                }
+
+                &:hover {
+                    transform: translateY(-1px);
+                }
+            }
+
+            .btn-cancel {
+                background: rgba($primary, 0.06);
+                color: $text-secondary;
+
+                &:hover {
+                    background: rgba($primary, 0.12);
+                }
+            }
+
+            .btn-apply {
+                background: $primary;
+                color: $white;
+
+                &:hover {
+                    box-shadow: 0 4px 16px rgba($primary, 0.3);
+                }
+            }
+        }
+    }
+}
+
+// ============ QR MODAL GRID ============
+.qr-modal-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 24px;
+
+    @media (max-width: 992px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// ============ CONTROLS ============
+.qr-controls {
+    background: $white;
+    border-radius: 16px;
+    padding: 20px;
+    border: 2px solid $border-color;
+
+    .control-group {
+        margin-bottom: 16px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: $text-secondary;
+            margin-bottom: 6px;
+
+            i {
+                font-size: 14px;
+                width: 16px;
+            }
+        }
+
+        .control-input,
+        .control-select,
+        .control-textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid $border-color;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: $primary;
+            background: $white;
+            transition: all 0.25s ease;
+
+            &:focus {
+                outline: none;
+                border-color: $primary;
+                box-shadow: 0 0 0 4px rgba($primary, 0.06);
+            }
+
+            &::placeholder {
+                color: rgba($primary, 0.3);
+            }
+        }
+
+        .control-textarea {
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            min-height: 60px;
+        }
+
+        .textarea-wrapper {
+            position: relative;
+
+            .btn-format {
+                position: absolute;
+                bottom: 6px;
+                right: 6px;
+                padding: 4px 10px;
+                background: $primary;
+                color: $white;
+                border: none;
+                border-radius: 6px;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                opacity: 0.7;
+
+                i {
+                    font-size: 14px;
+                }
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .color-group {
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: $white;
+            border: 2px solid $border-color;
+            border-radius: 10px;
+            padding: 3px 10px 3px 3px;
+            transition: all 0.25s ease;
+
+            &:focus-within {
+                border-color: $primary;
+                box-shadow: 0 0 0 4px rgba($primary, 0.06);
+            }
+
+            .color-picker {
+                width: 36px;
+                height: 36px;
+                border: none;
+                padding: 2px;
+                cursor: pointer;
+                background: none;
+                border-radius: 6px;
+
+                &::-webkit-color-swatch-wrapper {
+                    padding: 0;
+                }
+
+                &::-webkit-color-swatch {
+                    border: 2px solid $border-color;
+                    border-radius: 6px;
+                }
+            }
+
+            .color-hex {
+                font-size: 12px;
+                font-weight: 500;
+                color: $primary;
+                font-family: 'Courier New', monospace;
+            }
+        }
+    }
+
+    .range-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .control-range {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            background: $border-color;
+            border-radius: 4px;
+            outline: none;
+
+            &::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: $primary;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    transform: scale(1.1);
+                }
+            }
+
+            &::-moz-range-thumb {
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: $primary;
+                cursor: pointer;
+                border: none;
+            }
+        }
+
+        .range-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: $primary;
+            min-width: 45px;
+            text-align: right;
+        }
+    }
+
+    .logo-upload-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .control-file {
+            display: none;
+        }
+
+        .btn-upload {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: $white;
+            border: 2px dashed $border-color;
+            border-radius: 10px;
+            color: $text-secondary;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+
+            i {
+                font-size: 14px;
+            }
+
+            &:hover {
+                border-color: $primary;
+                color: $primary;
+            }
+        }
+
+        .btn-remove-logo {
+            width: 30px;
+            height: 30px;
+            border: 2px solid $border-color;
+            border-radius: 50%;
+            background: $white;
+            color: $text-secondary;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+
+            i {
+                font-size: 12px;
+            }
+
+            &:hover {
+                border-color: #d32f2f;
+                color: #d32f2f;
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    .logo-preview {
+        margin-top: 8px;
+
+        img {
+            max-width: 50px;
+            max-height: 50px;
+            border-radius: 8px;
+            border: 2px solid $border-color;
+            padding: 4px;
+            object-fit: contain;
+        }
+    }
+}
+
+// ============ PREVIEW ============
+.qr-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .preview-card {
+        background: $white;
+        border-radius: 16px;
+        padding: 20px;
+        border: 2px solid $border-color;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 320px;
+
+        app-qr-display {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+    }
+
+    .download-options {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 8px;
+
+        .btn-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px 6px;
+            border: none;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: $white;
+
+            i {
+                font-size: 14px;
+            }
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            &.png {
+                background: #004761;
+            }
+
+            &.jpg {
+                background: #e65100;
+            }
+
+            &.pdf {
+                background: #c62828;
+            }
+
+            &.svg {
+                background: #f57c00;
+            }
+
+            &.print {
+                background: #2e7d32;
+            }
+
+            &.copy {
+                background: #1565c0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (max-width: 480px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .response-card {
+        background: rgba($primary, 0.02);
+        border-radius: 12px;
+        border: 2px solid $border-color;
+        overflow: hidden;
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: $white;
+            border-bottom: 2px solid $border-color;
+
+            h6 {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                color: $primary;
+                margin: 0;
+
+                i {
+                    font-size: 14px;
+                }
+            }
+
+            .status-badge {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 11px;
+                font-weight: 500;
+                color: $text-secondary;
+
+                .status-dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: #4caf50;
+                    animation: pulse 2s infinite;
+                }
+            }
+        }
+
+        .response-content {
+            padding: 12px 16px;
+            overflow-x: auto;
+
+            pre {
+                font-family: 'Courier New', monospace;
+                font-size: 12px;
+                color: $primary;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                margin: 0;
+                line-height: 1.6;
+            }
+        }
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+// ============ GLOBAL MODAL STYLES ============
+::ng-deep .qr-modal-window .modal-dialog {
+    max-width: 1200px;
+    margin: 20px auto;
+
+    @media (max-width: 992px) {
+        max-width: 95%;
+        margin: 10px auto;
+    }
+}
+
+::ng-deep .qr-modal-window .modal-content {
+    border-radius: 20px;
+}
