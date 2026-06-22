@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import { DriverCertificationComponent } from '@modules/masters/driver-certification/driver-certification.component';
+import { DriverCertificationComponent } from '@modules/masters/driver/driver-certification/driver-certification.component';
 import { QRScannerModalComponent } from '@shared/component/header/qr/qr-scanner-modal/qr-scanner-modal.component';
 
 @Component({

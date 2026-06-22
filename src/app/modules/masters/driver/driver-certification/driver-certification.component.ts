@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { DriverCertification } from '@shared/models/driver-certification.model';
-import { QRDisplayComponent } from '../QR-Operation/qr-code/qr-display/qr-display.component';
+import { QRDisplayComponent } from '../../QR-Operation/qr-code/qr-display/qr-display.component';
 import { Subscription } from 'rxjs';
 import { DriverCertificationService } from '@shared/_http/driver-certification.service';
 

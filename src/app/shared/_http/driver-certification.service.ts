@@ -31,7 +31,7 @@ export class DriverCertificationService {
      * @returns Observable containing role data
      */
     getDriverCertificationByCertificationId(id: any): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}driverCertification/certification/1781968993303280`);
+        return this.httpClient.get(`${this.baseUrl}driverCertification/certification/${id}`);
     }
 
     /**
