@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TerminalService } from '@shared/_http/terminal.service';
-import { TableComponent } from '@shared/component/table/table.component';
 import { TerminalDetailsData } from '@shared/configs/terminal-config';
 import { RowData } from '@shared/models/table';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-terminal',
-  imports: [TableComponent],
   templateUrl: './terminal.component.html',
-  styleUrl: './terminal.component.scss'
+  styleUrl: './terminal.component.scss',
+  standalone: false
 })
 export class TerminalComponent {
   TerminalDetailsData: RowData = TerminalDetailsData;

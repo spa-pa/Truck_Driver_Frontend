@@ -8,7 +8,7 @@ import { LanguageRoutingModule } from './language-routing.module';
   declarations: [],
   imports: [
     CommonModule,
-    LanguageRoutingModule
+    LanguageRoutingModule,
   ]
 })
 export class LanguageModule { }
