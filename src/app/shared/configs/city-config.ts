@@ -6,7 +6,7 @@ export const CityDetailsData: RowData = {
     { label: "City  Name", key: "city_name", type: '' },
     // { label: "State", key: "stateName", type: '' },
     // { label: "Country", key: "countryName", type: '' },
-    { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }],
+    { label: "Action", key: "action", type: 'action', size: '10%', buttonNames: ['edit', 'view', 'delete'] }],
     "data": [],
     "dataKey": 'city_id',
     "buttonname": 'Create city ',
