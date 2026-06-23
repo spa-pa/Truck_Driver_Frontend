@@ -5,9 +5,9 @@ import { currentUser } from "@shared/utils/current-user";
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
-export class LanguageService {
+export class ApiLanguageService {
 
     private baseUrl: string
 

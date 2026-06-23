@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LanguageService } from '@shared/_http/language.service';
+import { ApiLanguageService } from '@shared/_http/language.service';
 import { TableComponent } from '@shared/component/table/table.component';
 import { LanguageDetailsData } from '@shared/configs/language-config';
 import { RowData } from '@shared/models/table';
@@ -16,7 +16,7 @@ export class LanguageComponent {
   LanguageDetailsData: RowData = LanguageDetailsData;
   subs: any;
 
-  constructor(private router: Router, private languageService: LanguageService) { }
+  constructor(private router: Router, private languageService: ApiLanguageService) { }
 
 
   ngOnInit(): void {

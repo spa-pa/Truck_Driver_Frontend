@@ -5,14 +5,16 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { LanguageService } from '@shared/_http/language.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ApiLanguageService } from '@shared/_http/language.service';
 import { VideoService } from '@shared/_http/video.service';
 import { QuestionsService } from '@shared/_http/questions.service';
+import { LanguageService } from '@shared/services/language.service';
 
 interface Language {
-  code: string;
-  name: string;
-  language_id?: number;
+  language_code: string;
+  language_name: string;
+  language_id: number;
 }
 
 interface VideoData {
@@ -106,7 +108,11 @@ interface QuizResult {
 @Component({
   selector: 'app-training',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule // ✅ Added TranslateModule
+  ],
   templateUrl: './training.component.html',
   styleUrls: ['./training.component.scss']
 })
@@ -114,12 +120,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
 
   // Languages
-  languages: Language[] = [
-    { code: 'en', name: 'English', language_id: 1 },
-    { code: 'hi', name: 'Hindi', language_id: 2 },
-    { code: 'mr', name: 'Marathi', language_id: 3 },
-    { code: 'gu', name: 'Gujarati', language_id: 4 }
-  ];
+  languages: Language[] = [];
 
   // State
   languageSelected: boolean = false;
@@ -132,8 +133,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
   videoProgress: number = 0;
 
   // Data
-  selectedLanguage: string = '';
+  selectedLanguage: number = 0;
   selectedLanguageId: number = 1;
+  selectedLanguageCode: string = 'en';
   videoUrl: string = '';
   questions: MappedQuestion[] = [];
   quizResult: QuizResult | null = null;
@@ -150,11 +152,18 @@ export class TrainingComponent implements OnInit, OnDestroy {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private languageService: LanguageService,
+    private apiLanguageService: ApiLanguageService,
     private videoService: VideoService,
-    private questionsService: QuestionsService
-  ) { }
+    private questionsService: QuestionsService,
+    private translate: TranslateService
+  ) {
+    // Set default language
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
+  }
 
   ngOnInit(): void {
+    this.getAllLanguage();
     this.initRegistrationForm();
   }
 
@@ -165,6 +174,18 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // ============================================
   // FORM INITIALIZATION
   // ============================================
+
+  getAllLanguage() {
+    this.subscriptions.add(this.apiLanguageService.getAllLanguages().subscribe({
+      next: (value) => {
+        this.languages = value.data;
+      },
+      error: (err) => {
+        console.error('Error loading languages:', err);
+      }
+    }));
+  }
+
   private initRegistrationForm(): void {
     this.registrationForm = this.fb.group({
       driver_name: ['', [Validators.required, Validators.minLength(3)]],
@@ -196,7 +217,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.showQuiz = false;
     this.showResultModal = false;
     this.videoProgress = 0;
-    this.selectedLanguage = '';
+    this.selectedLanguage = 0;
     this.selectedLanguageId = 1;
     this.questions = [];
     this.quizResult = null;
@@ -213,15 +234,35 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // ============================================
   // LANGUAGE SELECTION
   // ============================================
-  selectLanguage(code: string): void {
-    const selectedLang = this.languages.find(l => l.code === code);
+  selectLanguage(languageId: number): void {
+    const selectedLang = this.languages.find(l => l.language_id === languageId);
     if (selectedLang) {
-      this.selectedLanguage = code;
+      this.selectedLanguage = languageId;
       this.selectedLanguageId = selectedLang.language_id || 1;
+
+      // Set language for ngx-translate
+      const langCode = this.getLanguageCode(selectedLang.language_name);
+      this.selectedLanguageCode = langCode;
+      this.languageService.setLanguage(langCode);
+
+      debugger
       this.languageSelected = true;
       this.showRegistration = true;
       this.loadTrainingContent(selectedLang.language_id || 1);
     }
+  }
+
+  private getLanguageCode(languageName: string): string {
+    const map: { [key: string]: string } = {
+      'english': 'en',
+      'hindi': 'hi',
+      'marathi': 'mr',
+      'gujarati': 'gu',
+      "tamil": "ta",
+      "telugu": "te"
+    };
+
+    return map[languageName?.toLowerCase()] || 'en';
   }
 
   private loadTrainingContent(languageId: number): void {
@@ -231,26 +272,23 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.videoService.getVideoByLanguageId(languageId).subscribe({
         next: (response: any) => {
-
           if (response && response.data) {
             const video = response.data;
-            // Check if path is already a full URL or needs to be constructed
             if (video.path) {
               // Use the path directly from the response
-              this.videoUrl = response.data.path || video.path;
-              if (!this.videoUrl.startsWith('http://') && !this.videoUrl.startsWith('https://')) {
-                this.videoUrl
-                // If it's a relative path, construct the full URL
-                this.videoUrl = `${video.path}`;
-              }
+              // this.videoUrl = response.data.path || video.path;
+              // if (!this.videoUrl.startsWith('http://') && !this.videoUrl.startsWith('https://')) {                // If it's a relative path, construct the full URL
+              //   this.videoUrl = `${video.path}`;
+              // }
+
+              this.videoUrl = 'http://localhost:3000/resources/video/1782118519595-330376523.mp4';
             }
           }
           this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error loading video:', err);
-          // Fallback to default video
-          this.videoUrl = 'assets/video/auth-bg.mp4';
+          this.videoUrl = 'http://localhost:3000/resources/video/1782118519595-330376523.mp4';
           this.cdr.detectChanges();
         }
       })
@@ -264,19 +302,12 @@ export class TrainingComponent implements OnInit, OnDestroy {
           if (questionRes && questionRes.length > 0) {
             this.questions = this.mapQuestions(questionRes);
             this.initQuizForm();
-          } else {
-            // Fallback to sample questions
-            // this.questions = this.getSampleQuestions();
-            // this.initQuizForm();
           }
           this.isLoading = false;
           this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error loading questions:', err);
-          // Fallback to sample questions
-          // this.questions = this.getSampleQuestions();
-          // this.initQuizForm();
           this.isLoading = false;
           this.cdr.detectChanges();
         }
@@ -381,7 +412,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
       this.showRegistration = false;
       this.showVideo = true;
       this.cdr.detectChanges();
-    }, 1500)
+    }, 1500);
   }
 
   // ============================================
@@ -427,12 +458,16 @@ export class TrainingComponent implements OnInit, OnDestroy {
     const score = Math.round((correct / this.questions.length) * 100);
     const passed = score >= 70;
 
+    // Get translated messages
+    const passedMessage = this.translate.instant('MODAL.PASSED') ||
+      'You have successfully passed the safety training! Your certificate is ready.';
+    const failedMessage = this.translate.instant('MODAL.FAILED') ||
+      'You did not meet the passing score of 70%. Please review the material and try again.';
+
     this.quizResult = {
       passed,
       score,
-      message: passed
-        ? 'You have successfully passed the safety training! Your certificate is ready.'
-        : 'You did not meet the passing score of 70%. Please review the material and try again.'
+      message: passed ? passedMessage : failedMessage
     };
 
     this.isSubmitting = false;
@@ -462,8 +497,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // CERTIFICATE
   // ============================================
   downloadCertificate(): void {
-    console.log('Downloading certificate...');
-    alert('Certificate downloaded successfully!');
+    const downloadText = this.translate.instant('MODAL.DOWNLOAD_SUCCESS') ||
+      'Certificate downloaded successfully!';
+    alert(downloadText);
   }
 
   // ============================================
@@ -481,67 +517,20 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   // ============================================
-  // SAMPLE QUESTIONS (Fallback)
+  // HELPER METHODS
   // ============================================
-  // private getSampleQuestions(): MappedQuestion[] {
-  //   return [
-  //     {
-  //       id: 1,
-  //       question_text: 'What is the first thing you should do before starting a long journey?',
-  //       option_a: 'Check the weather forecast',
-  //       option_b: 'Check tire pressure and vehicle condition',
-  //       option_c: 'Plan your route',
-  //       option_d: 'Take a nap',
-  //       correct_answer: 'B',
-  //       audio_path: null,
-  //       image_path: null,
-  //       option_images: { A: null, B: null, C: null, D: null },
-  //       option_media: { A: null, B: null, C: null, D: null }
-  //     },
-  //     {
-  //       id: 2,
-  //       question_text: 'What is the safe following distance in normal conditions?',
-  //       option_a: '1 second',
-  //       option_b: '2 seconds',
-  //       option_c: '3 seconds',
-  //       option_d: '4 seconds',
-  //       correct_answer: 'C',
-  //       audio_path: null,
-  //       image_path: null,
-  //       option_images: { A: null, B: null, C: null, D: null },
-  //       option_media: { A: null, B: null, C: null, D: null }
-  //     },
-  //     {
-  //       id: 3,
-  //       question_text: 'What should you do when driving in foggy conditions?',
-  //       option_a: 'Use high beams',
-  //       option_b: 'Use fog lights and slow down',
-  //       option_c: 'Drive faster to get out of fog',
-  //       option_d: 'Use hazard lights always',
-  //       correct_answer: 'B',
-  //       audio_path: null,
-  //       image_path: null,
-  //       option_images: { A: null, B: null, C: null, D: null },
-  //       option_media: { A: null, B: null, C: null, D: null }
-  //     },
-  //     {
-  //       id: 4,
-  //       question_text: 'What is the maximum allowed working hours for a driver in a day?',
-  //       option_a: '8 hours',
-  //       option_b: '10 hours',
-  //       option_c: '12 hours',
-  //       option_d: '14 hours',
-  //       correct_answer: 'B',
-  //       audio_path: null,
-  //       image_path: null,
-  //       option_images: { A: null, B: null, C: null, D: null },
-  //       option_media: { A: null, B: null, C: null, D: null }
-  //     }
-  //   ];
-  // }
-
   getOptionText(question: MappedQuestion, option: string): string {
     const key = 'option_' + option.toLowerCase();
     return (question as any)[key] || '';
+  }
+
+  getOptionImage(question: MappedQuestion, option: string): string | null {
+    if (!question || !option || !question.option_images) return null;
+    return question.option_images[option] || null;
+  }
+
+  // Get translated text with parameters
+  getTranslation(key: string, params?: any): string {
+    return this.translate.instant(key, params);
   }
 }

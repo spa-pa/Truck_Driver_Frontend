@@ -4,8 +4,9 @@ import { CommonModule } from '@angular/common';
 import { TrainingRoutingModule } from './training-routing.module';
 import { TrainingComponent } from './training.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LanguageService } from '@shared/_http/language.service';
+import { ApiLanguageService } from '@shared/_http/language.service';
 import { VideoService } from '@shared/_http/video.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -13,8 +14,9 @@ import { VideoService } from '@shared/_http/video.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    TranslateModule,
     TrainingRoutingModule
   ],
-  providers: [LanguageService, VideoService]
+  providers: [ApiLanguageService, VideoService]
 })
 export class TrainingModule { }
