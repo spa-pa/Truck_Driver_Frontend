@@ -844,6 +844,115 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     }
 }
 
+$primary: #004761;
+$secondary: #f25f36;
+$white: #ffffff;
+$border-color: rgba($primary, 0.1);
+$text-secondary: rgba($primary, 0.7);
+
+// ============ MODAL CONTENT ============
+.modal-content {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    max-height: 90vh;
+    background: $white;
+}
+
+// ============ MODAL HEADER ============
+.modern-header {
+    padding: 20px 28px;
+    background: $white;
+    border-bottom: 2px solid $border-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+
+        .header-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba($primary, 0.08);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            i {
+                font-size: 22px;
+                color: $primary;
+            }
+        }
+
+        .header-text {
+            .modal-title {
+                font-size: 20px;
+                font-weight: 600;
+                color: $primary;
+                margin: 0;
+                letter-spacing: -0.3px;
+            }
+
+            .header-subtitle {
+                font-size: 13px;
+                color: $text-secondary;
+                margin: 0;
+                margin-top: 2px;
+            }
+        }
+    }
+
+    .close-btn {
+        width: 38px;
+        height: 38px;
+        border: none;
+        border-radius: 50%;
+        background: rgba($primary, 0.06);
+        color: $text-secondary;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+            font-size: 18px;
+        }
+
+        &:hover {
+            background: rgba($primary, 0.12);
+            color: $primary;
+            transform: rotate(90deg);
+        }
+    }
+}
+
+// ============ MODAL BODY ============
+.modal-body {
+    padding: 24px 28px !important;
+    background: #f5f6f8;
+    max-height: calc(90vh - 150px);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $border-color;
+        border-radius: 4px;
+    }
+
+}
+
 // ============================================
 // ANIMATIONS
 // ============================================

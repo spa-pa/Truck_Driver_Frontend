@@ -22,6 +22,9 @@
         "LICENSE": "Driving License Number",
         "LICENSE_PLACEHOLDER": "Enter driving license number",
         "LICENSE_ERROR": "Driving license number is required",
+        "LICENSE_EXPIRY": "Driving License Expiry",
+        "LICENSE_EXPIRY_PLACEHOLDER": "Enter driving license Expiry Date",
+        "LICENSE_EXPIRY_ERROR": "Driving license Expiry Date is required",
         "START": "Start Training",
         "REGISTERING": "Registering..."
     },

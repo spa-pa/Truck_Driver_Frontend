@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ApiLanguageService } from '@shared/_http/language.service';
 import { VideoService } from '@shared/_http/video.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { DriverTrainingService } from '@shared/_http/driver-training.service';
 
 
 @NgModule({
@@ -17,6 +18,6 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule,
     TrainingRoutingModule
   ],
-  providers: [ApiLanguageService, VideoService]
+  providers: [ApiLanguageService, VideoService, DriverTrainingService]
 })
 export class TrainingModule { }

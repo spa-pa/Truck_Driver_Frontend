@@ -48,12 +48,12 @@
                         <label>{{ 'REGISTRATION.FULL_NAME' | translate }} <span class="required">*</span></label>
                         <div class="input-wrapper">
                             <i class="fas fa-user input-icon"></i>
-                            <input type="text" formControlName="driver_name"
+                            <input type="text" formControlName="full_name"
                                 [placeholder]="'REGISTRATION.FULL_NAME_PLACEHOLDER' | translate"
-                                [class.error]="registrationForm.get('driver_name')?.invalid && registrationForm.get('driver_name')?.touched">
+                                [class.error]="registrationForm.get('full_name')?.invalid && registrationForm.get('full_name')?.touched">
                         </div>
                         <div class="error-message"
-                            *ngIf="registrationForm.get('driver_name')?.invalid && registrationForm.get('driver_name')?.touched">
+                            *ngIf="registrationForm.get('full_name')?.invalid && registrationForm.get('full_name')?.touched">
                             {{ 'REGISTRATION.FULL_NAME_ERROR' | translate }}
                         </div>
                     </div>
@@ -73,30 +73,30 @@
                     </div>
 
                     <div class="form-group">
-                        <label>{{ 'REGISTRATION.TRUCK' | translate }} <span class="required">*</span></label>
+                        <label>{{ 'REGISTRATION.LICENSE' | translate }} <span class="required">*</span></label>
                         <div class="input-wrapper">
-                            <i class="fas fa-truck input-icon"></i>
-                            <input type="text" formControlName="truck_number"
-                                [placeholder]="'REGISTRATION.TRUCK_PLACEHOLDER' | translate"
-                                [class.error]="registrationForm.get('truck_number')?.invalid && registrationForm.get('truck_number')?.touched">
+                            <i class="fas fa-id-card input-icon"></i>
+                            <input type="text" formControlName="driving_license_number"
+                                [placeholder]="'REGISTRATION.LICENSE_PLACEHOLDER' | translate"
+                                [class.error]="registrationForm.get('driving_license_number')?.invalid && registrationForm.get('driving_license_number')?.touched">
                         </div>
                         <div class="error-message"
-                            *ngIf="registrationForm.get('truck_number')?.invalid && registrationForm.get('truck_number')?.touched">
-                            {{ 'REGISTRATION.TRUCK_ERROR' | translate }}
+                            *ngIf="registrationForm.get('driving_license_number')?.invalid && registrationForm.get('driving_license_number')?.touched">
+                            {{ 'REGISTRATION.LICENSE_ERROR' | translate }}
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>{{ 'REGISTRATION.LICENSE' | translate }} <span class="required">*</span></label>
+                        <label>{{ 'REGISTRATION.LICENSE_EXPIRY' | translate }} <span class="required">*</span></label>
                         <div class="input-wrapper">
-                            <i class="fas fa-id-card input-icon"></i>
-                            <input type="text" formControlName="driving_license"
-                                [placeholder]="'REGISTRATION.LICENSE_PLACEHOLDER' | translate"
-                                [class.error]="registrationForm.get('driving_license')?.invalid && registrationForm.get('driving_license')?.touched">
+                            <i class="fas fa-truck input-icon"></i>
+                            <input type="date" formControlName="driving_license_expiry_date"
+                                [placeholder]="'REGISTRATION.LICENSE_EXPIRY_PLACEHOLDER' | translate"
+                                [class.error]="registrationForm.get('driving_license_expiry_date')?.invalid && registrationForm.get('driving_license_expiry_date')?.touched">
                         </div>
                         <div class="error-message"
-                            *ngIf="registrationForm.get('driving_license')?.invalid && registrationForm.get('driving_license')?.touched">
-                            {{ 'REGISTRATION.LICENSE_ERROR' | translate }}
+                            *ngIf="registrationForm.get('driving_license_expiry_date')?.invalid && registrationForm.get('driving_license_expiry_date')?.touched">
+                            {{ 'REGISTRATION.LICENSE_EXPIRY_ERROR' | translate }}
                         </div>
                     </div>
                 </div>
@@ -269,3 +269,28 @@
         </div>
     </div>
 </div>
+
+
+
+<ng-template #certificationModal let-modal>
+    <div class="modal-content border-0 shadow-lg rounded-4">
+        <!-- Modal Header -->
+        <div class="modal-header modern-header">
+            <div class="header-content">
+                <div class="header-text">
+                    <h5 class="modal-title">Driver Certification</h5>
+                </div>
+            </div>
+            <button class="close-btn" (click)="closeModal()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body p-4">
+            <app-driver-certification #certification [certificationId]="certificationId" [autoLoad]="true">
+            </app-driver-certification>
+        </div>
+
+    </div>
+</ng-template>
