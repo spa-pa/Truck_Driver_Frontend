@@ -5,11 +5,11 @@ import { currentUser } from "@shared/utils/current-user";
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class TerminalService {
 
-      private baseUrl: string
+    private baseUrl: string
 
     constructor(private httpClient: HttpClient) {
         this.baseUrl = environment.API_BASE_URL

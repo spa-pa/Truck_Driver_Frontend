@@ -1,0 +1,888 @@
+// src/app/modules/masters/training/training.component.scss
+
+$primary: #004761;
+$white: #ffffff;
+$light-bg: #f8f9fa;
+$border-color: rgba($primary, 0.08);
+$text-secondary: rgba($primary, 0.6);
+$success: #10b981;
+$warning: #f59e0b;
+$danger: #ef4444;
+$shadow: 0 20px 60px rgba($primary, 0.08);
+
+// ============================================
+// CONTAINER
+// ============================================
+.training-container {
+    min-height: 100vh;
+    background: $white;
+    padding: 40px 20px;
+    // max-width: 900px;
+    margin: 0 auto;
+
+    @media (max-width: 768px) {
+        padding: 20px 16px;
+    }
+}
+
+// ============================================
+// HOME BUTTON
+// ============================================
+.home-button {
+    margin-bottom: 32px;
+
+    .btn-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        background: $white;
+        color: $primary;
+        border: 2px solid $border-color;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.25s ease;
+
+        &:hover {
+            border-color: $primary;
+            transform: translateX(-4px);
+            box-shadow: $shadow;
+        }
+    }
+}
+
+// ============================================
+// STEP CONTAINER
+// ============================================
+.step-container {
+    animation: fadeSlideUp 0.5s ease;
+}
+
+// ============================================
+// STEP CARD
+// ============================================
+.step-card {
+    background: $white;
+    border-radius: 24px;
+    border: 2px solid $border-color;
+    padding: 40px;
+    box-shadow: $shadow;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: rgba($primary, 0.15);
+        box-shadow: 0 24px 72px rgba($primary, 0.08);
+    }
+
+    @media (max-width: 768px) {
+        padding: 24px 20px;
+    }
+}
+
+// ============================================
+// STEP HEADER
+// ============================================
+.step-header {
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+
+    .step-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 16px;
+        background: rgba($primary, 0.06);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+            font-size: 28px;
+            color: $primary;
+        }
+    }
+
+    h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: $primary;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.3px;
+    }
+
+    p {
+        font-size: 15px;
+        color: $text-secondary;
+        margin: 0;
+    }
+
+    .btn-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        background: transparent;
+        color: $text-secondary;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.25s ease;
+
+        &:hover {
+            color: $primary;
+            background: rgba($primary, 0.04);
+        }
+
+        @media (max-width: 480px) {
+            position: static;
+            margin-bottom: 12px;
+            justify-content: center;
+            width: 100%;
+        }
+    }
+}
+
+// ============================================
+// LANGUAGE SELECTION
+// ============================================
+.language-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+
+    .btn-language {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px 20px;
+        background: $white;
+        border: 2px solid $border-color;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 500;
+        color: $primary;
+        cursor: pointer;
+        transition: all 0.25s ease;
+
+        i {
+            font-size: 18px;
+            color: $text-secondary;
+            transition: all 0.25s ease;
+        }
+
+        &:hover {
+            border-color: $primary;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba($primary, 0.08);
+
+            i {
+                color: $primary;
+            }
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+// ============================================
+// FORM
+// ============================================
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    label {
+        font-size: 13px;
+        font-weight: 500;
+        color: $primary;
+
+        .required {
+            color: $danger;
+        }
+    }
+
+    .input-wrapper {
+        position: relative;
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: $text-secondary;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 2px solid $border-color;
+            border-radius: 10px;
+            font-size: 14px;
+            color: $primary;
+            background: $white;
+            transition: all 0.25s ease;
+
+            &:focus {
+                outline: none;
+                border-color: $primary;
+                box-shadow: 0 0 0 4px rgba($primary, 0.06);
+            }
+
+            &.error {
+                border-color: $danger;
+                box-shadow: 0 0 0 4px rgba($danger, 0.08);
+            }
+
+            &::placeholder {
+                color: rgba($primary, 0.3);
+            }
+        }
+    }
+
+    .error-message {
+        font-size: 12px;
+        color: $danger;
+        margin-top: 2px;
+    }
+}
+
+// ============================================
+// BUTTONS
+// ============================================
+.btn-primary,
+.btn-success,
+.btn-full {
+    margin-top: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: $white;
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba($primary, 0.25);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba($white, 0.3);
+        border-top-color: $white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+
+    .badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 10px;
+        border-radius: 12px;
+        background: rgba($white, 0.2);
+        color: $white;
+    }
+}
+
+.btn-primary {
+    background: $primary;
+
+    &:hover:not(:disabled) {
+        background: darken($primary, 5%);
+    }
+}
+
+.btn-success {
+    background: $success;
+
+    &:hover:not(:disabled) {
+        background: darken($success, 5%);
+        box-shadow: 0 8px 24px rgba($success, 0.3);
+    }
+}
+
+// ============================================
+// VIDEO SECTION
+// ============================================
+.video-container {
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+
+    .video-player {
+        width: 100%;
+        max-height: 400px;
+        display: block;
+    }
+}
+
+.video-progress {
+    margin-bottom: 16px;
+
+    .progress-track {
+        width: 100%;
+        height: 6px;
+        background: $border-color;
+        border-radius: 4px;
+        overflow: hidden;
+
+        .progress-fill {
+            height: 100%;
+            background: $primary;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+    }
+
+    .progress-text {
+        display: block;
+        text-align: center;
+        font-size: 13px;
+        color: $text-secondary;
+        margin-top: 4px;
+    }
+}
+
+// ============================================
+// QUIZ
+// ============================================
+.question-card {
+    background: $light-bg;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid $border-color;
+    transition: all 0.25s ease;
+
+    &:hover {
+        border-color: rgba($primary, 0.15);
+        background: $white;
+    }
+
+    .question-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+
+        .question-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            background: $primary;
+            color: $white;
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: $primary;
+            padding-top: 2px;
+        }
+    }
+
+    .options-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-left: 40px;
+
+        @media (max-width: 480px) {
+            padding-left: 0;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: $white;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: rgba($primary, 0.02);
+                border-color: $border-color;
+            }
+
+            input[type="radio"] {
+                display: none;
+
+                &:checked+.option-marker {
+                    background: $primary;
+                    color: $white;
+                    border-color: $primary;
+                }
+
+                &:checked~.option-text {
+                    color: $primary;
+                    font-weight: 500;
+                }
+            }
+
+            .option-marker {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 24px;
+                height: 24px;
+                border: 2px solid $border-color;
+                border-radius: 50%;
+                font-size: 12px;
+                font-weight: 600;
+                color: $text-secondary;
+                transition: all 0.25s ease;
+                flex-shrink: 0;
+            }
+
+            .option-text {
+                font-size: 14px;
+                color: $primary;
+                transition: all 0.25s ease;
+            }
+        }
+    }
+}
+
+// ============================================
+// ALERT
+// ============================================
+.alert-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: rgba($primary, 0.04);
+    border-radius: 10px;
+    border: 1px solid $border-color;
+    color: $primary;
+    font-size: 14px;
+    margin-bottom: 16px;
+
+    i {
+        font-size: 18px;
+    }
+}
+
+// ============================================
+// MODAL
+// ============================================
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+    padding: 20px;
+
+    .modal-container {
+        width: 100%;
+        max-width: 480px;
+        animation: slideUp 0.4s ease;
+
+        .modal-card {
+            background: $white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+
+            &.success {
+                border-top: 4px solid $success;
+            }
+
+            &.failed {
+                border-top: 4px solid $danger;
+            }
+
+            .modal-header {
+                padding: 24px 24px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+
+                .modal-icon {
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    i {
+                        font-size: 32px;
+                    }
+                }
+
+                .modal-close {
+                    width: 32px;
+                    height: 32px;
+                    border: none;
+                    background: transparent;
+                    font-size: 20px;
+                    color: $text-secondary;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        background: $light-bg;
+                        color: $primary;
+                    }
+                }
+            }
+
+            &.success .modal-icon {
+                background: rgba($success, 0.1);
+
+                i {
+                    color: $success;
+                }
+            }
+
+            &.failed .modal-icon {
+                background: rgba($danger, 0.1);
+
+                i {
+                    color: $danger;
+                }
+            }
+
+            .modal-body {
+                padding: 16px 24px 24px;
+
+                h3 {
+                    font-size: 22px;
+                    font-weight: 700;
+                    margin: 0 0 8px 0;
+
+                    &.text-success {
+                        color: $success;
+                    }
+
+                    &.text-danger {
+                        color: $danger;
+                    }
+                }
+
+                p {
+                    color: $text-secondary;
+                    font-size: 14px;
+                    margin: 0 0 16px 0;
+                    line-height: 1.6;
+                }
+
+                .score-section {
+                    background: $light-bg;
+                    border-radius: 14px;
+                    padding: 20px;
+                    text-align: center;
+
+                    .score-label {
+                        font-size: 12px;
+                        font-weight: 500;
+                        color: $text-secondary;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+
+                    .score-value {
+                        font-size: 40px;
+                        font-weight: 800;
+                        color: $primary;
+                        margin: 4px 0 12px;
+                    }
+
+                    .progress-track {
+                        height: 6px;
+                        background: $border-color;
+                        border-radius: 4px;
+                        overflow: hidden;
+
+                        .progress-fill {
+                            height: 100%;
+                            border-radius: 4px;
+                            transition: width 0.8s ease;
+
+                            &.success {
+                                background: $success;
+                            }
+
+                            &.warning {
+                                background: $warning;
+                            }
+
+                            &.danger {
+                                background: $danger;
+                            }
+                        }
+                    }
+
+                    .score-status {
+                        margin-top: 8px;
+                        font-size: 13px;
+                        font-weight: 600;
+
+                        i {
+                            margin-right: 4px;
+                        }
+
+                        &.success {
+                            color: $success;
+                        }
+
+                        &.warning {
+                            color: $warning;
+                        }
+
+                        &.danger {
+                            color: $danger;
+                        }
+                    }
+                }
+            }
+
+            .modal-footer {
+                padding: 16px 24px 24px;
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+
+                button {
+                    flex: 1;
+                    min-width: 120px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    padding: 10px 16px;
+                    border: none;
+                    border-radius: 10px;
+                    font-size: 13px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.25s ease;
+
+                    &:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+                    }
+
+                    &.btn-download {
+                        background: $success;
+                        color: $white;
+
+                        &:hover {
+                            background: darken($success, 5%);
+                        }
+                    }
+
+                    &.btn-retake {
+                        background: $warning;
+                        color: $white;
+
+                        &:hover {
+                            background: darken($warning, 5%);
+                        }
+                    }
+
+                    &.btn-close-modal {
+                        background: $primary;
+                        color: $white;
+
+                        &:hover {
+                            background: darken($primary, 5%);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// Add these styles for question images and audio
+
+.question-image {
+    margin: 12px 0;
+    text-align: center;
+
+    img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        border: 1px solid $border-color;
+    }
+}
+
+.question-audio {
+    margin: 12px 0;
+
+    audio {
+        width: 100%;
+        border-radius: 8px;
+    }
+}
+
+.option-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: $white;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba($primary, 0.02);
+        border-color: $border-color;
+    }
+
+    .option-image-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+
+        .option-image {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid $border-color;
+        }
+
+        .option-text {
+            font-size: 14px;
+            color: $primary;
+        }
+    }
+
+    input[type="radio"] {
+        display: none;
+
+        &:checked+.option-marker {
+            background: $primary;
+            color: $white;
+            border-color: $primary;
+        }
+    }
+
+    .option-marker {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 24px;
+        height: 24px;
+        border: 2px solid $border-color;
+        border-radius: 50%;
+        font-size: 12px;
+        font-weight: 600;
+        color: $text-secondary;
+        transition: all 0.25s ease;
+        flex-shrink: 0;
+    }
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

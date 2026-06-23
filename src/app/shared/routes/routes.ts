@@ -126,7 +126,7 @@ const mastersData: Routes = [
             breadcrumb: "Training",
             pageId: 2
         },
-        loadComponent: () => import('../../modules/masters/QR-Operation/qr-code/qr-editor/qr-editor.component').then(r => r.QREditorComponent),
+        loadComponent: () => import('../../modules/masters/training/training.component').then(r => r.TrainingComponent),
         // canActivate: [PermissionGuard]
     }
 
