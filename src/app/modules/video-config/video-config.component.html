@@ -13,7 +13,10 @@
         (change)="onLanguageChange()"
       >
         <option [ngValue]="null">-- Select --</option>
-        <option *ngFor="let language of languages" [ngValue]="language.language_id">
+        <option
+          *ngFor="let language of languages"
+          [ngValue]="language.language_id"
+        >
           {{ language.language_name }} ({{ language.language_code }})
         </option>
       </select>
@@ -185,16 +188,17 @@
                 <source [src]="currentVideo" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-              <button
-                *ngIf="currentVideoId"
-                class="delete-video-btn"
-                (click)="deleteVideo(currentVideoId!)"
-                title="Delete this video"
-              >
-                <i class="fas fa-trash-alt"></i>
-                Delete
-              </button>
             </div>
+            
+            <button
+              *ngIf="currentVideoId"
+              class="delete-video-btn"
+              (click)="deleteVideo(currentVideoId!)"
+              title="Delete this video"
+            >
+              <i class="fas fa-trash-alt"></i>
+              Delete
+            </button>
 
             <!-- Empty State -->
             <div *ngIf="!currentVideo" class="player-empty">

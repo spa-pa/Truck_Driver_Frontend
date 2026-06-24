@@ -43,13 +43,13 @@
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  padding: 10px 24px; 
+  padding: 10px 24px;
 }
 
 .video-manager__body {
   flex: 1;
   overflow: hidden;
-   padding: 12px 18px;
+  padding: 12px 18px;
 
   @media (max-width: 992px) {
     overflow-y: auto;
@@ -183,10 +183,12 @@
 
   &--upload {
     flex: 0 0 36%;
+    max-height: 440px;
   }
 
   &--player {
     flex: 1;
+    max-height: 440px;
   }
 
   @media (max-width: 992px) {
@@ -230,7 +232,7 @@
   flex-direction: column;
   min-height: 0;
   padding: 12px;
-  overflow-y: auto;
+  overflow: hidden;
 
   &--flush {
     padding: 0;
@@ -245,7 +247,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   border: none;
   border-radius: var(--radius-pill);
   font-size: 13px;
@@ -256,6 +258,10 @@
     box-shadow 0.2s ease,
     transform 0.15s ease,
     opacity 0.2s ease;
+
+  i {
+    font-size: 11px; // Smaller icon
+  }
 
   &:hover {
     transform: translateY(-1px);
@@ -288,6 +294,10 @@
   &--sm {
     padding: 7px 18px;
     font-size: 12px;
+
+    i {
+      font-size: 10px;
+    }
   }
 
   &--block {
@@ -368,7 +378,7 @@
 .upload-flow {
   display: flex;
   flex-direction: column;
-  gap: 8px; 
+  gap: 8px;
 
   &__progress-text {
     text-align: center;
@@ -402,21 +412,21 @@
   &__icon {
     color: var(--color-navy-soft);
     opacity: 0.8;
-    font-size: 22px;
+    font-size: 16px;
     margin-bottom: 6px;
   }
 
   &__title {
     font-weight: 600;
     color: var(--color-text);
-    font-size: 13px;        // was inheriting h6 default
+    font-size: 13px; // was inheriting h6 default
     margin: 0 0 4px;
   }
 
   &__or {
     font-size: 12px;
     color: var(--color-text-muted);
-    margin: 0 0 6px;        
+    margin: 0 0 6px;
   }
 
   &__hint {
@@ -427,13 +437,17 @@
     font-size: 10px;
     color: var(--color-text-muted);
     margin: 6px 0 0;
+
+    i {
+      font-size: 9px; // Smaller info icon
+    }
   }
 
   @media (max-width: 576px) {
     padding: 18px 12px;
 
     &__icon {
-      font-size: 26px;
+      font-size: 16px;
     }
 
     &__title {
@@ -549,6 +563,7 @@
   height: 100%;
   min-height: 400px;
   background: var(--color-navy);
+  overflow: hidden;
 
   @media (max-width: 768px) {
     min-height: 280px;
@@ -561,8 +576,7 @@
   &__video {
     position: relative;
     width: 100%;
-    height: 100%;
-    min-height: 400px;
+    height: 100%;;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -593,26 +607,27 @@
 
 .delete-video-btn {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 12px;
+  right: 12px;
   z-index: 10;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   background: rgba(214, 69, 69, 0.92);
   border: none;
   color: #fff;
-  padding: 8px 16px;
+  padding: 5px 12px;
   border-radius: var(--radius-pill);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   backdrop-filter: blur(4px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  transition:
-    background 0.2s ease,
-    transform 0.15s ease,
-    box-shadow 0.2s ease;
+  transition: all 0.2s ease;
+
+  i {
+    font-size: 10px;
+  }
 
   &:hover {
     background: var(--color-red);
@@ -623,8 +638,12 @@
   @media (max-width: 576px) {
     top: 12px;
     right: 12px;
-    padding: 6px 12px;
-    font-size: 11px;
+    padding: 4px 10px;
+    font-size: 10px;
+
+    i {
+      font-size: 9px;
+    }
   }
 }
 
