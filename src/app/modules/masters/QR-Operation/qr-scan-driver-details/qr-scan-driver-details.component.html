@@ -1,0 +1,136 @@
+<!-- src/app/modules/masters/qr-scan-driver-details/qr-scan-driver-details.component.html -->
+
+<div class="qr-scan-page">
+    <!-- Background Decoration -->
+    <div class="bg-decoration">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="header-icon">
+                    <i class="fa fa-id-card"></i>
+                </div>
+                <div class="header-text">
+                    <h1>Driver Certification</h1>
+                    <p>Scan and verify driver certifications instantly</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator" *ngIf="certificationId">
+                    <span class="status-dot active"></span>
+                    <span class="status-text">Connected</span>
+                </div>
+                <button class="btn-rescan" (click)="rescan()" *ngIf="certificationId">
+                    <i class="fa fa-qrcode"></i>
+                    Rescan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="page-content">
+        <!-- Scan Section -->
+        <div class="scan-section" [class.scanned]="certificationId" *ngIf="!certificationId">
+            <div class="scan-card">
+                <div class="scan-card-content">
+                    <div class="scan-icon-wrapper">
+                        <div class="scan-icon">
+                            <i class="fa fa-qrcode"></i>
+                        </div>
+                    </div>
+
+                    <div class="scan-info">
+                        <h3>Scan QR Code</h3>
+                        <p>Position the QR code within the frame to verify driver certification</p>
+                    </div>
+
+                    <app-qr-scanner-modal (scanComplete)="onScanComplete($event)"></app-qr-scanner-modal>
+                </div>
+            </div>
+
+            <!-- Scanner Instructions -->
+            <!-- <div class="scan-instructions" *ngIf="!certificationId">
+                <div class="instruction-item">
+                    <div class="instruction-icon">
+                        <i class="fa fa-camera"></i>
+                    </div>
+                    <div class="instruction-text">
+                        <h4>Open Scanner</h4>
+                        <p>Click the "Scan QR" button to open the camera</p>
+                    </div>
+                </div>
+                <div class="instruction-arrow">
+                    <i class="fa fa-arrow-right"></i>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon">
+                        <i class="fa fa-qrcode"></i>
+                    </div>
+                    <div class="instruction-text">
+                        <h4>Scan QR Code</h4>
+                        <p>Align the QR code within the scanner frame</p>
+                    </div>
+                </div>
+                <div class="instruction-arrow">
+                    <i class="fa fa-arrow-right"></i>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon">
+                        <i class="fa fa-check-circle"></i>
+                    </div>
+                    <div class="instruction-text">
+                        <h4>View Details</h4>
+                        <p>Driver certification details will appear automatically</p>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+        <!-- Certification Details Section -->
+        <div class="certification-section" *ngIf="certificationId">
+            <div class="certification-wrapper">
+                <div class="certification-header">
+                    <div class="header-left">
+                        <div class="cert-badge">
+                            <i class="fa fa-check-circle"></i>
+                            Verified
+                        </div>
+                        <h2>Certification Details</h2>
+                    </div>
+                    <div class="header-right">
+                        <button class="btn-refresh" (click)="refreshCertification()">
+                            <i class="fa fa-refresh"></i>
+                            Refresh
+                        </button>
+                        <button class="btn-close" (click)="clearCertification()">
+                            <i class="fa fa-times"></i>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+                <app-driver-certification #certification [certificationId]="certificationId"
+                    [autoLoad]="true"></app-driver-certification>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!certificationId">
+            <div class="empty-state-content">
+                <div class="empty-icon">
+                    <i class="fa fa-qrcode"></i>
+                </div>
+                <h3>No Certification Loaded</h3>
+                <p>Scan a driver certification QR code to view details</p>
+                <div class="empty-actions">
+                    <app-qr-scanner-modal (scanComplete)="onScanComplete($event)"></app-qr-scanner-modal>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

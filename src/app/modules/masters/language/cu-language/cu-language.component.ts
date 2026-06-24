@@ -1,7 +1,7 @@
 import { AfterViewInit, OnInit } from "@angular/core";
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { LanguageService } from "@shared/_http/language.service";
+import { ApiLanguageService } from "@shared/_http/language.service";
 import { FormComponent } from "@shared/component/form/form.component";
 import {
   LanguageDetailsData,
@@ -29,7 +29,7 @@ export class CuLanguageComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private activatedroute: ActivatedRoute,
-    private languageService: LanguageService,
+    private languageService: ApiLanguageService,
     private toastService: ToastService,
   ) {}
 

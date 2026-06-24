@@ -119,7 +119,7 @@ export const AdminMenu = {
       "icon": "Activity",
       "id": 4,
       "level": 1,
-      "path": "/report",
+      "path": "/training",
       "title": "Training",
       "type": "link"
     },
@@ -128,7 +128,7 @@ export const AdminMenu = {
       "icon": "Activity",
       "id": 5,
       "level": 1,
-      "path": "/report",
+      "path": "/training-result",
       "title": "Training Results",
       "type": "link"
     },

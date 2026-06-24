@@ -28,4 +28,9 @@ export class QrComponent {
       this.qrModal.openModal();
     }
   }
+
+  openScanner() {
+
+  }
+
 }

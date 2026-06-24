@@ -5,33 +5,33 @@ import { currentUser } from "@shared/utils/current-user";
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class TerminalService {
 
-      private baseUrl: string
+    private baseUrl: string
 
     constructor(private httpClient: HttpClient) {
         this.baseUrl = environment.API_BASE_URL
     }
 
     getAllTerminals(): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}terminalMaster/getAllTerminals`);
+        return this.httpClient.get(`${this.baseUrl}terminalMaster`);
     }
 
     getTerminalById(id: any): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}terminalMaster/getTerminalById/${id}`);
+        return this.httpClient.get(`${this.baseUrl}terminalMaster/${id}`);
     }
 
     createTerminal(payload: any): Observable<any> {
-        return this.httpClient.post(`${this.baseUrl}terminalMaster/createTerminal/`, payload);
+        return this.httpClient.post(`${this.baseUrl}terminalMaster/`, payload);
     }
 
     updateTerminal(payload: any, id: any): Observable<any> {
-        return this.httpClient.put(`${this.baseUrl}terminalMaster/updateTerminal/${id}`, payload);
+        return this.httpClient.put(`${this.baseUrl}terminalMaster/${id}`, payload);
     }
 
     deleteTerminal(id: any): Observable<any> {
-        return this.httpClient.delete(`${this.baseUrl}terminalMaster/deleteTerminal/${id}`);
+        return this.httpClient.delete(`${this.baseUrl}terminalMaster/${id}`);
     }
 }

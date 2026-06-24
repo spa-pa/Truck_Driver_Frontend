@@ -1,4 +1,61 @@
 {
+    "HOME": {
+        "BACK": "Back to Home"
+    },
+    "LANGUAGE": {
+        "TITLE": "Safety Training Program",
+        "SELECT": "Please select your preferred language to begin"
+    },
+    "REGISTRATION": {
+        "TITLE": "Driver Registration",
+        "SUBTITLE": "Please fill in your details to continue",
+        "BACK": "Back",
+        "FULL_NAME": "Full Name",
+        "FULL_NAME_PLACEHOLDER": "Enter your full name",
+        "FULL_NAME_ERROR": "Full name is required",
+        "MOBILE": "Mobile Number",
+        "MOBILE_PLACEHOLDER": "10-digit mobile number",
+        "MOBILE_ERROR": "Valid 10-digit mobile number is required",
+        "TRUCK": "Truck Number",
+        "TRUCK_PLACEHOLDER": "Enter truck registration number",
+        "TRUCK_ERROR": "Truck number is required",
+        "LICENSE": "Driving License Number",
+        "LICENSE_PLACEHOLDER": "Enter driving license number",
+        "LICENSE_ERROR": "Driving license number is required",
+        "LICENSE_EXPIRY": "Driving License Expiry",
+        "LICENSE_EXPIRY_PLACEHOLDER": "Enter driving license Expiry Date",
+        "LICENSE_EXPIRY_ERROR": "Driving license Expiry Date is required",
+        "START": "Start Training",
+        "REGISTERING": "Registering..."
+    },
+    "VIDEO": {
+        "TITLE": "Safety Training Video",
+        "SUBTITLE": "Please watch the entire video carefully",
+        "TAKE_QUIZ": "Take Quiz",
+        "UNLOCK": "Watch 90% to unlock",
+        "COMPLETED": "completed",
+        "NOT_SUPPORTED": "Your browser does not support the video tag."
+    },
+    "QUIZ": {
+        "TITLE": "Safety Knowledge Check",
+        "SUBTITLE": "Test your understanding of safety protocols",
+        "RETAKE": "Retake Quiz",
+        "SUBMIT": "Submit & Get Certificate",
+        "SUBMITTING": "Submitting...",
+        "NO_QUESTIONS": "No quiz questions available. Please contact administrator.",
+        "AUDIO_NOT_SUPPORTED": "Your browser does not support the audio element."
+    },
+    "MODAL": {
+        "CONGRATULATIONS": "Congratulations!",
+        "FAILED": "Quiz Failed!",
+        "YOUR_SCORE": "Your Score",
+        "PASSED": "Passed",
+        "BORDERLINE": "Borderline",
+        "FAILED_STATUS": "Failed",
+        "DOWNLOAD": "Download Certificate",
+        "RETAKE": "Retake Quiz",
+        "CLOSE": "Close"
+    },
     "Dashboards": "Dashboard ",
     "Ecommerce": "Ecommerce",
     "Widget": "widget",
@@ -199,12 +256,11 @@
     "Chat": "Chat",
     "Private Chat": "Private Chat",
     "Group Chat": "Group Chat",
-
     "GENERAL": "GENERAL",
     "Dashboard": "Dashboard",
     "Chartist Chart": "Chartist Chart",
     "Chatjs Chart": "Chatjs Chart",
-    "Editors":"Editors",
+    "Editors": "Editors",
     "NGX Editor": "NGX Editor",
     "MDE Editor": "MDE Editor"
 }

@@ -1,0 +1,131 @@
+<!-- src/app/components/qr-scanner/qr-scanner.component.html -->
+
+<div class="scanner-container">
+    <!-- Header -->
+    <!-- <div class="scanner-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <i class="fa fa-qrcode"></i>
+            </div>
+            <div class="header-text">
+                <h1>QR Code Scanner</h1>
+                <p>Scan QR codes to send data to backend</p>
+            </div>
+        </div>
+        <button class="btn-close" (click)="closeScanner()">
+            <i class="fa fa-times"></i>
+        </button>
+    </div> -->
+
+    <!-- Scanner Body -->
+    <div class="scanner-body">
+        <!-- Camera Container -->
+        <div class="camera-container">
+            <video #video id="video" autoplay playsinline></video>
+            <canvas #canvas id="canvas" style="display: none;"></canvas>
+
+            <!-- Scanner Overlay -->
+            <div class="scanner-overlay" *ngIf="isCameraOn">
+                <div class="scanner-frame">
+                    <div class="corner top-left"></div>
+                    <div class="corner top-right"></div>
+                    <div class="corner bottom-left"></div>
+                    <div class="corner bottom-right"></div>
+                    <div class="scan-line"></div>
+                </div>
+                <div class="scanner-instruction">
+                    <i class="fa fa-camera"></i>
+                    <span>Place QR code within the frame</span>
+                </div>
+            </div>
+
+            <!-- Status Overlay -->
+            <div class="status-overlay" *ngIf="scanStatus">
+                <div class="status-content" [class.success]="scanStatus === 'success'"
+                    [class.error]="scanStatus === 'error'">
+                    <i class="fa" [class.fa-check-circle]="scanStatus === 'success'"
+                        [class.fa-exclamation-circle]="scanStatus === 'error'"></i>
+                    <span>{{ statusMessage }}</span>
+                </div>
+            </div>
+
+            <!-- No Camera Message -->
+            <div class="no-camera-overlay" *ngIf="!hasCameraSupport && !isCameraOn">
+                <div class="no-camera-content">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <h3>Camera Not Available</h3>
+                    <p>Please upload a QR code image instead</p>
+                    <button class="btn-upload-image" (click)="fileInput.click()">
+                        <i class="fa fa-upload"></i>
+                        Upload Image
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="scanner-controls">
+            <button class="btn-toggle-camera" (click)="toggleCamera()">
+                <i class="fa" [class.fa-video-camera]="isCameraOn" [class.fa-stop]="!isCameraOn"></i>
+                {{ isCameraOn ? 'Stop Camera' : 'Start Camera' }}
+            </button>
+            <button class="btn-upload-image" (click)="fileInput.click()">
+                <i class="fa fa-upload"></i>
+                Upload QR Image
+            </button>
+            <input type="file" #fileInput accept="image/*" style="display: none" (change)="onImageUpload($event)" />
+            <button class="btn-flash" (click)="toggleFlash()" *ngIf="hasFlash && isCameraOn">
+                <i class="fa" [class.fa-lightbulb-o]="!isFlashOn" [class.fa-lightbulb]="isFlashOn"></i>
+            </button>
+            <!-- Test Button for Development -->
+            <button class="btn-test" (click)="generateTestData()" *ngIf="!isProduction">
+                <i class="fa fa-flask"></i>
+                Test
+            </button>
+        </div>
+
+        <!-- Scanned Data Display -->
+        <div class="scanned-data" *ngIf="scannedData">
+            <div class="data-header">
+                <h3>
+                    <i class="fa fa-check-circle" style="color: #4caf50;"></i>
+                    QR Code Scanned Successfully
+                </h3>
+                <button class="btn-clear" (click)="clearScannedData()">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="data-content">
+                <div class="data-row">
+                    <span class="data-label">Raw Data:</span>
+                    <span class="data-value">{{ scannedData }}</span>
+                </div>
+                <div class="data-row" *ngIf="parsedData">
+                    <span class="data-label">Parsed Data:</span>
+                    <pre class="data-json">{{ parsedData | json }}</pre>
+                </div>
+            </div>
+            <div class="data-actions">
+                <button class="btn-send-backend" (click)="sendToBackend()" [disabled]="isSending">
+                    <i class="fa" [class.fa-paper-plane]="!isSending" [class.fa-spinner]="isSending"></i>
+                    {{ isSending ? 'Sending...' : 'Send to Backend' }}
+                </button>
+                <button class="btn-copy-data" (click)="copyToClipboard()">
+                    <i class="fa fa-clipboard"></i>
+                    Copy Data
+                </button>
+            </div>
+            <div class="backend-response" *ngIf="backendResponse">
+                <div class="response-header" [class.success]="backendResponse.success"
+                    [class.error]="!backendResponse.success">
+                    <i class="fa" [class.fa-check-circle]="backendResponse.success"
+                        [class.fa-exclamation-circle]="!backendResponse.success"></i>
+                    <span>{{ backendResponse.success ? 'Success!' : 'Error!' }}</span>
+                </div>
+                <div class="response-body">
+                    <pre>{{ backendResponse.message | json }}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

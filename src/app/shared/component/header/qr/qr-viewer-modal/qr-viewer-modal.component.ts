@@ -3,7 +3,7 @@
 import { Component, Input, OnInit, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal, NgbModalRef, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import { QRDisplayComponent } from '@modules/masters/qr-code/qr-display/qr-display.component';
+import { QRDisplayComponent } from '@modules/masters/QR-Operation/qr-code/qr-display/qr-display.component';
 import { QRConfig, DEFAULT_QR_CONFIG, QRResponse } from '@shared/models/qr.model';
 import { QRConfigService } from '@shared/services/qr-config.service';
 

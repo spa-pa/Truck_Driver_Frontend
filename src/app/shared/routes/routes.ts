@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 
 const mastersData: Routes = [
     {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+    },
+    {
         path: 'dashboard',
         data: {
             title: "Dashboard",
@@ -56,7 +61,7 @@ const mastersData: Routes = [
         data: {
             title: "Terminal",
             breadcrumb: "Terminal",
-            pageId: 2
+            pageId: 9
         },
         loadChildren: () => import('../../modules/masters/terminal/terminal.module').then(r => r.TerminalModule),
         // canActivate: [PermissionGuard]
@@ -85,16 +90,47 @@ const mastersData: Routes = [
         //loadChildren: () => import('../../modules/quiz-config/quiz-config-routing.module').then(r => r.QuizConfigRoutingModule),
     },
     {
+        path: 'qr-scan-details',
+        data: {
+            title: "QR Scanner",
+            breadcrumb: "QR Scanner",
+            pageId: 2
+        },
+        loadComponent: () => import('../../modules/masters/QR-Operation/qr-scan-driver-details/qr-scan-driver-details.component').then(r => r.QRScanDriverDetailsComponent),
+        // canActivate: [PermissionGuard]
+    },
+    {
         path: 'qr-code-config',
         data: {
             title: "QR Code Config",
             breadcrumb: "QR Code Config",
             pageId: 2
         },
-        loadComponent: () => import('../../modules/masters/qr-code/qr-editor/qr-editor.component').then(r => r.QREditorComponent),
+        //loadComponent: () => import('../../modules/masters/qr-code/qr-editor/qr-editor.component').then(r => r.QREditorComponent),
+        loadComponent: () => import('../../modules/masters/QR-Operation/qr-code/qr-editor/qr-editor.component').then(r => r.QREditorComponent),
+        // canActivate: [PermissionGuard]
+    },
+    {
+        path: 'training-result',
+        data: {
+            title: "Training Results",
+            breadcrumb: "Training Results",
+            pageId: 2
+        },
+        loadChildren: () => import('../../modules/masters/driver/driver-training-list/driver-training-list.module').then(r => r.DriverTrainingListModule),
+        // canActivate: [PermissionGuard]
+    },
+    {
+        path: 'training',
+        data: {
+            title: "Training",
+            breadcrumb: "Training",
+            pageId: 2
+        },
+        loadComponent: () => import('../../modules/masters/training/training.component').then(r => r.TrainingComponent),
         // canActivate: [PermissionGuard]
     }
-    
+
 ]
 
 

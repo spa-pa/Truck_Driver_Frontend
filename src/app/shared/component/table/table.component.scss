@@ -42,8 +42,12 @@ input[type="input"] {
 }
 
 ::ng-deep .p-inputtext {
-  padding-bottom: 0.5rem !important;
+  padding-left: 0.5rem !important;
+    line-height: 2.3 !important;
+
+  // padding-bottom: 0.5rem !important;
 }
+
 
 .cursor-pointer {
   cursor: pointer;

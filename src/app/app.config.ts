@@ -42,6 +42,7 @@ export const appConfig: ApplicationConfig = {
       useValue: { timezone: 'Asia/Kolkata' }
     },
     TranslateModule.forRoot({
+      defaultLanguage: 'en',
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
