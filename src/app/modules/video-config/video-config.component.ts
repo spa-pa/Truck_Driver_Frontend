@@ -2,7 +2,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { LanguageService } from "../../shared/_http/language.service";
+import { ApiLanguageService } from "../../shared/_http/language.service";
 import { VideoService } from "../../shared/_http/video.service";
 import {
   VideoData,
@@ -45,7 +45,7 @@ export class VideoConfigComponent implements OnInit {
   private subscriptions: Subscription = new Subscription();
 
   constructor(
-    private languageService: LanguageService,
+    private apilanguageService: ApiLanguageService,
     private videoService: VideoService,
     private modalService: ModalService, // Add ModalService
   ) {}
@@ -62,7 +62,7 @@ export class VideoConfigComponent implements OnInit {
   loadLanguages() {
     this.isLoading = true;
     this.subscriptions.add(
-      this.languageService.getAllLanguages().subscribe({
+      this.apilanguageService.getAllLanguages().subscribe({
         next: (response: any) => {
           if (response && response.data && Array.isArray(response.data)) {
             this.languages = response.data;
@@ -117,7 +117,7 @@ export class VideoConfigComponent implements OnInit {
     this.isLoading = true;
 
     this.subscriptions.add(
-      this.videoService.getVideosByLanguageId(langId).subscribe({
+      this.videoService.getVideoByLanguageId(langId).subscribe({
         next: (videos) => {
           this.isLoading = false;
 

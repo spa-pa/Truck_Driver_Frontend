@@ -31,7 +31,7 @@ export class VideoService {
   }
 
    // Get videos by language ID - returns array
-  getVideosByLanguageId(languageId: number): Observable<VideoResponse[]> {
+  getVideoByLanguageId(languageId: number): Observable<VideoResponse[]> {
     return this.http
       .get<{ success: boolean; data: VideoResponse }>(
         `${this.baseUrl}videoMaster/language/${languageId}`

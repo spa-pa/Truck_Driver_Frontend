@@ -10,7 +10,7 @@ import {
   Validators,
   FormControl,
 } from "@angular/forms";
-import { LanguageService } from "../../shared/_http/language.service";
+import { ApiLanguageService } from "../../shared/_http/language.service";
 import { QuizService } from "../../shared/_http/quiz.service";
 import {
   QuestionHeaderText,
@@ -60,7 +60,7 @@ export class QuizConfigComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private languageService: LanguageService,
+    private apilanguageService: ApiLanguageService,
     private quizService: QuizService,
     private modalService: ModalService,
   ) {
@@ -86,7 +86,7 @@ export class QuizConfigComponent implements OnInit {
   loadLanguages() {
     this.isLoading = true;
     this.subscriptions.add(
-      this.languageService.getAllLanguages().subscribe({
+      this.apilanguageService.getAllLanguages().subscribe({
         next: (response: any) => {
           if (response && response.data && Array.isArray(response.data)) {
             this.languages = response.data;
