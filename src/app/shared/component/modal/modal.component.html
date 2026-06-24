@@ -1,0 +1,38 @@
+<div *ngIf="isVisible" class="modal-overlay" (click)="onOverlayClick($event)">
+  <div class="modal-container">
+    <div class="modal-card" [ngClass]="modalOptions?.type || 'info'">
+      <!-- Header -->
+      <div class="modal-header">
+        <div class="modal-icon">
+          <i class="fas" [ngClass]="getIconClass()"></i>
+        </div>
+        <button class="modal-close" *ngIf="modalOptions?.type !== 'confirm'" (click)="close()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <h4 class="modal-title">{{ modalOptions?.title || 'Notification' }}</h4>
+        <p class="modal-message">{{ modalOptions?.message || '' }}</p>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer" [ngClass]="modalOptions?.type === 'confirm' ? 'confirm-footer' : ''">
+        <ng-container *ngIf="modalOptions?.type === 'confirm'">
+          <button class="btn btn-secondary" (click)="cancel()">
+            {{ modalOptions?.cancelText || 'Cancel' }}
+          </button>
+          <button class="btn btn-primary" (click)="confirm()">
+            {{ modalOptions?.confirmText || 'Yes' }}
+          </button>
+        </ng-container>
+        <ng-container *ngIf="modalOptions?.type !== 'confirm'">
+          <button class="btn btn-primary" (click)="close()">
+            <i class="fas fa-check me-2"></i>OK
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

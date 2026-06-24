@@ -62,7 +62,6 @@ const mastersData: Routes = [
         // canActivate: [PermissionGuard]
     },
     {
-<<<<<<< HEAD
         path: 'video-configuration',
         data: {
             title: "Video Configuration",
@@ -84,7 +83,8 @@ const mastersData: Routes = [
         loadComponent: () => import('../../modules/quiz-config/quiz-config.component').then(r => r.QuizConfigComponent)
         //loadChildren: () => import('../../modules/quiz-config/quiz-config.module').then(r => r.QuizConfigModule),
         //loadChildren: () => import('../../modules/quiz-config/quiz-config-routing.module').then(r => r.QuizConfigRoutingModule),
-=======
+    },
+    {
         path: 'qr-code-config',
         data: {
             title: "QR Code Config",
@@ -92,7 +92,6 @@ const mastersData: Routes = [
             pageId: 2
         },
         loadComponent: () => import('../../modules/masters/qr-code/qr-editor/qr-editor.component').then(r => r.QREditorComponent),
->>>>>>> 70f5ab28998e767ba07ef3a732bc2135df0e41d3
         // canActivate: [PermissionGuard]
     }
     
