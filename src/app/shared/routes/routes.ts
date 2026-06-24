@@ -130,9 +130,6 @@ const mastersData: Routes = [
         // canActivate: [PermissionGuard]
     }
 
-
-
-
 ]
 
 
