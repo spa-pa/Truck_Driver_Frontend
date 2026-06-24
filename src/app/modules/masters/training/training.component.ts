@@ -406,14 +406,19 @@ export class TrainingComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           if (err.data) {
-            this.driverDetails = err.data;
-            if (err.data.certification_id) {
-              this.certificationId = err.data.certification_id;
+            if (err.data.driver) {
+              this.driverDetails = err.data.driver;
+            }
+            if (err.data.certification) {
+              this.certificationId = err.data.certification.certification_id;
               this.modalRef = this.modalService.open(this.certificationModal, {
                 size: 'xl',
                 centered: true,
                 backdrop: 'static'
               });
+              this.initRegistrationForm();
+              this.showRegistration = true;
+              this.showVideo = false;
             }
           }
           console.error('Registration error:', err);
@@ -426,13 +431,13 @@ export class TrainingComponent implements OnInit, OnDestroy {
       // Simulated response
     );
 
-    setTimeout(() => {
-      console.log('Driver Registered:', formData);
-      this.isLoading = false;
-      this.showRegistration = false;
-      this.showVideo = true;
-      this.cdr.detectChanges();
-    }, 1500);
+    // setTimeout(() => {
+    //   console.log('Driver Registered:', formData);
+    //   this.isLoading = false;
+    //   this.showRegistration = false;
+    //   this.showVideo = true;
+    //   this.cdr.detectChanges();
+    // }, 1500);
   }
 
   // ============================================
@@ -567,6 +572,10 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // MODAL
   // ============================================
   closeModal(): void {
+    if (this.modalRef) {
+      this.modalRef.close();
+      this.modalRef = null;
+    }
     this.showResultModal = false;
     this.cdr.detectChanges();
   }
