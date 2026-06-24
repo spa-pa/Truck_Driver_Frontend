@@ -6,10 +6,11 @@ import { LoaderComponent } from './shared/component/loader/loader.component';
 import { LayoutService } from '@shared/services/layout.service';
 import { LoaderService } from '@shared/services/loader.service';
 import { SpinnerComponent } from '@shared/component/spinner/spinner.component';
+import { ModalComponent } from '@shared/component/modal/modal.component';
 
 @Component({
     selector: 'app-root',
-    imports: [CommonModule, RouterOutlet, TapToTopComponent, LoaderComponent,SpinnerComponent],
+    imports: [CommonModule, RouterOutlet, TapToTopComponent, LoaderComponent,SpinnerComponent, ModalComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
     providers: [LayoutService]
