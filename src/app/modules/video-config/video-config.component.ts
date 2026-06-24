@@ -47,7 +47,7 @@ export class VideoConfigComponent implements OnInit {
   constructor(
     private apilanguageService: ApiLanguageService,
     private videoService: VideoService,
-    private modalService: ModalService, // Add ModalService
+    private modalService: ModalService,
   ) {}
 
   ngOnInit() {
@@ -167,6 +167,52 @@ export class VideoConfigComponent implements OnInit {
     this.isVideoLoaded = false;
     this.currentLoadingLanguageId = null;
     this.videoKey++;
+  }
+
+  // ============ DELETE VIDEO ============
+  deleteVideo(videoId: number) {
+    if (!videoId) return;
+
+    this.modalService.confirm(
+      "Delete Video",
+      "Are you sure you want to delete this video? This action cannot be undone.",
+      () => {
+        // On Confirm - delete the video
+        this.isLoading = true;
+        this.subscriptions.add(
+          this.videoService.deleteVideo(videoId).subscribe({
+            next: () => {
+              this.isLoading = false;
+              this.modalService.success(
+                "Video Deleted",
+                "Video has been deleted successfully!",
+              );
+              // Clear current video and reload
+              this.clearVideo();
+              this.clearFile();
+              if (this.selectedLanguageId !== null) {
+                this.loadVideosByLanguage(this.selectedLanguageId);
+              }
+            },
+            error: (error) => {
+              console.error("Delete error:", error);
+              this.isLoading = false;
+              this.modalService.error(
+                "Delete Failed",
+                error.error?.message ||
+                  "Failed to delete video. Please try again.",
+              );
+            },
+          }),
+        );
+      },
+      () => {
+        // On Cancel - do nothing
+        console.log("Delete cancelled");
+      },
+      "Yes, Delete",
+      "Cancel",
+    );
   }
 
   // ============ UPLOAD METHODS ============
@@ -370,7 +416,12 @@ export class VideoConfigComponent implements OnInit {
 
     console.log("Language changed to ID:", this.selectedLanguageId);
 
+    // Clear everything when language changes
     this.clearVideo();
+    this.clearFile();
+    this.isUploading = false;
+    this.uploadProgress = 0;
+
     if (this.selectedLanguageId !== null) {
       this.loadVideosByLanguage(this.selectedLanguageId);
     }
