@@ -30,40 +30,44 @@ export class VideoService {
       .pipe(map((response) => response.data || []));
   }
 
-   // Get videos by language ID - returns array
-  getVideoByLanguageId(languageId: number): Observable<VideoResponse[]> {
-    return this.http
-      .get<{ success: boolean; data: VideoResponse }>(
-        `${this.baseUrl}videoMaster/language/${languageId}`
-      )
-      .pipe(
-        map((response) => {
-          console.log('Raw API response:', response);
-          
-          // If success is false or no data, return empty array
-          if (!response.success || !response.data) {
-            console.log('No video found for language:', languageId);
-            return [];
-          }
-          
-          // Response.data is a single object, wrap it in an array
-          const video = response.data;
-          console.log('Video found for language:', languageId, video);
-          
-          // Verify the video belongs to the requested language
-          if (video.dataValues && video.dataValues.language_id === Number(languageId)) {
-            return [video];
-          }
-          
-          // If language_id doesn't match, return empty array
-          console.log('Language mismatch:', video.dataValues?.language_id, '!=', languageId);
-          return [];
-        }),
-        catchError((error) => {
-          console.log('API error:', error);
-          return of([]);
-        })
-      );
+  // Get videos by language ID - returns array
+  // getVideoByLanguageId(languageId: number): Observable<VideoResponse[]> {
+  //   return this.http
+  //     .get<{ success: boolean; data: VideoResponse }>(
+  //       `${this.baseUrl}videoMaster/language/${languageId}`
+  //     )
+  //     .pipe(
+  //       map((response) => {
+  //         console.log('Raw API response:', response);
+
+  //         // If success is false or no data, return empty array
+  //         if (!response.success || !response.data) {
+  //           console.log('No video found for language:', languageId);
+  //           return [];
+  //         }
+
+  //         // Response.data is a single object, wrap it in an array
+  //         const video = response.data;
+  //         console.log('Video found for language:', languageId, video);
+
+  //         // Verify the video belongs to the requested language
+  //         if (video.dataValues && video.dataValues.language_id === Number(languageId)) {
+  //           return [video];
+  //         }
+
+  //         // If language_id doesn't match, return empty array
+  //         console.log('Language mismatch:', video.dataValues?.language_id, '!=', languageId);
+  //         return [];
+  //       }),
+  //       catchError((error) => {
+  //         console.log('API error:', error);
+  //         return of([]);
+  //       })
+  //     );
+  // }
+
+  getVideoByLanguageId(languageId: any): Observable<any> {
+    return this.http.get(`${this.baseUrl}videoMaster/language/${languageId}`);
   }
 
   // Upload video

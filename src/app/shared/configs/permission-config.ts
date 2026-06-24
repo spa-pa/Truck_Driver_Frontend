@@ -6,7 +6,7 @@ export const PermissionDetails: RowData = {
     "headers": [
         { label: "SR.NO", key: "SR.NO", type: 'autoIncrementNumber', size: '1rem' },
         // { label: "ID", key: "permission_id", type: '',size: '2rem' }, 
-        { label: "Permission", key: "permission", type: '' },
+        { label: "Permission", key: "permission_name", type: '' },
         // { label: "Action", type: "button", key: "delete", size: '4rem' },
         { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }
     ],
@@ -121,7 +121,7 @@ export const RoleFormGroup: IFormStructure[] = [
 
 export const PermissionFormGroup: IFormStructure[] = [
     {
-        name: "permissionId",
+        name: "permission_id",
         label: "Permission ID",
         placeholder: "Permission ID",
         type: "text",
@@ -130,34 +130,35 @@ export const PermissionFormGroup: IFormStructure[] = [
         hiddenControl: true,
     },
     {
-        name: "permissionValues",
-        label: "Permission Values",
-        placeholder: "Permission Values",
-        type: "text",
-        value: "",
-        disable: true,
-        hiddenControl: true,
-    },
-    {
-        name: "permission",
-        label: "Permission",
-        placeholder: "Permission",
+        name: "permission_name",
+        label: "Permission Name",
+        placeholder: "Permission Name",
         type: "text",
         value: "",
         disable: false,
         required: true,
-        colsize: "col-6"
+        hiddenControl: false,
     },
-    {
-        name: "description",
-        label: "Description",
-        placeholder: "Description",
-        type: "text",
-        value: "",
-        disable: false,
-        required: true,
-        colsize: "col-6"
-    }
+    // {
+    //     name: "permission",
+    //     label: "Permission",
+    //     placeholder: "Permission",
+    //     type: "text",
+    //     value: "",
+    //     disable: false,
+    //     required: true,
+    //     colsize: "col-6"
+    // },
+    // {
+    //     name: "description",
+    //     label: "Description",
+    //     placeholder: "Description",
+    //     type: "text",
+    //     value: "",
+    //     disable: false,
+    //     required: true,
+    //     colsize: "col-6"
+    // }
 
 
 ]
@@ -222,7 +223,7 @@ export const RolePermissionFormGroup: IFormStructure[] = [
 export const RolePagePermissionGroup: IFormStructure[] = [
     {
 
-        name: "rolePagePermissionId",
+        name: "role_page_permission_id",
         label: "permission",
         placeholder: "permission",
         type: "number",
@@ -231,42 +232,33 @@ export const RolePagePermissionGroup: IFormStructure[] = [
         hiddenControl: true
     },
     {
-        name: "permission",
-        label: "permission",
-        placeholder: "permission",
-        type: "number",
-        value: "",
-        disable: false,
-        hiddenControl: true
-    },
-    {
-        name: "roleId",
+        name: "role_id",
         label: "Role",
         placeholder: "Enter role",
         type: "select",
         value: "",
         required: true,
         disable: false,
-        bindValue: 'roleId',
-        bindLabel: 'roleName',
+        bindValue: 'role_id',
+        bindLabel: 'role',
         listName: 'role-id',
         listData: []
     },
     {
-        name: "pageId",
+        name: "page_id",
         label: "Pages",
         placeholder: "Enter service type",
         type: "select",
         value: "",
         required: true,
         disable: false,
-        bindValue: 'pageId',
-        bindLabel: 'pageName',
+        bindValue: 'page_id',
+        bindLabel: 'page_name',
         listName: 'page-id',
         listData: []
     },
     {
-        name: "permissionId",
+        name: "permission_id",
         label: "Permission",
         placeholder: "Enter permission",
         type: "select",
@@ -274,8 +266,8 @@ export const RolePagePermissionGroup: IFormStructure[] = [
         required: true,
         disable: false,
         bindMultiple: true,
-        bindValue: 'permissionId',
-        bindLabel: 'permission',
+        bindValue: 'permission_id',
+        bindLabel: 'permission_name',
         listName: 'permission-id',
         listData: []
     },

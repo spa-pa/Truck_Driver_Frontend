@@ -96,8 +96,8 @@ export class ModifyRolePagePermissionComponent implements OnInit, AfterViewInit,
         break
 
       case "yesno":
-          ele.listData = YES_NO_LISTDATA.yesno
-          break
+        ele.listData = YES_NO_LISTDATA.yesno
+        break
     }
   }
 
@@ -109,8 +109,8 @@ export class ModifyRolePagePermissionComponent implements OnInit, AfterViewInit,
         this.roleDetailsData.data = value.data;
         const result = this.getPermissionsFromDescription(value.data.description);
         const resultArray: any = []
-        result.forEach((permission:any) => {
-          resultArray.push(permission.permissionId);
+        result.forEach((permission: any) => {
+          resultArray.push(permission.permission_id);
         });
         this.roleDetailsData.data.permissionId = resultArray;
         this.roleDetailsData.data = { ...this.roleDetailsData.data }
@@ -125,7 +125,7 @@ export class ModifyRolePagePermissionComponent implements OnInit, AfterViewInit,
     const permissionNames = description.split(' + ').map(name => name.trim());
 
     // Find and return the permissions that match the names in the description
-    return this.permissionsArray.filter(permission => permissionNames.includes(permission.permission));
+    return this.permissionsArray.filter(permission => permissionNames.includes(permission.permission_name));
   }
 
   handleSelectValueChange(event: any) {
@@ -137,7 +137,7 @@ export class ModifyRolePagePermissionComponent implements OnInit, AfterViewInit,
       this.roleDetailsData.data.pageName = event.pageName
       this.setPermissionDataViaPageId(event.page_id);
     }
-    if ('permissionId' in event[0]) {
+    if ('permission_id' in event[0]) {
       // Calculate the total permission values
       const totalPermissionValues = event.reduce((total: number, current: any) => {
         return total + (current.permissionValues || 0);
@@ -146,7 +146,7 @@ export class ModifyRolePagePermissionComponent implements OnInit, AfterViewInit,
       // Create the permission description
       const description = this.generatePermissionDescription(event);
       this.roleDetailsData.data.description = description;
-      this.roleDetailsData.data.permission = totalPermissionValues;
+      // this.roleDetailsData.data.permission = totalPermissionValues;
       const resultArray: any = []
       event.forEach((permission: any) => {
         resultArray.push(permission.permissionId);
@@ -178,18 +178,14 @@ export class ModifyRolePagePermissionComponent implements OnInit, AfterViewInit,
   generatePermissionDescription(permissions: Permission[]): string {
     const activePermissions: string[] = [];
     permissions.forEach(permission => {
-      activePermissions.push(permission.permission);
+      activePermissions.push(permission.permission_name);
     });
     return activePermissions.join(' + ');
   }
 
   handleSubmit(event: any): void {
     const formData = JSON.parse(JSON.stringify(event.formValue));
-    if (this.roleDetailsData.data.roleName) {
-      formData.roleName = this.roleDetailsData.data.roleName;
-    }
 
-    delete formData.permissionId;
     this.loader.showLoader();
     switch (this.routeName) {
       case 'create':

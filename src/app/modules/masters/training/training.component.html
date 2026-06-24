@@ -10,7 +10,7 @@
     </div>
 
     <!-- Language Selection -->
-    <div *ngIf="!languageSelected" class="step-container">
+    <!-- <div *ngIf="!languageSelected" class="step-container">
         <div class="step-card">
             <div class="step-header">
                 <div class="step-icon">
@@ -26,20 +26,34 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Registration Form -->
-    <div *ngIf="languageSelected && showRegistration" class="step-container">
+    <div *ngIf="showRegistration" class="step-container">
         <div class="step-card">
             <div class="step-header">
+                <!-- Language Selection Dropdown -->
+                <div class="language-select-wrapper">
+                    <div class="language-select-container">
+                        <i class="fas fa-globe language-icon"></i>
+                        <select class="language-select" (change)="onLanguageChange($event)"
+                            [value]="selectedLanguageId">
+                            <option *ngFor="let lang of languages" [value]="lang.language_id">
+                                <i class="fas fa-flag"></i>
+                                {{ lang.language_name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
                 <div class="step-icon">
                     <i class="fas fa-user-plus"></i>
                 </div>
                 <h2>{{ 'REGISTRATION.TITLE' | translate }}</h2>
                 <p>{{ 'REGISTRATION.SUBTITLE' | translate }}</p>
-                <button class="btn-back" (click)="goBack()">
+                <!-- <button class="btn-back" (click)="goBack()">
                     <i class="fas fa-arrow-left"></i> {{ 'REGISTRATION.BACK' | translate }}
-                </button>
+                </button> -->
+
             </div>
 
             <form [formGroup]="registrationForm" (ngSubmit)="registerDriver()">
@@ -212,6 +226,12 @@
             </form>
         </div>
     </div>
+
+    <!-- Certification -->
+    <div *ngIf="showCertification" class="step-container">
+        <app-driver-certification #certification [certificationId]="certificationId" [autoLoad]="true">
+        </app-driver-certification>
+    </div>
 </div>
 
 <!-- Result Modal -->
@@ -269,6 +289,7 @@
         </div>
     </div>
 </div>
+
 
 
 

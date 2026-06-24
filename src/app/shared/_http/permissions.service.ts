@@ -25,15 +25,15 @@ export class PermissionControllerService {
     }
 
     getAllPages(): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}PageMaster//`);
+        return this.httpClient.get(`${this.baseUrl}PageMaster/`);
     }
 
     getAllPagePermission(): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}PagePermission//`);
+        return this.httpClient.get(`${this.baseUrl}pagePermissionMaster/`);
     }
 
     getAllRolePermissions(): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}RolePagePermission/`);
+        return this.httpClient.get(`${this.baseUrl}rolePagePermissionMaster/`);
     }
 
     // --------------------------------------
@@ -45,7 +45,7 @@ export class PermissionControllerService {
     }
 
     getAllPagePermissionByID(pagepermissionid: any): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}PagePermission/GetById/${pagepermissionid}/`);
+        return this.httpClient.get(`${this.baseUrl}pagePermissionMaster/${pagepermissionid}/`);
     }
 
     getAllPagePermissionByPageId(PageId: any): Observable<any> {
@@ -58,7 +58,7 @@ export class PermissionControllerService {
 
 
     getAllRolePermissionsID(rolepagepermissionid: any): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}RolePagePermission/GetById/${rolepagepermissionid}/`);
+        return this.httpClient.get(`${this.baseUrl}rolePagePermissionMaster/${rolepagepermissionid}/`);
     }
 
     // --------------------------------------
@@ -93,17 +93,17 @@ export class PermissionControllerService {
 
     createPagePermission(payload: any): Observable<any> {
         payload['created_by'] = currentUser().user_id;
-        return this.httpClient.post(`${this.baseUrl}PagePermission/Insert`, payload);
+        return this.httpClient.post(`${this.baseUrl}pagePermissionMaster`, payload);
     }
 
     createPermission(payload: any): Observable<any> {
         payload['created_by'] = currentUser().user_id;
-        return this.httpClient.post(`${this.baseUrl}PermissionMaster/Insert`, payload);
+        return this.httpClient.post(`${this.baseUrl}permissionMaster`, payload);
     }
 
     createRolepermission(payload: any): Observable<any> {
         payload['created_by'] = currentUser().user_id;
-        return this.httpClient.post(`${this.baseUrl}RolePagePermission/save`, payload);
+        return this.httpClient.post(`${this.baseUrl}rolePagePermissionMaster/`, payload);
     }
 
     // --------------------------------------
@@ -114,7 +114,7 @@ export class PermissionControllerService {
 
     updatePagePermission(payload: any): Observable<any> {
         payload['created_by'] = currentUser().user_id;
-        return this.httpClient.put(`${this.baseUrl}PagePermission/Update`, payload);
+        return this.httpClient.put(`${this.baseUrl}pagePermissionMaster`, payload);
     }
 
     // updatePagePermission(payload: any, pagePermissionId: any): Observable<any> {
@@ -129,7 +129,7 @@ export class PermissionControllerService {
 
     updateRolepermission(payload: any, rolepagepermissionid: any): Observable<any> {
         payload['created_by'] = currentUser().user_id;
-        return this.httpClient.put(`${this.baseUrl}RolePagePermission/Update`, payload);
+        return this.httpClient.put(`${this.baseUrl}rolePagePermissionMaster/`, payload);
     }
 
     // --------------------------------------
@@ -151,7 +151,7 @@ export class PermissionControllerService {
         const newRes = new EncryptionAPILayer().encryptData(payload);
         const data = { reqBody: newRes };
 
-        return this.httpClient.post(`${this.baseUrl}RolePagePermission/Insert`, data, { headers });
+        return this.httpClient.post(`${this.baseUrl}rolePagePermissionMaster/`, data, { headers });
     }
 
     /**

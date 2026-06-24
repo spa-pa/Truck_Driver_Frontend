@@ -117,7 +117,7 @@ export class ModifyPagePermissionComponent implements OnInit, AfterViewInit, OnD
 
     // Find and return the permissions that match the names in the description
     return this.permissionsArray.filter(permission =>
-      permissionNames.includes(permission.permission.toLowerCase()),
+      permissionNames.includes(permission.permission_name.toLowerCase()),
     );
   }
 
@@ -125,13 +125,13 @@ export class ModifyPagePermissionComponent implements OnInit, AfterViewInit, OnD
     const formData = { ...event.formValue };
     // formData.permissionIdList = formData.permission_id;
     // Create the pagePermissionList array
-    formData.pagePermissionList = formData.permissionId.map((permissionId: string) => ({
-      pageId: formData.pageId, // assuming formData has page_id
-      permissionId: permissionId
-    }));
+    // formData.pagePermissionList = formData.permission_id.map((permissionId: string) => ({
+    //   page_id: formData.page_id, // assuming formData has page_id
+    //   permission_id: permissionId
+    // }));
 
     // Remove permission_id from formData as it's now part of pagePermissionList
-    delete formData.permission_id;
+    // delete formData.permission_id;
     switch (this.routeName) {
       case 'create':
         this.subs.add(this.permissionControllerService.createPagePermission(formData).subscribe({

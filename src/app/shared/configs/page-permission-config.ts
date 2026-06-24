@@ -4,8 +4,8 @@ import { RowData } from "@shared/models/table";
 export const PagePermissionDetailsData: RowData = {
     "headers": [
         { label: "", key: "SR.NO", type: 'autoIncrementNumber', size: '4%' },
-        { label: "Page Name", key: "pageName", type: 'text' },
-        { label: "Permission", key: "description", type: 'text' },
+        { label: "Page Name", key: "page_name", type: 'text' },
+        { label: "Permission", key: "Permission", type: 'text' },
         { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }
     ],
     "data": [
@@ -25,7 +25,7 @@ export const PagePermissionDetailsData: RowData = {
 
 export const PagePermissionSearchGroup: IFormStructure[] = [
     {
-        name: "pagePermissionId",
+        name: "page_permission_id",
         label: "Pages",
         placeholder: "Enter service type",
         type: "text",
@@ -35,7 +35,7 @@ export const PagePermissionSearchGroup: IFormStructure[] = [
         disable: false,
     },
     {
-        name: "pageId",
+        name: "page_id",
         label: "Pages",
         placeholder: "Enter service type",
         type: "select",
@@ -43,13 +43,13 @@ export const PagePermissionSearchGroup: IFormStructure[] = [
         required: true,
         disable: false,
         bindMultiple: false,
-        bindValue: 'pageId',
-        bindLabel: 'pageName',
+        bindValue: 'page_id',
+        bindLabel: 'page_name',
         listName: 'page-id',
         listData: []
     },
     {
-        name: "permissionId",
+        name: "permission_id",
         label: "Permission",
         placeholder: "Enter permission",
         type: "select",
@@ -57,8 +57,8 @@ export const PagePermissionSearchGroup: IFormStructure[] = [
         required: true,
         disable: false,
         bindMultiple: true,
-        bindValue: 'permissionId',
-        bindLabel: 'permission',
+        bindValue: 'permission_id',
+        bindLabel: 'permission_name',
         listName: 'permission-id',
         listData: [],
     },

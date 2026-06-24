@@ -19,26 +19,26 @@
   
   @media (min-width: 576px) {
     .no-record-found {
-      max-width: 400px; /* Limit width on smaller screens */
+      max-width: 450px; /* Limit width on smaller screens */
       margin: 20px auto; /* Center horizontally */
     }
   }
   
   @media (min-width: 768px) {
     .no-record-found {
-      max-width: 390px; /* Adjust max width for medium screens */
+      max-width: 490px; /* Adjust max width for medium screens */
     }
   }
   
   @media (min-width: 992px) {
     .no-record-found {
-      max-width: 390px; /* Adjust max width for large screens */
+      max-width: 490px; /* Adjust max width for large screens */
     }
   }
   
   @media (min-width: 1200px) {
     .no-record-found {
-      max-width: 390px; /* Adjust max width for extra-large screens */
+      max-width: 500px; /* Adjust max width for extra-large screens */
     }
   }
   

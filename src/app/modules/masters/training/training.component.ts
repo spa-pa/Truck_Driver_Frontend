@@ -123,7 +123,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   // State
   languageSelected: boolean = false;
-  showRegistration: boolean = false;
+  showRegistration: boolean = true;
+  showCertification: boolean = false;
   showVideo: boolean = false;
   showQuiz: boolean = false;
   showResultModal: boolean = false;
@@ -183,16 +184,16 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // FORM INITIALIZATION
   // ============================================
 
-  getAllLanguage() {
-    this.subscriptions.add(this.apiLanguageService.getAllLanguages().subscribe({
-      next: (value) => {
-        this.languages = value.data;
-      },
-      error: (err) => {
-        console.error('Error loading languages:', err);
-      }
-    }));
-  }
+  // getAllLanguage() {
+  //   this.subscriptions.add(this.apiLanguageService.getAllLanguages().subscribe({
+  //     next: (value) => {
+  //       this.languages = value.data;
+  //     },
+  //     error: (err) => {
+  //       console.error('Error loading languages:', err);
+  //     }
+  //   }));
+  // }
 
   private initRegistrationForm(): void {
     this.registrationForm = this.fb.group({
@@ -216,7 +217,13 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // NAVIGATION
   // ============================================
   goToHome(): void {
-    this.router.navigate(['/']);
+    this.showResultModal = false;
+    this.certificationId = null;
+    this.initRegistrationForm();
+    this.showRegistration = true;
+    this.showVideo = false;
+    this.showCertification = false;
+    // this.router.navigate(['/']);
   }
 
   goBack(): void {
@@ -500,14 +507,18 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.showResultModal = true;
     this.cdr.detectChanges();
 
-    this.saveQuizResult(score, correct, passed);
+    // this.saveQuizResult(score, correct, passed);
+    // Call saveQuizResult with delay after 3-4 seconds
+    setTimeout(() => {
+      this.saveQuizResult(score, correct, passed);
+    }, 3500); // 3.5 seconds delay
   }
 
   private saveQuizResult(score: number, correct: number, passed: boolean): void {
     // Simulate API call - Replace with actual API
     setTimeout(() => {
       console.log('Quiz Result Saved:', { score, passed });
-    }, 500);
+    }, 2000);
 
     const formData = {
       driver_id: this.driverDetails.driver_id,
@@ -529,7 +540,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     if (passed) {
       const certificationFormData = {
         driver_id: this.driverDetails.driver_id,
-        expiry_date: '01/01/2050'
+        expiry_date: this.getOneYearExpiryDate()
       }
       this.subscriptions.add(
         this.driverCertification.createDriverCertification(certificationFormData).subscribe({
@@ -537,11 +548,15 @@ export class TrainingComponent implements OnInit, OnDestroy {
             if (response.data.certification_id) {
               this.showResultModal = false;
               this.certificationId = response.data.certification_id;
-              this.modalRef = this.modalService.open(this.certificationModal, {
-                size: 'xl',
-                centered: true,
-                backdrop: 'static'
-              });
+              this.initRegistrationForm();
+              this.showRegistration = false;
+              this.showVideo = false;
+              this.showCertification = true;
+              // this.modalRef = this.modalService.open(this.certificationModal, {
+              //   size: 'xl',
+              //   centered: true,
+              //   backdrop: 'static'
+              // });
             }
           },
           error: (err) => {
@@ -602,5 +617,76 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // Get translated text with parameters
   getTranslation(key: string, params?: any): string {
     return this.translate.instant(key, params);
+  }
+
+  // Add this method to your component
+
+  // ============================================
+  // LANGUAGE CHANGE
+  // ============================================
+  onLanguageChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const languageId = parseInt(select.value);
+
+    // Find the selected language
+    const selectedLang = this.languages.find(l => l.language_id === languageId);
+    if (selectedLang) {
+      // Reset current state
+      this.languageSelected = false;
+      this.showRegistration = false;
+      this.showVideo = false;
+      this.showQuiz = false;
+      this.showResultModal = false;
+      this.videoProgress = 0;
+      this.questions = [];
+      this.quizResult = null;
+      this.initRegistrationForm();
+
+      if (this.videoPlayer) {
+        this.videoPlayer.nativeElement.pause();
+        this.videoPlayer.nativeElement.currentTime = 0;
+      }
+
+      // Load new language content
+      this.selectLanguage(selectedLang.language_id);
+    }
+  }
+
+  // Also update the getAllLanguage method to set default language
+  getAllLanguage() {
+    this.subscriptions.add(this.apiLanguageService.getAllLanguages().subscribe({
+      next: (value) => {
+        this.languages = value.data;
+        // Set default language as first language or English
+        if (this.languages.length > 0) {
+          const defaultLang = this.languages.find(l => l.language_name === 'English') || this.languages[0];
+          this.selectedLanguageId = defaultLang.language_id;
+          this.selectedLanguageCode = this.getLanguageCode(defaultLang.language_name);
+          this.languageService.setLanguage(this.selectedLanguageCode);
+          this.loadTrainingContent(this.selectedLanguageId);
+        }
+      },
+      error: (err) => {
+        console.error('Error loading languages:', err);
+      }
+    }));
+  }
+
+  // Helper method to get date one year from now
+  private getOneYearExpiryDate(): string {
+    const today = new Date();
+    const expiryDate = new Date(today);
+    expiryDate.setFullYear(today.getFullYear() + 1);
+
+    // Format as 'DD/MM/YYYY' or 'YYYY-MM-DD' based on your API requirement
+    const day = String(expiryDate.getDate()).padStart(2, '0');
+    const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
+    const year = expiryDate.getFullYear();
+
+    // Option 1: DD/MM/YYYY format
+    return `${day}/${month}/${year}`;
+
+    // Option 2: YYYY-MM-DD format (if your API expects this)
+    // return `${year}-${month}-${day}`;
   }
 }
