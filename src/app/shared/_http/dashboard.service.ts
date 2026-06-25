@@ -15,6 +15,6 @@ export class DashboardService {
     }
 
     getDashboardCount(): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}dashboard/count/`);
+        return this.httpClient.get(`${this.baseUrl}dashboard/counts`);
     }
 }
