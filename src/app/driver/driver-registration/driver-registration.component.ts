@@ -223,7 +223,7 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
     this.showRegistration = true;
     this.showVideo = false;
     this.showCertification = false;
-    // this.router.navigate(['/']);
+    this.router.navigate(['/']);
   }
 
   goBack(): void {
@@ -426,6 +426,10 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
               this.initRegistrationForm();
               this.showRegistration = true;
               this.showVideo = false;
+            } else {
+              this.showRegistration = false;
+              this.showVideo = true;
+              this.cdr.detectChanges();
             }
           }
           console.error('Registration error:', err);

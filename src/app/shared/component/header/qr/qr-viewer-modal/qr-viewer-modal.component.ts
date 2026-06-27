@@ -6,6 +6,7 @@ import { NgbModal, NgbModalRef, NgbModalModule } from '@ng-bootstrap/ng-bootstra
 import { QRDisplayComponent } from '@modules/masters/QR-Operation/qr-code/qr-display/qr-display.component';
 import { QRConfig, DEFAULT_QR_CONFIG, QRResponse } from '@shared/models/qr.model';
 import { QRConfigService } from '@shared/services/qr-config.service';
+import { UrlService } from '@shared/services/url.service';
 
 
 @Component({
@@ -36,7 +37,8 @@ export class QRViewerModalComponent implements OnInit, AfterViewInit {
 
   constructor(
     private modalService: NgbModal,
-    private qrConfigService: QRConfigService
+    private qrConfigService: QRConfigService,
+    private urlService:UrlService
   ) { }
 
   ngOnInit(): void {
@@ -59,13 +61,11 @@ export class QRViewerModalComponent implements OnInit, AfterViewInit {
       this.config.terminalId = this.terminalId;
     }
 
-    if (this.qrData) {
-      try {
-        JSON.parse(this.qrData);
-        this.config.data = this.qrData;
-      } catch (e) {
-        // Keep as is
-      }
+    // Only set URL if qrData is not provided
+    if (!this.qrData) {
+      this.config.data = this.urlService.getDriverTrainingUrl(this.terminalId);
+    } else {
+      this.config.data = this.qrData;
     }
 
     // If configData is provided, use it
@@ -73,6 +73,7 @@ export class QRViewerModalComponent implements OnInit, AfterViewInit {
       this.config = { ...this.config, ...this.configData };
     }
   }
+
 
   ngAfterViewInit(): void {
     this.isInitialized = true;

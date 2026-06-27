@@ -1,10 +1,12 @@
 const version = 'api/v1/';
 const domain = 'localhost:3000/';
-
+const frontenddomain = 'localhost:4200/';
 //const domain = 'truck-driver-backend-dpa1.onrender.com/';
 
 export const environment = {
     production: false,
     ENABLE_ENCRYPTION: false,
     API_BASE_URL: 'http://' + domain + version,
+    SACNNING_BASE_URL: 'http://' + frontenddomain,
+    
 };

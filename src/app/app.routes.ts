@@ -10,6 +10,11 @@ import { DriverRegistrationComponent } from './driver/driver-registration/driver
 
 export const routes: Routes = [
     {
+        path: 'driver-training',
+        loadComponent: () => import('./driver/driver-registration/driver-registration.component')
+            .then(m => m.DriverRegistrationComponent)
+    },
+    {
         path: 'auth/login',
         component: LoginComponent
     },

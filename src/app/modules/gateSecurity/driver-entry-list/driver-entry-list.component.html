@@ -1,0 +1,27 @@
+<app-table [jsonData]="DriverEntriesDetailsData" (handleCreateAction)="handleCreateAction()"
+    (handleDeleteAction)="handleDeleteAction($event)" (handleEditAction)="handleEditAction($event)"
+    (handleViewAction)="handleViewAction($event)" (handleSelectRowAction)="handleEditAction($event)"></app-table>
+
+
+<ng-template #certificationModal let-modal>
+    <div class="modal-content border-0 shadow-lg rounded-4">
+        <!-- Modal Header -->
+        <div class="modal-header modern-header">
+            <div class="header-content">
+                <div class="header-text">
+                    <h5 class="modal-title">Driver Certification</h5>
+                </div>
+            </div>
+            <button class="close-btn" (click)="closeModal()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body p-4">
+            <app-driver-certification #certification [certificationId]="certificationId" [autoLoad]="true">
+            </app-driver-certification>
+        </div>
+
+    </div>
+</ng-template>

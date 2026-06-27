@@ -1,14 +1,14 @@
 // src/app/components/qr-display/qr-display.component.ts
 
-import { 
-  Component, 
-  Input, 
-  OnChanges, 
-  SimpleChanges, 
-  ViewChild, 
-  ElementRef, 
-  AfterViewInit, 
-  Output, 
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  Output,
   EventEmitter,
   OnDestroy
 } from '@angular/core';
@@ -17,6 +17,7 @@ import QRCodeStyling from 'qr-code-styling';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { QRConfig } from '@shared/models/qr.model';
+import { environment } from '@environments/environment.prod';
 
 @Component({
   selector: 'app-qr-display',
@@ -74,7 +75,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
         this.generateQR();
       }, 50);
     }
-    
+
     // Regenerate when size changes
     if (this.isInitialized && changes['size']) {
       setTimeout(() => {
@@ -107,8 +108,11 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
       const size = this.config.qrSize || this.getSize();
       const { cornerType, cornerDotType } = this.getCornerStyles();
 
-      let qrData = this.config.data || ' ';
-      
+      // let qrData = this.config.data || ' ';
+      // Generate QR data - use URL or custom data
+      let qrData = this.generateQRData();
+
+
       // Validate JSON
       try {
         JSON.parse(qrData);
@@ -165,6 +169,23 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
     }
   }
 
+  private generateQRData(): string {
+    // Get base URL from environment
+    const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
+
+    // If custom data is provided, use it
+    if (this.config.data && this.config.data !== ' ') {
+      return this.config.data;
+    }
+
+    // Generate the full URL for driver-training
+    const url = `${baseUrl}/driver-training`;
+
+    console.log('QR Code URL:', url); // For debugging
+
+    return url;
+  }
+
   private getSize(): number {
     switch (this.size) {
       case 'small': return 180;
@@ -175,7 +196,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private getCornerStyles(): { cornerType: string; cornerDotType: string } {
     const dotType = this.config.dotType;
-    
+
     switch (dotType) {
       case 'rounded':
         return { cornerType: 'extra-rounded', cornerDotType: 'dot' };
@@ -249,20 +270,20 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
 
       const imageData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      
+
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      
+
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
       const padding = 40;
       const maxWidth = pageWidth - padding;
       const maxHeight = pageHeight - padding;
-      
+
       const ratio = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
       const width = imgWidth * ratio;
       const height = imgHeight * ratio;
-      
+
       const x = (pageWidth - width) / 2;
       const y = (pageHeight - height) / 2;
 
@@ -270,14 +291,14 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
       pdf.setTextColor('#004761');
       pdf.text(`Terminal ID: ${this.config.terminalId || 'N/A'}`, 20, 20);
       pdf.text(`Generated: ${new Date().toLocaleString()}`, 20, 28);
-      
+
       pdf.addImage(imageData, 'PNG', x, y, width, height);
-      
+
       const footerText = this.config.bottomText || 'Scan to Connect';
       pdf.setFontSize(10);
       pdf.setTextColor('#004761');
       pdf.text(footerText, pageWidth / 2, pageHeight - 20, { align: 'center' });
-      
+
       pdf.save(`qr-code-${this.config.terminalId || 'terminal'}.pdf`);
     } catch (error) {
       console.error('PDF download error:', error);
@@ -299,7 +320,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
           </foreignObject>
         </svg>
       `;
-      
+
       const blob = new Blob([svg], { type: 'image/svg+xml' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');

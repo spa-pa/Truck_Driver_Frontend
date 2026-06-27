@@ -1,6 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { TooltipModule } from "primeng/tooltip";
 import { QRViewerModalComponent } from './qr-viewer-modal/qr-viewer-modal.component';
+import { UrlService } from '@shared/services/url.service';
+import { currentUser } from '@shared/utils/current-user';
 
 @Component({
   selector: 'app-qr',
@@ -12,12 +14,14 @@ export class QrComponent {
 
   @ViewChild('qrModal') qrModal!: QRViewerModalComponent;
 
-  terminalId: number = 123;
-  qrDataString: string = JSON.stringify({
-    action: 'connect',
-    device: 'terminal-123',
-    timestamp: new Date().toISOString()
-  });
+
+  qrDataString: string = '';
+  terminalId: number;
+
+  constructor(private urlService: UrlService) {
+    // Generate the URL for driver-training
+    this.qrDataString = this.urlService.getDriverTrainingUrl(this.terminalId);
+  }
 
   qRcode(): void {
     this.openQRModal();
@@ -25,6 +29,8 @@ export class QrComponent {
 
   openQRModal(): void {
     if (this.qrModal) {
+      this.qrModal.qrData = this.qrDataString;
+      this.qrModal.terminalId = currentUser().terminal_id;
       this.qrModal.openModal();
     }
   }

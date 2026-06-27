@@ -33,11 +33,12 @@ export interface QRConfig {
 }
 
 export const DEFAULT_QR_CONFIG: QRConfig = {
-  data: JSON.stringify({
-    action: 'connect',
-    device: 'terminal-123',
-    timestamp: new Date().toISOString()
-  }, null, 2),
+  data:'',
+  // data: JSON.stringify({
+  //   action: 'connect',
+  //   device: 'terminal-123',
+  //   timestamp: new Date().toISOString()
+  // }, null, 2),
   qrColor: '#004761',
   bgColor: '#ffffff',
   qrSize: 250,

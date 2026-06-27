@@ -129,6 +129,16 @@ const mastersData: Routes = [
         },
         loadComponent: () => import('../../modules/masters/training/training.component').then(r => r.TrainingComponent),
         // canActivate: [PermissionGuard]
+    },
+    {
+        path: 'driver-entry',
+        data: {
+            title: "Driver Entry List",
+            breadcrumb: "Driver Entry List",
+            pageId: 2
+        },
+        loadChildren: () => import('../../modules/gateSecurity/driver-entry-list/driver-entry-list.module').then(r => r.DriverEntryListModule),
+        // canActivate: [PermissionGuard]
     }
 
 ]
