@@ -4,6 +4,8 @@ import { dashData } from './shared/routes/routes';
 import { LoginComponent } from './auth/login/login.component';
 import { ErrorPageComponent } from '@shared/component/error-page/error-page.component';
 import { AdminGuard } from '@shared/guard/admin.guard';
+import { TrainingComponent } from '@modules/masters/training/training.component';
+import { DriverRegistrationComponent } from './driver/driver-registration/driver-registration.component';
 
 
 export const routes: Routes = [
