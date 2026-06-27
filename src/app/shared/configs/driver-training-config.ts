@@ -5,10 +5,10 @@ export const DriverTrainingDetailsData: RowData = {
     "headers": [{ label: "Sr.No", key: "SR.NO", type: 'autoIncrementNumber', size: '4%' },
     { label: "Full Name", key: "full_name", type: '' },
     { label: "Mobile Number", key: "mobile_number", type: '' },
-    { label: "Driving License Number", key: "driving_license_number", type: '' },
-    { label: "Driving License Expiry", key: "driving_license_expiry_date", type: 'date' },
+    { label: "License Number", key: "driving_license_number", type: '' },
+    { label: "License Expiry", key: "driving_license_expiry_date", type: 'date' },
     { label: "Certification Expiry", key: "expiry_date", type: 'date' },
-
+    { label: "Created At", key: "created_at", type: 'date&time' },
     { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['view'] }],
     "data": [],
     "dataKey": 'certification_id',

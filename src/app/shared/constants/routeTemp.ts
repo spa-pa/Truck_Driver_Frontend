@@ -125,17 +125,26 @@ export const AdminMenu = {
     // },
     {
       "active": false,
-      "icon": "Activity",
+      "icon": "Profile",
       "id": 4,
       "level": 1,
       "path": "/driver-entry",
-      "title": "Driver Entry List",
+      "title": "Register Drivers",
+      "type": "link"
+    },
+    {
+      "active": false,
+      "icon": "Scan",
+      "id": 5,
+      "level": 1,
+      "path": "/qr-scan-details",
+      "title": "Validate Certificate",
       "type": "link"
     },
     {
       "active": false,
       "icon": "Activity",
-      "id": 5,
+      "id": 6,
       "level": 1,
       "path": "/training-result",
       "title": "Training Results",
@@ -155,8 +164,8 @@ export const AdminMenu = {
           "type": "link"
         }
       ],
-      "icon": "Swap",
-      "id": 6,
+      "icon": "Work",
+      "id": 7,
       "level": 1,
       "title": "Training Configuration",
       "type": "sub"
@@ -164,7 +173,7 @@ export const AdminMenu = {
     {
       "active": false,
       "icon": "Swap",
-      "id": 7,
+      "id": 8,
       "level": 1,
       "path": "/qr-code-config",
       "title": "QR Configuration",
