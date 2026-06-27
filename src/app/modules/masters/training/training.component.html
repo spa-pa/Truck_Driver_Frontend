@@ -77,7 +77,7 @@
                         <label>{{ 'REGISTRATION.MOBILE' | translate }} <span class="required">*</span></label>
                         <div class="input-wrapper">
                             <i class="fas fa-mobile-alt input-icon"></i>
-                            <input type="tel" formControlName="mobile_number"  maxlength="10"
+                            <input type="tel" formControlName="mobile_number" maxlength="10"
                                 [placeholder]="'REGISTRATION.MOBILE_PLACEHOLDER' | translate"
                                 [class.error]="registrationForm.get('mobile_number')?.invalid && registrationForm.get('mobile_number')?.touched">
                         </div>
@@ -113,6 +113,9 @@
                             *ngIf="registrationForm.get('driving_license_expiry_date')?.invalid && registrationForm.get('driving_license_expiry_date')?.touched">
                             {{ 'REGISTRATION.LICENSE_EXPIRY_ERROR' | translate }}
                         </div>
+                        <span *ngIf="registrationForm.get('driving_license_expiry_date')?.errors?.['pattern']">
+                            Invalid date.
+                        </span>
                     </div>
                 </div>
 
