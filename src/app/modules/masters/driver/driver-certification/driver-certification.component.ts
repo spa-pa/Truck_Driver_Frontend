@@ -87,23 +87,23 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
 
     const qrData = {
       certification_id: this.certification.certification_id,
-      driver_id: this.certification.driver_id,
-      full_name: this.certification.full_name,
-      license_number: this.certification.driving_license_number,
-      expiry: this.certification.expiry_date,
-      type: 'driver_certification'
+      // driver_id: this.certification.driver_id,
+      // full_name: this.certification.full_name,
+      // license_number: this.certification.driving_license_number,
+      // expiry: this.certification.expiry_date,
+      // type: 'driver_certification'
     };
 
     this.qrConfig = {
-      ...this.qrConfig,
+      // ...this.qrConfig,
       data: JSON.stringify(qrData),
-      bottomText: `Driver: ${this.certification.full_name}`,
-      terminalId: this.certification.driver_id
+      // bottomText: `Driver: ${this.certification.full_name}`,
+      // terminalId: this.certification.driver_id
     };
 
     this.certificationDetailsId = {
       ...this.qrConfig,
-      certification_id: this.certification.certification_id
+      // certification_id: this.certification.certification_id
     };
   }
 

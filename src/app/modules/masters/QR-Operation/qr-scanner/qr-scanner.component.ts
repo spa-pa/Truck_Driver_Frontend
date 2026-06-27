@@ -7,6 +7,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import jsQR from 'jsqr';
 import { Subscription } from 'rxjs';
 import { DriverCertificationService } from '@shared/_http/driver-certification.service';
+import { CertificateScannedService } from '@shared/_http/certificate-scanned.service';
+import { currentUser } from '@shared/utils/current-user';
+import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'app-qr-scanner',
@@ -48,7 +51,7 @@ export class QRScannerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   subs: any;
 
-  constructor(private http: HttpClient, private driverCertificationService: DriverCertificationService) { }
+  constructor(private http: HttpClient, private driverCertificationService: DriverCertificationService, private certificateScannedService: CertificateScannedService, private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.subs = new Subscription();
@@ -224,14 +227,33 @@ export class QRScannerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.parsedData = { raw: data };
     }
 
-    setTimeout(() => {
-      this.stopCamera();
-    }, 1000);
 
     this.scanComplete.emit({
       data: data,
       parsed: this.parsedData
     });
+
+    if (this.parsedData.certification_id) {
+
+      const payload = {
+        terminal_id: currentUser().terminal_id,
+        certification_id: this.parsedData.certification_id
+      }
+
+      this.subs.add(this.certificateScannedService.createCertificateScanned(payload).subscribe({
+        next: (value) => {
+          if (value.driver_certification_id) {
+            setTimeout(() => {
+              this.stopCamera();
+            }, 1000);
+
+            this.toastService.open('!Successfully', 'success');
+          }
+        }, error: (err) => {
+          this.toastService.open('Certification Issue', 'error');
+        }
+      }))
+    }
   }
 
   // ============ IMAGE UPLOAD METHODS ============
