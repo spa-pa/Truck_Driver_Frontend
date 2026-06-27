@@ -20,5 +20,5 @@ export const DriverEntriesDetailsData: RowData = {
         { label: 'true', value: 'success' },
     ],
     "filterfields": ['mobile_number,driving_license_number'],
-    "isSearch": true
+    "isSearch": false
 }

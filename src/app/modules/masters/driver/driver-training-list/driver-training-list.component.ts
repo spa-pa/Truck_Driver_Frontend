@@ -60,7 +60,7 @@ export class DriverTrainingListComponent implements OnInit {
 
   handleEditAction(event: any) {
     this.certificationId = event;
-    this.modalService.open(this.certificationModal, {
+    this.modalRef = this.modalService.open(this.certificationModal, {
       size: 'xl',
       centered: true,
       backdrop: 'static'
