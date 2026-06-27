@@ -131,7 +131,7 @@ export class VideoConfigComponent implements OnInit {
 
           console.log("Videos response for language", langId, ":", this.videos);
 
-          if (this.videos && this.videos.path) {
+          if (this.videos && this.videos.path && langId== this.videos?.dataValues?.language_id) {
             const video = this.videos;
             this.currentVideo = video.path;
             this.currentVideoName = video.path.split("/").pop() || "video.mp4";
