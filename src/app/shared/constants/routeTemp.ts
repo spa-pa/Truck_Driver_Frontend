@@ -116,7 +116,7 @@ export const AdminMenu = {
     },
     {
       "active": false,
-      "icon": "Activity",
+      "icon": "Shield",
       "id": 4,
       "level": 1,
       "path": "/training",

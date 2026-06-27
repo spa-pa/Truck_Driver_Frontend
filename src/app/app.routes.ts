@@ -19,6 +19,10 @@ export const routes: Routes = [
         component: LoginComponent
     },
     {
+        path: 'safety-training',
+        component: TrainingComponent
+    },
+    {
         path: '',
         component: ContentComponent,
         children: dashData,
