@@ -114,22 +114,22 @@ export const AdminMenu = {
       "title": "Master",
       "type": "sub"
     },
-    // {
-    //   "active": false,
-    //   "icon": "Activity",
-    //   "id": 4,
-    //   "level": 1,
-    //   "path": "/training",
-    //   "title": "Training",
-    //   "type": "link"
-    // },
+    {
+      "active": false,
+      "icon": "Activity",
+      "id": 4,
+      "level": 1,
+      "path": "/training",
+      "title": "Training",
+      "type": "link"
+    },
     {
       "active": false,
       "icon": "Profile",
       "id": 4,
       "level": 1,
       "path": "/driver-entry",
-      "title": "Register Drivers",
+      "title": "Gate In",
       "type": "link"
     },
     {
