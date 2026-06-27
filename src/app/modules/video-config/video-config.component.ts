@@ -26,7 +26,7 @@ export class VideoConfigComponent implements OnInit {
 
   languages: any[] = [];
   selectedLanguageId: number | null = null;
-  videos: VideoResponse[] = [];
+  videos: VideoResponse | null = null;
   currentVideo: string | null = null;
   currentVideoName: string = "";
   currentVideoId: number | null = null;
@@ -39,6 +39,7 @@ export class VideoConfigComponent implements OnInit {
   isUploading = false;
   isLoading = false;
   isVideoLoaded = false;
+  isPlaying = false;
 
   // Track current loading language to prevent race conditions
   private currentLoadingLanguageId: number | null = null;
@@ -48,7 +49,7 @@ export class VideoConfigComponent implements OnInit {
     private apilanguageService: ApiLanguageService,
     private videoService: VideoService,
     private modalService: ModalService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadLanguages();
@@ -126,12 +127,12 @@ export class VideoConfigComponent implements OnInit {
             return;
           }
 
-          this.videos = videos || [];
+          this.videos = videos.data || [];
 
           console.log("Videos response for language", langId, ":", this.videos);
 
-          if (this.videos.length > 0) {
-            const video = this.videos[0];
+          if (this.videos && this.videos.path) {
+            const video = this.videos;
             this.currentVideo = video.path;
             this.currentVideoName = video.path.split("/").pop() || "video.mp4";
             this.currentVideoId = video.dataValues.video_id;
@@ -160,7 +161,7 @@ export class VideoConfigComponent implements OnInit {
   }
 
   clearVideo() {
-    this.videos = [];
+    this.videos = null;
     this.currentVideo = null;
     this.currentVideoName = "";
     this.currentVideoId = null;
@@ -200,7 +201,7 @@ export class VideoConfigComponent implements OnInit {
               this.modalService.error(
                 "Delete Failed",
                 error.error?.message ||
-                  "Failed to delete video. Please try again.",
+                "Failed to delete video. Please try again.",
               );
             },
           }),
@@ -253,21 +254,14 @@ export class VideoConfigComponent implements OnInit {
       return;
     }
 
-    // Check if video already exists for this language
-    const existingVideo = this.videos.find(
-      (v) =>
-        v.dataValues.language_id === this.selectedLanguageId &&
-        v.dataValues.is_active === true,
-    );
-
-    if (existingVideo) {
+    if (this.videos && this.videos?.path && this.videos?.dataValues?.video_id) {
       // Show confirmation modal using ModalService
       this.modalService.confirm(
         "Replace Video",
         `A video already exists for ${this.getLanguageDisplay(this.selectedLanguageId!)}. Do you want to replace it?`,
         () => {
           // On Confirm - update existing video
-          this.updateExistingVideo(existingVideo.dataValues.video_id);
+          this.updateExistingVideo(this.videos?.dataValues?.video_id);
         },
         () => {
           // On Cancel - do nothing
@@ -320,14 +314,14 @@ export class VideoConfigComponent implements OnInit {
             this.modalService.error(
               "Upload Failed",
               error.error?.message ||
-                "Failed to upload video. Please try again.",
+              "Failed to upload video. Please try again.",
             );
           },
         }),
     );
   }
 
-  updateExistingVideo(videoId: number) {
+  updateExistingVideo(videoId: any) {
     if (!this.selectedFile || !this.selectedLanguageId) return;
 
     this.isUploading = true;
@@ -361,7 +355,7 @@ export class VideoConfigComponent implements OnInit {
             this.modalService.error(
               "Update Failed",
               error.error?.message ||
-                "Failed to update video. Please try again.",
+              "Failed to update video. Please try again.",
             );
           },
         }),
@@ -398,11 +392,7 @@ export class VideoConfigComponent implements OnInit {
 
   getLanguageStatus(languageId: number): boolean {
     if (!languageId) return false;
-    return this.videos.some(
-      (v) =>
-        v.dataValues.language_id === Number(languageId) &&
-        v.dataValues.is_active === true,
-    );
+    return this.videos?.dataValues.language_id === Number(languageId)
   }
 
   getVideoName(): string {
