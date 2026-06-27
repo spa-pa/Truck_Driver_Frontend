@@ -15,7 +15,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 // ============================================
 .training-container {
     min-height: 100vh;
-    background: $white;
+    // background: $white;
     padding: 40px 20px;
     // max-width: 900px;
     margin: 0 auto;
@@ -1134,6 +1134,7 @@ $text-secondary: rgba($primary, 0.7);
 
             .language-select-container {
                 width: 100%;
+                margin-bottom: 5%;
 
                 .language-select {
                     flex: 1;
