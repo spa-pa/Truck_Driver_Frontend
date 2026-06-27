@@ -227,17 +227,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    this.languageSelected = false;
-    this.showRegistration = false;
+    this.showRegistration = true;
     this.showVideo = false;
-    this.showQuiz = false;
-    this.showResultModal = false;
-    this.videoProgress = 0;
-    this.selectedLanguage = 0;
-    this.selectedLanguageId = 1;
-    this.questions = [];
-    this.quizResult = null;
-    this.initRegistrationForm();
 
     if (this.videoPlayer) {
       this.videoPlayer.nativeElement.pause();
@@ -245,6 +236,11 @@ export class TrainingComponent implements OnInit, OnDestroy {
     }
 
     this.cdr.detectChanges();
+  }
+
+  goBackVedio() {
+    this.showVideo = true;
+    this.showQuiz = false;
   }
 
   // ============================================
@@ -412,10 +408,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
         error: (err) => {
+          console.log("err " + JSON.stringify(err))
           if (err.data) {
-            if (err.data.driver) {
-              this.driverDetails = err.data.driver;
-            }
             if (err.data.certification) {
               this.certificationId = err.data.certification.certification_id;
               this.modalRef = this.modalService.open(this.certificationModal, {
@@ -426,11 +420,18 @@ export class TrainingComponent implements OnInit, OnDestroy {
               this.initRegistrationForm();
               this.showRegistration = true;
               this.showVideo = false;
+            } else if (err.data.driver) {
+              this.driverDetails = err.data.driver;
+              this.isLoading = false;
+              this.showRegistration = false;
+              this.showVideo = true;
+              this.cdr.detectChanges();
+            } else {
+              this.toastService.open(err.message, 'error');
             }
           }
           console.error('Registration error:', err);
           this.isLoading = false;
-          this.toastService.open(err.message, 'error');
           this.cdr.detectChanges();
         }
       })
@@ -493,6 +494,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     // Get translated messages
     const passedMessage = this.translate.instant('MODAL.PASSED') ||
       'You have successfully passed the safety training! Your certificate is ready.';
+
     const failedMessage = this.translate.instant('MODAL.FAILED') ||
       'You did not meet the passing score of 70%. Please review the material and try again.';
 
@@ -504,14 +506,15 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
     this.isSubmitting = false;
     this.showQuiz = false;
-    this.showResultModal = true;
+    if (!passed)
+      this.showResultModal = true;
     this.cdr.detectChanges();
 
     // this.saveQuizResult(score, correct, passed);
     // Call saveQuizResult with delay after 3-4 seconds
-    setTimeout(() => {
-      this.saveQuizResult(score, correct, passed);
-    }, 3500); // 3.5 seconds delay
+    // setTimeout(() => {
+    this.saveQuizResult(score, correct, passed);
+    // }, 3500); // 3.5 seconds delay
   }
 
   private saveQuizResult(score: number, correct: number, passed: boolean): void {

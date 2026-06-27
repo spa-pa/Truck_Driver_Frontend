@@ -77,7 +77,7 @@
                         <label>{{ 'REGISTRATION.MOBILE' | translate }} <span class="required">*</span></label>
                         <div class="input-wrapper">
                             <i class="fas fa-mobile-alt input-icon"></i>
-                            <input type="tel" formControlName="mobile_number"
+                            <input type="tel" formControlName="mobile_number"  maxlength="10"
                                 [placeholder]="'REGISTRATION.MOBILE_PLACEHOLDER' | translate"
                                 [class.error]="registrationForm.get('mobile_number')?.invalid && registrationForm.get('mobile_number')?.touched">
                         </div>
@@ -158,7 +158,7 @@
             <button class="btn-primary btn-full" [disabled]="videoProgress < 90" (click)="proceedToQuiz()">
                 <i class="fas fa-question-circle"></i>
                 {{ 'VIDEO.TAKE_QUIZ' | translate }}
-                <span class="badge" *ngIf="videoProgress < 90">{{ 'VIDEO.UNLOCK' | translate }}</span>
+                <!-- <span class="badge" *ngIf="videoProgress < 90">{{ 'VIDEO.UNLOCK' | translate }}</span> -->
             </button>
         </div>
     </div>
@@ -167,13 +167,16 @@
     <div *ngIf="showQuiz" class="step-container">
         <div class="step-card">
             <div class="step-header">
-                <div class="step-icon">
+                <!-- <div class="step-icon">
                     <i class="fas fa-question-circle"></i>
                 </div>
                 <h2>{{ 'QUIZ.TITLE' | translate }}</h2>
-                <p>{{ 'QUIZ.SUBTITLE' | translate }}</p>
-                <button class="btn-back" (click)="retakeQuiz()">
+                <p>{{ 'QUIZ.SUBTITLE' | translate }}</p> -->
+                <button class="btn-back custom-right" (click)="retakeQuiz()">
                     <i class="fas fa-redo"></i> {{ 'QUIZ.RETAKE' | translate }}
+                </button>
+                <button class="btn-back custom-left" (click)="goBackVedio()">
+                    <i class="fas fa-arrow-left"></i> {{ 'REGISTRATION.BACK' | translate }}
                 </button>
             </div>
 
@@ -218,7 +221,7 @@
                     {{ 'QUIZ.NO_QUESTIONS' | translate }}
                 </div>
 
-                <button type="submit" class="btn-success btn-full"
+                <button type="submit" class="btn-primary btn-full"
                     [disabled]="quizForm.invalid || isSubmitting || questions.length === 0">
                     <span *ngIf="isSubmitting" class="spinner"></span>
                     <i class="fas fa-certificate" *ngIf="!isSubmitting"></i>
@@ -277,9 +280,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button *ngIf="quizResult?.passed" class="btn-download" (click)="downloadCertificate()">
+                <!-- <button *ngIf="quizResult?.passed" class="btn-download" (click)="downloadCertificate()">
                     <i class="fas fa-download"></i> {{ 'MODAL.DOWNLOAD' | translate }}
-                </button>
+                </button> -->
                 <button *ngIf="!quizResult?.passed" class="btn-retake" (click)="retakeQuiz()">
                     <i class="fas fa-redo"></i> {{ 'MODAL.RETAKE' | translate }}
                 </button>

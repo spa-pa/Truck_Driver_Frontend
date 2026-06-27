@@ -96,19 +96,19 @@ export class AuthTokenInterceptor implements HttpInterceptor {
                 );
             }
 
-            if (
-                responseBody?.code &&
-                !responseBody?.success
-            ) {
+            // if (
+            //     responseBody?.code &&
+            //     !responseBody?.success
+            // ) {
 
-                const message =
-                    responseMessages.codes.find(
-                        x => x.code === responseBody.code
-                    )?.message
-                    || "Something went wrong, please try again later";
+            //     const message =
+            //         responseMessages.codes.find(
+            //             x => x.code === responseBody.code
+            //         )?.message
+            //         || "Something went wrong, please try again later";
 
-                this.toastService.open(message, "error");
-            }
+            //     this.toastService.open(message, "error");
+            // }
 
             return event.clone({
                 body: responseBody
@@ -189,19 +189,19 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
                 } else {
 
-                    const message =
-                        responseMessages.codes.find(
-                            x => x.code === errorData?.error_message
-                        )?.message
-                        || "Something went wrong, please try again later";
+                    // const message =
+                    //     responseMessages.codes.find(
+                    //         x => x.code === errorData?.error_message
+                    //     )?.message
+                    //     || "Something went wrong, please try again later";
 
 
-                    if (err.status !== 400) {
-                        this.toastService.open(
-                            message,
-                            "error"
-                        );
-                    }
+                    // if (err.status !== 400) {
+                    //     this.toastService.open(
+                    //         message,
+                    //         "error"
+                    //     );
+                    // }
 
                 }
 
