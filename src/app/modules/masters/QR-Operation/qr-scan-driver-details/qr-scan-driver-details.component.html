@@ -32,9 +32,8 @@
   </div>
 
   <!-- PAGE CONTENT -->
-
   <div class="page-content">
-    <!-- QR SCANNER | SEARCH FORM-->
+    <!-- QR SCANNER | SEARCH FORM (shown only when no certification loaded) -->
     <div class="row g-4" *ngIf="!certificationId">
       <!-- LEFT COLUMN: QR SCANNER -->
       <div class="col-lg-6">
@@ -186,7 +185,7 @@
       </div>
     </div>
 
-    <!-- CERTIFICATION DETAILS -->
+    <!-- CERTIFICATION DETAILS (shown when loaded) -->
     <div class="certification-section" *ngIf="certificationId">
       <div class="certification-wrapper">
         <div class="certification-header">
@@ -212,24 +211,7 @@
           #certification
           [certificationId]="certificationId"
           [autoLoad]="true"
-        >
-        </app-driver-certification>
-      </div>
-    </div>
-
-    <!-- EMPTY STATE (when no certification loaded) -->
-    <div class="empty-state" *ngIf="!certificationId">
-      <div class="empty-state-content">
-        <div class="empty-icon">
-          <i class="fa fa-qrcode"></i>
-        </div>
-        <h3>No Certification Loaded</h3>
-        <p>Scan a QR code or search by mobile / license number</p>
-        <div class="empty-actions">
-          <app-qr-scanner-modal
-            (scanComplete)="onScanComplete($event)"
-          ></app-qr-scanner-modal>
-        </div>
+        ></app-driver-certification>
       </div>
     </div>
   </div>

@@ -1,5 +1,3 @@
-// src/app/modules/masters/driver-certification/driver-certification.component.ts
-
 import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
@@ -87,23 +85,14 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
 
     const qrData = {
       certification_id: this.certification.certification_id,
-      // driver_id: this.certification.driver_id,
-      // full_name: this.certification.full_name,
-      // license_number: this.certification.driving_license_number,
-      // expiry: this.certification.expiry_date,
-      // type: 'driver_certification'
     };
 
     this.qrConfig = {
-      // ...this.qrConfig,
       data: JSON.stringify(qrData),
-      // bottomText: `Driver: ${this.certification.full_name}`,
-      // terminalId: this.certification.driver_id
     };
 
     this.certificationDetailsId = {
       ...this.qrConfig,
-      // certification_id: this.certification.certification_id
     };
   }
 
@@ -132,46 +121,63 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
 
   getExpiryProgress(): number {
     if (!this.certification) return 0;
-    const expiry = new Date(this.certification.expiry_date);
-    const today = new Date();
     const totalDays = 365;
     const daysLeft = this.getDaysUntilExpiry(this.certification.expiry_date) || 0;
     const progress = ((totalDays - daysLeft) / totalDays) * 100;
     return Math.min(Math.max(progress, 0), 100);
   }
 
-  // ============ DOWNLOAD METHODS ============
+  // ============ DOWNLOAD METHODS (IMPROVED) ============
 
   async downloadPDF(): Promise<void> {
     const element = this.certificationCard?.nativeElement;
     if (!element) return;
 
+    // Temporarily add a class to hide buttons and other UI elements
+    element.classList.add('pdf-export');
+
     try {
+      // Capture with optimized settings
       const canvas = await html2canvas(element, {
-        scale: 3,
+        scale: 1.5,                  // reduced from 3 to keep file size small
         useCORS: true,
         backgroundColor: '#ffffff',
-        logging: false
+        logging: false,
+        width: element.scrollWidth,
+        height: element.scrollHeight,
+        onclone: (clonedDoc) => {
+          // Ensure buttons are hidden in the cloned document as well
+          const clonedElement = clonedDoc.querySelector('.certification-card');
+          if (clonedElement) {
+            clonedElement.classList.add('pdf-export');
+          }
+        }
       });
 
-      const imageData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      // Convert to JPEG with quality 0.9 to reduce size
+      const imageData = canvas.toDataURL('image/jpeg', 0.9);
 
+      const pdf = new jsPDF('p', 'mm', 'a4');
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
+      // Calculate image dimensions to fit within A4 with margins
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
-      const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
-      const width = imgWidth * ratio * 0.9;
-      const height = imgHeight * ratio * 0.9;
+      const ratio = Math.min((pageWidth - 20) / imgWidth, (pageHeight - 20) / imgHeight);
+      const width = imgWidth * ratio;
+      const height = imgHeight * ratio;
       const x = (pageWidth - width) / 2;
       const y = (pageHeight - height) / 2;
 
-      pdf.addImage(imageData, 'PNG', x, y, width, height);
+      pdf.addImage(imageData, 'JPEG', x, y, width, height);
       pdf.save(`Driver-Certification-${this.certification?.certification_id || 'Unknown'}.pdf`);
+
     } catch (error) {
       console.error('PDF download error:', error);
+    } finally {
+      // Remove the class after capture
+      element.classList.remove('pdf-export');
     }
   }
 
@@ -200,7 +206,8 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
             .print-container { max-width: 900px; margin: 0 auto; }
             ${styles}
             .certification-card { box-shadow: none !important; border: 2px solid #004761 !important; }
-            .btn-download, .btn-print { display: none !important; }
+            .btn-download, .btn-print, .footer-right { display: none !important; }
+            .pdf-export .footer-right { display: none !important; }
           </style>
         </head>
         <body>
