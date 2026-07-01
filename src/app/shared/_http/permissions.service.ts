@@ -129,7 +129,7 @@ export class PermissionControllerService {
 
     updateRolepermission(payload: any, rolepagepermissionid: any): Observable<any> {
         payload['created_by'] = currentUser().user_id;
-        return this.httpClient.put(`${this.baseUrl}rolePagePermissionMaster/`, payload);
+        return this.httpClient.put(`${this.baseUrl}rolePagePermissionMaster/${rolepagepermissionid}`, payload);
     }
 
     // --------------------------------------

@@ -49,6 +49,7 @@ export const PageFormGroup: IFormStructure[] = [
         type: "text",
         value: "",
         disable: false,
+        required: true
     },
     {
         name: "page_path",
@@ -57,5 +58,6 @@ export const PageFormGroup: IFormStructure[] = [
         type: "text",
         value: "",
         disable: false,
+        required: true
     }
 ]

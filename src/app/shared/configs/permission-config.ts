@@ -26,21 +26,21 @@ export const RolePermissionDetails: RowData = {
     "headers": [
         { label: "SR.NO", key: "SR.NO", type: 'autoIncrementNumber', size: '1rem' },
         // { label: "ID", key: "role_page_permission_id", type: 'link', url: "/permission/role-permission/", size: '2rem' }, 
-        { label: "Role Name", key: "roleName", type: '' },
-        { label: "Page Name", key: "pageName", type: '', size: '13rem', truncateString: false },
-        { label: "Role", key: "permission", type: '', size: '13rem', truncateString: false },
+        { label: "Role Name", key: "role_name", type: '' },
+        { label: "Page Name", key: "page_name", type: '', size: '13rem', truncateString: false },
+        { label: "Role", key: "description", type: '', size: '13rem', truncateString: false },
         // { label: "Action", type: "button", key: "delete" }
         { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }
     ],
     "data": [],
-    "dataKey": 'rolePagePermissionId',
+    "dataKey": 'role_page_permission_id',
     "buttonname": 'Create Role Permission',
     "button": true,
     "statuses": [
         { label: 'false', value: 'danger' },
         { label: 'true', value: 'success' },
     ],
-    "filterfields": ['rolePagePermissionId', 'role_name', 'page_name'],
+    "filterfields": ['role_page_permission_id', 'role_name', 'page_name'],
     "isSearch": true
 }
 
@@ -280,18 +280,18 @@ export const RolePagePermissionGroup: IFormStructure[] = [
         disable: true,
         hiddenControl: true
     },
-    {
-        name: "status_id",
-        label: "Is Active",
-        placeholder: "Is Active",
-        type: "select",
-        value: "",
-        bindValue: 'id',
-        bindLabel: 'name',
-        listName: 'yesno',
-        required: true,
-        disable: false,
-    }
+    // {
+    //     name: "is_active",
+    //     label: "Is Active",
+    //     placeholder: "Is Active",
+    //     type: "select",
+    //     value: "",
+    //     bindValue: 'id',
+    //     bindLabel: 'name',
+    //     listName: 'yesno',
+    //     required: true,
+    //     disable: false,
+    // }
 ];
 
 export const PagePermissionFormGroup: IFormStructure[] = [

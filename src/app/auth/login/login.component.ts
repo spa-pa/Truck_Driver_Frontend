@@ -77,10 +77,11 @@ export class LoginComponent {
 
         this.toastService.open("Login Successful", "success");
 
+        // ====================== THIS IS MAIN DYNAMIC START================
         // this.encryptedStorage.clearAll();
         // const menuData = JSON.parse(value.user.menus);
 
-        // // const permissions = value.role_page_permission;
+        // const permissions = value.user.role_page_permissions;
         // // new EncryptedStorage().setItem(new GlobalConfig().pagePermissions, JSON.stringify(permissions), false);
 
         // this.encryptedStorage.setItem(this.globalConfig.authToken, value.token, false);
@@ -91,8 +92,8 @@ export class LoginComponent {
         //   this.navmenu.intializeMenu(menuData);
         //   this.router.navigate([this.globalConfig.dashboardRoute]);
         // } else {
-        //   // const filteredMenu = this.filterMenuByPermissions(menuData, permissions);
-        //   const filteredMenu = menuData;
+        //   const filteredMenu = this.filterMenuByPermissions(menuData, permissions);
+        //   // const filteredMenu = menuData;
 
         //   new EncryptedStorage().setItem(new GlobalConfig().menu, JSON.stringify(filteredMenu), false);
         //   new EncryptedStorage().setItem(new GlobalConfig().userDetails, JSON.stringify({
@@ -100,18 +101,19 @@ export class LoginComponent {
         //     menu: JSON.stringify(filteredMenu)  // Update with filtered menu
         //   }), false);
         //   this.navmenu.intializeMenu(filteredMenu);
-        //   // this.permissionsService.loadPermissions();
-        //   // if (permissions && permissions.length > 0) {
-        //   //   const sortedPermissions = permissions.sort((a: any, b: any) => a.role_page_permission_id - b.role_page_permission_id);
-        //   //   const firstRoute = sortedPermissions[0]?.page_url;
-        //   //   this.router.navigate([firstRoute]);
-        //   // } else {
-        //   //   new EncryptedStorage().clearAll();
-        //   //   this.router.navigate(['/auth/login'])
-        //   //   this.toastService.open('Permission not granted. Please contact the administrator.', "error");
-        //   //   return;
-        //   // }
+        //   this.permissionsService.loadPermissions();
+        //   if (permissions && permissions.length > 0) {
+        //     const sortedPermissions = permissions.sort((a: any, b: any) => a.role_page_permission_id - b.role_page_permission_id);
+        //     const firstRoute = sortedPermissions[0]?.page_url;
+        //     this.router.navigate([firstRoute]);
+        //   } else {
+        //     new EncryptedStorage().clearAll();
+        //     this.router.navigate(['/auth/login'])
+        //     this.toastService.open('Permission not granted. Please contact the administrator.', "error");
+        //     return;
+        //   }
         // }
+        // ====================== THIS IS MAIN DYNAMIC END================
         // this.router.navigate([this.globalConfig.dashboardRoute]);
       },
       error: (err: HttpErrorResponse) => {

@@ -107,12 +107,14 @@ export class ModifyRolePagePermissionComponent implements OnInit, AfterViewInit,
       next: value => {
         this.loader.hideLoader();
         this.roleDetailsData.data = value.data;
+    
         const result = this.getPermissionsFromDescription(value.data.description);
+
         const resultArray: any = []
         result.forEach((permission: any) => {
           resultArray.push(permission.permission_id);
         });
-        this.roleDetailsData.data.permissionId = resultArray;
+        this.roleDetailsData.data.permission_id = resultArray;
         this.roleDetailsData.data = { ...this.roleDetailsData.data }
       }, error: () => {
         this.loader.hideLoader()
@@ -149,9 +151,9 @@ export class ModifyRolePagePermissionComponent implements OnInit, AfterViewInit,
       // this.roleDetailsData.data.permission = totalPermissionValues;
       const resultArray: any = []
       event.forEach((permission: any) => {
-        resultArray.push(permission.permissionId);
+        resultArray.push(permission.permission_id);
       });
-      this.roleDetailsData.data.permissionId = resultArray;
+      this.roleDetailsData.data.permission_id = resultArray;
       this.roleDetailsData.data = { ...this.roleDetailsData.data }
       // this.roleDetailsData.data = { ...this.roleDetailsData.data }
       // Log or use the description as needed
@@ -165,7 +167,7 @@ export class ModifyRolePagePermissionComponent implements OnInit, AfterViewInit,
       next: (value) => {
         this.loader.hideLoader();
         this.roleSearchGroupStructure.forEach((ele, index) => {
-          if (ele.name === 'permissionId') {
+          if (ele.name === 'permission_id') {
             ele.listData = value.data
           }
         })
