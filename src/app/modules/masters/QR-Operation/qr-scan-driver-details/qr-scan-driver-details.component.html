@@ -1,136 +1,236 @@
-<!-- src/app/modules/masters/qr-scan-driver-details/qr-scan-driver-details.component.html -->
-
 <div class="qr-scan-page">
-    <!-- Background Decoration -->
-    <div class="bg-decoration">
-        <div class="circle circle-1"></div>
-        <div class="circle circle-2"></div>
-        <div class="circle circle-3"></div>
-    </div>
+  <!-- Background Decoration -->
+  <div class="bg-decoration">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+  </div>
 
-    <!-- Header Section -->
-    <div class="page-header">
-        <div class="header-content">
-            <div class="header-left">
-                <div class="header-icon">
-                    <i class="fa fa-id-card"></i>
-                </div>
-                <div class="header-text">
-                    <h1>Driver Certification</h1>
-                    <p>Scan and verify driver certifications instantly</p>
-                </div>
+  <!-- HEADER SECTION -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="header-icon">
+          <i class="fa fa-id-card"></i>
+        </div>
+        <div class="header-text">
+          <h1>Driver Certification</h1>
+          <p>Scan QR or search by mobile / license number</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="status-indicator" *ngIf="certificationId">
+          <span class="status-dot active"></span>
+          <span class="status-text">Verified</span>
+        </div>
+        <button class="btn-rescan" (click)="rescan()" *ngIf="certificationId">
+          <i class="fa fa-qrcode"></i>
+          Rescan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE CONTENT -->
+
+  <div class="page-content">
+    <!-- QR SCANNER | SEARCH FORM-->
+    <div class="row g-4" *ngIf="!certificationId">
+      <!-- LEFT COLUMN: QR SCANNER -->
+      <div class="col-lg-6">
+        <div class="scan-card">
+          <div class="scan-card-content">
+            <div class="scan-icon-wrapper">
+              <div class="scan-icon">
+                <i class="fa fa-qrcode"></i>
+              </div>
             </div>
-            <div class="header-right">
-                <div class="status-indicator" *ngIf="certificationId">
-                    <span class="status-dot active"></span>
-                    <span class="status-text">Connected</span>
+            <div class="scan-info">
+              <h3>Scan QR Code</h3>
+              <p>
+                Position the QR code within the frame to verify driver
+                certification
+              </p>
+            </div>
+            <app-qr-scanner-modal
+              (scanComplete)="onScanComplete($event)"
+            ></app-qr-scanner-modal>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: MANUAL SEARCH -->
+      <div class="col-lg-6">
+        <div class="search-card">
+          <div class="search-card-header">
+            <div class="search-icon">
+              <i class="fa fa-search"></i>
+            </div>
+            <h4>Search by Credentials</h4>
+            <p class="text-muted small">
+              Enter mobile number or license number to find a certification
+            </p>
+          </div>
+
+          <form
+            #searchForm="ngForm"
+            (ngSubmit)="onSearch()"
+            class="search-form"
+          >
+            <div class="row g-3">
+              <!-- Mobile Number -->
+              <div class="col-12">
+                <label for="mobileNo" class="form-label fw-semibold">
+                  <i class="fa fa-phone me-1"></i> Mobile Number
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="fa fa-phone"></i
+                  ></span>
+                  <input
+                    type="text"
+                    id="mobileNo"
+                    name="mobileNo"
+                    class="form-control"
+                    [(ngModel)]="searchParams.mobileNo"
+                    placeholder="e.g. 9876543210"
+                    [class.is-invalid]="
+                      searchError &&
+                      !searchParams.mobileNo &&
+                      !searchParams.licenseNo
+                    "
+                  />
                 </div>
-                <button class="btn-rescan" (click)="rescan()" *ngIf="certificationId">
-                    <i class="fa fa-qrcode"></i>
-                    Rescan
+              </div>
+
+              <!-- OR Divider -->
+              <div class="col-12 text-center">
+                <span class="or-divider">or</span>
+              </div>
+
+              <!-- License Number -->
+              <div class="col-12">
+                <label for="licenseNo" class="form-label fw-semibold">
+                  <i class="fa fa-id-card me-1"></i> License Number
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="fa fa-id-card"></i
+                  ></span>
+                  <input
+                    type="text"
+                    id="licenseNo"
+                    name="licenseNo"
+                    class="form-control"
+                    [(ngModel)]="searchParams.licenseNo"
+                    placeholder="e.g. DL-1234567890"
+                    [class.is-invalid]="
+                      searchError &&
+                      !searchParams.mobileNo &&
+                      !searchParams.licenseNo
+                    "
+                  />
+                </div>
+              </div>
+
+              <!-- Validation Message -->
+              <div
+                class="col-12"
+                *ngIf="
+                  searchError &&
+                  !searchParams.mobileNo &&
+                  !searchParams.licenseNo
+                "
+              >
+                <div class="alert alert-danger alert-sm py-2">
+                  <i class="fa fa-exclamation-circle me-1"></i>
+                  Please enter either mobile number or license number.
+                </div>
+              </div>
+
+              <!-- Search Button -->
+              <div class="col-12 mt-3">
+                <button
+                  type="submit"
+                  class="btn btn-search w-100"
+                  [disabled]="searchLoading"
+                >
+                  <span *ngIf="!searchLoading">
+                    <i class="fa fa-search me-2"></i> Find Certification
+                  </span>
+                  <span *ngIf="searchLoading">
+                    <i class="fa fa-spinner fa-spin me-2"></i> Searching...
+                  </span>
                 </button>
+              </div>
+
+              <!-- Search Result Message -->
+              <div
+                class="col-12 mt-2"
+                *ngIf="
+                  searchError &&
+                  (searchParams.mobileNo || searchParams.licenseNo)
+                "
+              >
+                <div class="alert alert-danger alert-sm py-2">
+                  <i class="fa fa-exclamation-circle me-1"></i>
+                  {{
+                    searchErrorMessage ||
+                      "No certification found matching the provided details."
+                  }}
+                </div>
+              </div>
             </div>
+          </form>
         </div>
+      </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="page-content">
-        <!-- Scan Section -->
-        <div class="scan-section" [class.scanned]="certificationId" *ngIf="!certificationId">
-            <div class="scan-card">
-                <div class="scan-card-content">
-                    <div class="scan-icon-wrapper">
-                        <div class="scan-icon">
-                            <i class="fa fa-qrcode"></i>
-                        </div>
-                    </div>
-
-                    <div class="scan-info">
-                        <h3>Scan QR Code</h3>
-                        <p>Position the QR code within the frame to verify driver certification</p>
-                    </div>
-
-                    <app-qr-scanner-modal (scanComplete)="onScanComplete($event)"></app-qr-scanner-modal>
-                </div>
+    <!-- CERTIFICATION DETAILS -->
+    <div class="certification-section" *ngIf="certificationId">
+      <div class="certification-wrapper">
+        <div class="certification-header">
+          <div class="header-left">
+            <div class="cert-badge">
+              <i class="fa fa-check-circle"></i>
+              Verified
             </div>
-
-            <!-- Scanner Instructions -->
-            <!-- <div class="scan-instructions" *ngIf="!certificationId">
-                <div class="instruction-item">
-                    <div class="instruction-icon">
-                        <i class="fa fa-camera"></i>
-                    </div>
-                    <div class="instruction-text">
-                        <h4>Open Scanner</h4>
-                        <p>Click the "Scan QR" button to open the camera</p>
-                    </div>
-                </div>
-                <div class="instruction-arrow">
-                    <i class="fa fa-arrow-right"></i>
-                </div>
-                <div class="instruction-item">
-                    <div class="instruction-icon">
-                        <i class="fa fa-qrcode"></i>
-                    </div>
-                    <div class="instruction-text">
-                        <h4>Scan QR Code</h4>
-                        <p>Align the QR code within the scanner frame</p>
-                    </div>
-                </div>
-                <div class="instruction-arrow">
-                    <i class="fa fa-arrow-right"></i>
-                </div>
-                <div class="instruction-item">
-                    <div class="instruction-icon">
-                        <i class="fa fa-check-circle"></i>
-                    </div>
-                    <div class="instruction-text">
-                        <h4>View Details</h4>
-                        <p>Driver certification details will appear automatically</p>
-                    </div>
-                </div>
-            </div> -->
+            <h2>Certification Details</h2>
+          </div>
+          <div class="header-right">
+            <button class="btn-refresh" (click)="refreshCertification()">
+              <i class="fa fa-refresh"></i>
+              Refresh
+            </button>
+            <button class="btn-close" (click)="clearCertification()">
+              <i class="fa fa-times"></i>
+              Clear
+            </button>
+          </div>
         </div>
-
-        <!-- Certification Details Section -->
-        <div class="certification-section" *ngIf="certificationId">
-            <div class="certification-wrapper">
-                <div class="certification-header">
-                    <div class="header-left">
-                        <div class="cert-badge">
-                            <i class="fa fa-check-circle"></i>
-                            Verified
-                        </div>
-                        <h2>Certification Details</h2>
-                    </div>
-                    <div class="header-right">
-                        <button class="btn-refresh" (click)="refreshCertification()">
-                            <i class="fa fa-refresh"></i>
-                            Refresh
-                        </button>
-                        <button class="btn-close" (click)="clearCertification()">
-                            <i class="fa fa-times"></i>
-                            Clear
-                        </button>
-                    </div>
-                </div>
-                <app-driver-certification #certification [certificationId]="certificationId"
-                    [autoLoad]="true"></app-driver-certification>
-            </div>
-        </div>
-
-        <!-- Empty State -->
-        <div class="empty-state" *ngIf="!certificationId">
-            <div class="empty-state-content">
-                <div class="empty-icon">
-                    <i class="fa fa-qrcode"></i>
-                </div>
-                <h3>No Certification Loaded</h3>
-                <p>Scan a driver certification QR code to view details</p>
-                <div class="empty-actions">
-                    <app-qr-scanner-modal (scanComplete)="onScanComplete($event)"></app-qr-scanner-modal>
-                </div>
-            </div>
-        </div>
+        <app-driver-certification
+          #certification
+          [certificationId]="certificationId"
+          [autoLoad]="true"
+        >
+        </app-driver-certification>
+      </div>
     </div>
+
+    <!-- EMPTY STATE (when no certification loaded) -->
+    <div class="empty-state" *ngIf="!certificationId">
+      <div class="empty-state-content">
+        <div class="empty-icon">
+          <i class="fa fa-qrcode"></i>
+        </div>
+        <h3>No Certification Loaded</h3>
+        <p>Scan a QR code or search by mobile / license number</p>
+        <div class="empty-actions">
+          <app-qr-scanner-modal
+            (scanComplete)="onScanComplete($event)"
+          ></app-qr-scanner-modal>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

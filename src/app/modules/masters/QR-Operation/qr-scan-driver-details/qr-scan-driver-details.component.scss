@@ -1,8 +1,14 @@
-// src/app/modules/masters/QR-Operation/qr-scan-driver-details/qr-scan-driver-details.component.scss
+/*
+============================================================
+FILE: qr-scan-driver-details.component.scss
+DESCRIPTION: Full styling for split-screen layout with
+             QR scanner + search panel
+============================================================
+*/
 
-// ============================================
-// VARIABLES
-// ============================================
+/* ============================================
+   VARIABLES
+   ============================================ */
 $primary: #004761;
 $secondary: #f25f36;
 $white: #ffffff;
@@ -10,13 +16,16 @@ $light-bg: #f0f2f5;
 $border-color: rgba($primary, 0.08);
 $text-secondary: rgba($primary, 0.6);
 $shadow: 0 20px 60px rgba($primary, 0.08);
+$shadow-hover: 0 24px 72px rgba($primary, 0.12);
 $success: #10b981;
 $warning: #f59e0b;
 $danger: #ef4444;
+$radius: 20px;
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-// ============================================
-// PAGE CONTAINER
-// ============================================
+/* ============================================
+   PAGE CONTAINER
+   ============================================ */
 .qr-scan-page {
     min-height: 100vh;
     background: $light-bg;
@@ -27,9 +36,9 @@ $danger: #ef4444;
     flex-direction: column;
 }
 
-// ============================================
-// BACKGROUND DECORATION
-// ============================================
+/* ============================================
+   BACKGROUND DECORATION
+   ============================================ */
 .bg-decoration {
     position: fixed;
     top: 0;
@@ -52,14 +61,12 @@ $danger: #ef4444;
             top: -200px;
             right: -100px;
         }
-
         &.circle-2 {
             width: 400px;
             height: 400px;
             bottom: -100px;
             left: -150px;
         }
-
         &.circle-3 {
             width: 300px;
             height: 300px;
@@ -70,9 +77,9 @@ $danger: #ef4444;
     }
 }
 
-// ============================================
-// PAGE HEADER
-// ============================================
+/* ============================================
+   PAGE HEADER
+   ============================================ */
 .page-header {
     background: $white;
     border-bottom: 2px solid $border-color;
@@ -102,7 +109,6 @@ $danger: #ef4444;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-
                 i {
                     font-size: 24px;
                     color: $primary;
@@ -117,7 +123,6 @@ $danger: #ef4444;
                     margin: 0;
                     letter-spacing: -0.5px;
                 }
-
                 p {
                     font-size: 14px;
                     color: $text-secondary;
@@ -133,35 +138,6 @@ $danger: #ef4444;
             gap: 12px;
             flex-wrap: wrap;
 
-            .btn-scan {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                padding: 8px 20px;
-                background: $primary;
-                color: $white;
-                border: none;
-                border-radius: 10px;
-                font-size: 13px;
-                font-weight: 500;
-                cursor: pointer;
-                transition: all 0.25s ease;
-
-                i {
-                    font-size: 16px;
-                }
-
-                &:hover {
-                    background: darken($primary, 5%);
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba($primary, 0.3);
-                }
-
-                &:active {
-                    transform: translateY(0);
-                }
-            }
-
             .status-indicator {
                 display: flex;
                 align-items: center;
@@ -175,13 +151,11 @@ $danger: #ef4444;
                     height: 8px;
                     border-radius: 50%;
                     background: $text-secondary;
-
                     &.active {
                         background: $success;
                         animation: pulse-dot 2s ease-in-out infinite;
                     }
                 }
-
                 .status-text {
                     font-size: 13px;
                     font-weight: 500;
@@ -201,18 +175,16 @@ $danger: #ef4444;
                 font-size: 13px;
                 font-weight: 500;
                 cursor: pointer;
-                transition: all 0.25s ease;
+                transition: $transition;
 
                 i {
                     font-size: 16px;
                 }
-
                 &:hover {
                     background: darken($secondary, 5%);
                     transform: translateY(-2px);
                     box-shadow: 0 4px 12px rgba($secondary, 0.3);
                 }
-
                 &:active {
                     transform: translateY(0);
                 }
@@ -221,9 +193,9 @@ $danger: #ef4444;
     }
 }
 
-// ============================================
-// PAGE CONTENT
-// ============================================
+/* ============================================
+   PAGE CONTENT
+   ============================================ */
 .page-content {
     flex: 1;
     max-width: 1400px;
@@ -234,148 +206,228 @@ $danger: #ef4444;
     z-index: 1;
 }
 
-// ============================================
-// SCAN SECTION
-// ============================================
-.scan-section {
+/* ============================================
+   LEFT COLUMN: QR SCANNER CARD
+   ============================================ */
+.scan-card {
+    background: $white;
+    border-radius: $radius;
+    box-shadow: $shadow;
+    padding: 32px 28px;
+    border: 2px solid $border-color;
+    transition: $transition;
+    height: 100%;
     display: flex;
-    gap: 40px;
-    margin-bottom: 40px;
+    flex-direction: column;
+    justify-content: center;
 
-    &.scanned {
-        .scan-card {
-            flex: 0 0 auto;
-            max-width: 320px;
-        }
+    &:hover {
+        border-color: rgba($primary, 0.15);
+        box-shadow: $shadow-hover;
     }
 
-    .scan-card {
-        background: $white;
-        border-radius: 20px;
-        box-shadow: $shadow;
-        padding: 32px;
-        flex: 1;
-        border: 2px solid $border-color;
-        transition: all 0.3s ease;
-
-        &:hover {
-            border-color: rgba($primary, 0.15);
-            box-shadow: 0 24px 72px rgba($primary, 0.12);
-        }
-
-        .scan-card-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 20px;
-
-            .scan-icon-wrapper {
-                .scan-icon {
-                    width: 80px;
-                    height: 80px;
-                    background: rgba($secondary, 0.08);
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-
-                    i {
-                        font-size: 36px;
-                        color: $secondary;
-                    }
-                }
-            }
-
-            .scan-info {
-                h3 {
-                    font-size: 18px;
-                    font-weight: 600;
-                    color: $primary;
-                    margin: 0 0 4px 0;
-                }
-
-                p {
-                    font-size: 14px;
-                    color: $text-secondary;
-                    margin: 0;
-                }
-            }
-
-            app-qr-scanner-modal {
-                display: block;
-                width: 100%;
-            }
-        }
-    }
-
-    .scan-instructions {
-        flex: 1;
+    .scan-card-content {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 16px;
-        background: $white;
-        border-radius: 20px;
-        padding: 24px 32px;
-        box-shadow: $shadow;
-        border: 2px solid $border-color;
+        text-align: center;
+        gap: 20px;
 
-        .instruction-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
-
-            .instruction-icon {
-                width: 44px;
-                height: 44px;
-                background: rgba($primary, 0.06);
-                border-radius: 12px;
+        .scan-icon-wrapper {
+            .scan-icon {
+                width: 80px;
+                height: 80px;
+                background: rgba($secondary, 0.08);
+                border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                flex-shrink: 0;
-
                 i {
-                    font-size: 20px;
-                    color: $primary;
-                }
-            }
-
-            .instruction-text {
-                h4 {
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: $primary;
-                    margin: 0;
-                }
-
-                p {
-                    font-size: 12px;
-                    color: $text-secondary;
-                    margin: 0;
+                    font-size: 36px;
+                    color: $secondary;
                 }
             }
         }
 
-        .instruction-arrow {
-            color: $text-secondary;
-            font-size: 18px;
-            opacity: 0.3;
+        .scan-info {
+            h3 {
+                font-size: 18px;
+                font-weight: 600;
+                color: $primary;
+                margin: 0 0 4px 0;
+            }
+            p {
+                font-size: 14px;
+                color: $text-secondary;
+                margin: 0;
+            }
+        }
+
+        app-qr-scanner-modal {
+            display: block;
+            width: 100%;
         }
     }
 }
 
-// ============================================
-// CERTIFICATION SECTION
-// ============================================
+/* ============================================
+   RIGHT COLUMN: SEARCH CARD
+   ============================================ */
+.search-card {
+    background: $white;
+    border-radius: $radius;
+    box-shadow: $shadow;
+    padding: 32px 28px;
+    border: 2px solid $border-color;
+    transition: $transition;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+        border-color: rgba($primary, 0.15);
+        box-shadow: $shadow-hover;
+    }
+
+    .search-card-header {
+        text-align: center;
+        margin-bottom: 24px;
+
+        .search-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 12px;
+            background: rgba($primary, 0.06);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            i {
+                font-size: 28px;
+                color: $primary;
+            }
+        }
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: $primary;
+            margin: 0 0 4px 0;
+        }
+        p {
+            font-size: 14px;
+            color: $text-secondary;
+            margin: 0;
+        }
+    }
+
+    .search-form {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        .form-label {
+            font-size: 14px;
+            color: $primary;
+            margin-bottom: 4px;
+        }
+
+        .input-group {
+            .input-group-text {
+                background: rgba($primary, 0.04);
+                border: 1px solid $border-color;
+                color: $text-secondary;
+                font-size: 14px;
+            }
+            .form-control {
+                border: 1px solid $border-color;
+                border-radius: 0 10px 10px 0;
+                padding: 10px 14px;
+                font-size: 14px;
+                transition: $transition;
+
+                &:focus {
+                    border-color: $primary;
+                    box-shadow: 0 0 0 3px rgba($primary, 0.1);
+                }
+                &.is-invalid {
+                    border-color: $danger;
+                    box-shadow: 0 0 0 3px rgba($danger, 0.1);
+                }
+            }
+        }
+
+        .or-divider {
+            display: inline-block;
+            padding: 0 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: $text-secondary;
+            background: $white;
+            position: relative;
+
+            &::before,
+            &::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                width: 40px;
+                height: 1px;
+                background: $border-color;
+            }
+            &::before {
+                right: 100%;
+            }
+            &::after {
+                left: 100%;
+            }
+        }
+
+        .btn-search {
+            padding: 12px 24px;
+            background: $primary;
+            color: $white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: $transition;
+
+            &:hover:not(:disabled) {
+                background: darken($primary, 5%);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba($primary, 0.3);
+            }
+            &:active:not(:disabled) {
+                transform: translateY(0);
+            }
+            &:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+        }
+
+        .alert {
+            border-radius: 10px;
+            font-size: 13px;
+            i {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+/* ============================================
+   CERTIFICATION SECTION
+   ============================================ */
 .certification-section {
     animation: slideUp 0.5s ease;
+    margin-top: 32px;
 
     .certification-wrapper {
         background: $white;
-        border-radius: 20px;
+        border-radius: $radius;
         box-shadow: $shadow;
         border: 2px solid $border-color;
         overflow: hidden;
@@ -403,12 +455,10 @@ $danger: #ef4444;
                     border-radius: 20px;
                     font-size: 12px;
                     font-weight: 600;
-
                     i {
                         font-size: 14px;
                     }
                 }
-
                 h2 {
                     font-size: 18px;
                     font-weight: 600;
@@ -431,12 +481,10 @@ $danger: #ef4444;
                     font-size: 13px;
                     font-weight: 500;
                     cursor: pointer;
-                    transition: all 0.25s ease;
-
+                    transition: $transition;
                     i {
                         font-size: 14px;
                     }
-
                     &:hover {
                         transform: translateY(-2px);
                     }
@@ -445,7 +493,6 @@ $danger: #ef4444;
                 .btn-refresh {
                     background: rgba($primary, 0.06);
                     color: $primary;
-
                     &:hover {
                         background: rgba($primary, 0.12);
                     }
@@ -454,7 +501,6 @@ $danger: #ef4444;
                 .btn-close {
                     background: rgba($secondary, 0.06);
                     color: $secondary;
-
                     &:hover {
                         background: rgba($secondary, 0.12);
                     }
@@ -469,9 +515,9 @@ $danger: #ef4444;
     }
 }
 
-// ============================================
-// EMPTY STATE
-// ============================================
+/* ============================================
+   EMPTY STATE
+   ============================================ */
 .empty-state {
     display: flex;
     align-items: center;
@@ -491,7 +537,6 @@ $danger: #ef4444;
             display: flex;
             align-items: center;
             justify-content: center;
-
             i {
                 font-size: 48px;
                 color: $primary;
@@ -505,7 +550,6 @@ $danger: #ef4444;
             color: $primary;
             margin: 0 0 8px 0;
         }
-
         p {
             font-size: 16px;
             color: $text-secondary;
@@ -520,32 +564,14 @@ $danger: #ef4444;
     }
 }
 
-// ============================================
-// PAGE FOOTER
-// ============================================
-.page-footer {
-    padding: 16px 40px;
-    text-align: center;
-    font-size: 13px;
-    color: $text-secondary;
-    border-top: 2px solid $border-color;
-    background: $white;
-
-    .footer-divider {
-        margin: 0 12px;
-        opacity: 0.3;
-    }
-}
-
-// ============================================
-// ANIMATIONS
-// ============================================
+/* ============================================
+   ANIMATIONS
+   ============================================ */
 @keyframes slideUp {
     from {
         opacity: 0;
         transform: translateY(30px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -553,184 +579,124 @@ $danger: #ef4444;
 }
 
 @keyframes pulse-dot {
-
     0%,
     100% {
         opacity: 1;
         transform: scale(1);
     }
-
     50% {
         opacity: 0.5;
         transform: scale(1.2);
     }
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-// ============================================
-// RESPONSIVE
-// ============================================
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media (max-width: 1024px) {
-    .scan-section {
-        flex-direction: column;
-
-        &.scanned {
-            .scan-card {
-                flex: 1;
-                max-width: 100%;
-            }
-        }
-
-        .scan-instructions {
-            flex-direction: column;
-            padding: 20px;
-
-            .instruction-arrow {
-                transform: rotate(90deg);
-            }
-
-            .instruction-item {
+    .page-header {
+        padding: 16px 24px;
+        .header-content {
+            flex-wrap: wrap;
+            gap: 12px;
+            .header-right {
                 width: 100%;
+                justify-content: flex-start;
             }
         }
+    }
+    .page-content {
+        padding: 24px 20px;
     }
 }
 
 @media (max-width: 768px) {
     .page-header {
-        padding: 16px 20px;
-
+        padding: 14px 16px;
         .header-content {
-            flex-direction: column;
-            gap: 12px;
-            align-items: flex-start;
-
             .header-left {
                 .header-text {
                     h1 {
                         font-size: 18px;
                     }
-
                     p {
                         font-size: 12px;
                     }
                 }
             }
-
             .header-right {
-                width: 100%;
-                justify-content: flex-start;
                 flex-wrap: wrap;
+                .status-indicator {
+                    padding: 4px 12px;
+                    font-size: 12px;
+                }
+                .btn-rescan {
+                    padding: 6px 14px;
+                    font-size: 12px;
+                }
             }
         }
     }
 
     .page-content {
-        padding: 20px;
+        padding: 16px;
     }
 
-    .scan-section {
-        .scan-card {
-            padding: 24px 20px;
-        }
+    .scan-card,
+    .search-card {
+        padding: 24px 20px;
     }
 
-    .certification-section {
-        .certification-wrapper {
-            .certification-header {
-                flex-direction: column;
-                gap: 12px;
-                align-items: flex-start;
-                padding: 16px 20px;
-
-                .header-right {
-                    width: 100%;
-
-                    button {
-                        flex: 1;
-                        justify-content: center;
-                    }
-                }
+    .certification-section .certification-wrapper .certification-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 16px 20px;
+        .header-right {
+            width: 100%;
+            button {
+                flex: 1;
+                justify-content: center;
             }
         }
     }
 
-    .empty-state {
-        .empty-state-content {
-            .empty-icon {
-                width: 80px;
-                height: 80px;
-
-                i {
-                    font-size: 32px;
-                }
-            }
+    .empty-state .empty-state-content .empty-icon {
+        width: 80px;
+        height: 80px;
+        i {
+            font-size: 32px;
         }
     }
 
-    .page-footer {
-        padding: 12px 20px;
+    .search-card .search-form .or-divider {
         font-size: 12px;
-
-        .footer-divider {
-            display: none;
-        }
-
-        span {
-            display: block;
-            margin: 2px 0;
+        &::before,
+        &::after {
+            width: 20px;
         }
     }
 }
 
 @media (max-width: 480px) {
     .page-header {
-        padding: 12px 16px;
-
+        padding: 10px 12px;
         .header-content {
             .header-left {
-                gap: 12px;
-
+                gap: 10px;
                 .header-icon {
-                    width: 40px;
-                    height: 40px;
-
+                    width: 36px;
+                    height: 36px;
                     i {
-                        font-size: 18px;
-                    }
-                }
-
-                .header-text {
-                    h1 {
                         font-size: 16px;
                     }
                 }
-            }
-
-            .header-right {
-
-                .btn-scan,
-                .btn-rescan {
-                    padding: 6px 14px;
-                    font-size: 12px;
-
-                    i {
-                        font-size: 14px;
+                .header-text {
+                    h1 {
+                        font-size: 15px;
                     }
-                }
-
-                .status-indicator {
-                    padding: 4px 12px;
-                    font-size: 12px;
-
-                    .status-dot {
-                        width: 6px;
-                        height: 6px;
+                    p {
+                        font-size: 11px;
                     }
                 }
             }
@@ -741,12 +707,41 @@ $danger: #ef4444;
         padding: 12px;
     }
 
-    .scan-section .scan-card .scan-card-content .scan-icon-wrapper .scan-icon {
-        width: 60px;
-        height: 60px;
-
+    .scan-card .scan-card-content .scan-icon-wrapper .scan-icon {
+        width: 56px;
+        height: 56px;
         i {
-            font-size: 28px;
+            font-size: 24px;
+        }
+    }
+
+    .search-card .search-card-header .search-icon {
+        width: 48px;
+        height: 48px;
+        i {
+            font-size: 20px;
+        }
+    }
+
+    .search-card .search-form .btn-search {
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+
+    .certification-section .certification-wrapper .certification-header {
+        .header-left {
+            flex-wrap: wrap;
+            .cert-badge {
+                font-size: 11px;
+                padding: 3px 10px;
+            }
+            h2 {
+                font-size: 15px;
+            }
+        }
+        .header-right button {
+            font-size: 12px;
+            padding: 6px 12px;
         }
     }
 }
