@@ -201,7 +201,7 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
       full_name: ['', [Validators.required, Validators.minLength(3)]],
       mobile_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       driving_license_number: ['', Validators.required],
-      driving_license_expiry_date: ['10/12/1998', Validators.required]
+      driving_license_expiry_date: ['', Validators.required]
     });
   }
 

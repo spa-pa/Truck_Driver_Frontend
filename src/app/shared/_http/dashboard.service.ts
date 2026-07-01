@@ -17,4 +17,12 @@ export class DashboardService {
     getDashboardCount(): Observable<any> {
         return this.httpClient.get(`${this.baseUrl}dashboard/counts`);
     }
+
+    getAllDriverCertificationsData(search: any): Observable<any> {
+        return this.httpClient.get(`${this.baseUrl}driverCertification?created_at=${search}`);
+    }
+
+    getAllScannedCertificationsData(search: any): Observable<any> {
+        return this.httpClient.get(`${this.baseUrl}certificateScanned?created_at=${search}`);
+    }
 }

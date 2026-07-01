@@ -1,0 +1,729 @@
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  rel="stylesheet"
+/>
+
+<div class="dashboard-container">
+  <div class="container-fluid py-2">
+    <!-- Export Button -->
+    <div class="d-flex justify-content-end mb-3">
+      <button class="btn btn-modern-export" (click)="exportToExcel()">
+        <i class="fas fa-file-export"></i>
+        <span class="btn-text">Export All</span>
+      </button>
+    </div>
+
+    <!-- Statistics Cards - Row 1 -->
+    <div class="row g-3">
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card stat-card border-0 shadow-sm h-100">
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="stat-info">
+                <h6 class="text-muted mb-1 small text-uppercase fw-semibold">
+                  Total Drivers
+                </h6>
+                <h4 class="mb-0 fw-bold">
+                  {{ counts.total_drivers | number }}
+                </h4>
+                <small class="text-success"
+                  ><i class="fas fa-arrow-up me-1"></i>12.5%</small
+                >
+              </div>
+              <div class="stat-icon-wrapper bg-primary">
+                <i class="fas fa-users text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card stat-card border-0 shadow-sm h-100">
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="stat-info">
+                <h6 class="text-muted mb-1 small text-uppercase fw-semibold">
+                  Active Certificates
+                </h6>
+                <h4 class="mb-0 fw-bold">
+                  {{ counts.active_certificates | number }}
+                </h4>
+                <small class="text-danger"
+                  ><i class="fas fa-arrow-down me-1"></i>5.2%</small
+                >
+              </div>
+              <div class="stat-icon-wrapper bg-success">
+                <i class="fas fa-certificate text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card stat-card border-0 shadow-sm h-100">
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="stat-info">
+                <h6 class="text-muted mb-1 small text-uppercase fw-semibold">
+                  Today's Gate Entries
+                </h6>
+                <h4 class="mb-0 fw-bold">
+                  {{ counts.todays_gate_entries | number }}
+                </h4>
+                <small class="text-success"
+                  ><i class="fas fa-arrow-up me-1"></i>8.4%</small
+                >
+              </div>
+              <div class="stat-icon-wrapper bg-warning">
+                <i class="fas fa-truck text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card stat-card border-0 shadow-sm h-100">
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="stat-info">
+                <h6 class="text-muted mb-1 small text-uppercase fw-semibold">
+                  Today's Certificates
+                </h6>
+                <h4 class="mb-0 fw-bold">
+                  {{ counts.todays_certificates_generated | number }}
+                </h4>
+                <small class="text-success"
+                  ><i class="fas fa-arrow-up me-1"></i>15.7%</small
+                >
+              </div>
+              <div class="stat-icon-wrapper bg-info">
+                <i class="fas fa-file-alt text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle Row: Recent Activity + Compliance & Language -->
+    <div class="row mt-2 g-4 align-items-stretch">
+      <!-- Left Column: Recent Activity -->
+      <div class="col-12 col-lg-6 d-flex">
+        <div class="card panel-card border-0 shadow-sm w-100">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div class="d-flex align-items-center gap-3">
+                <div class="panel-icon-chip bg-primary">
+                  <i class="fas fa-stream"></i>
+                </div>
+                <div>
+                  <h5 class="card-title mb-1 fw-semibold">Recent Activity</h5>
+                  <p class="text-muted small mb-0">Latest 5 records</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs custom-tabs border-0 mb-3" role="tablist">
+              <li class="nav-item">
+                <button
+                  class="nav-link"
+                  [class.active]="activeTab === 'gate'"
+                  (click)="setActiveTab('gate')"
+                >
+                  <i class="fas fa-truck me-1"></i> Gate Entries
+                  <span class="tab-indicator"></span>
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  class="nav-link"
+                  [class.active]="activeTab === 'quiz'"
+                  (click)="setActiveTab('quiz')"
+                >
+                  <i class="fas fa-question-circle me-1"></i> Quiz Drivers
+                  <span class="tab-indicator"></span>
+                </button>
+              </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content flex-grow-1">
+              <!-- Gate Entries -->
+              <div class="tab-pane" [class.active]="activeTab === 'gate'">
+                <div class="activity-list">
+                  <div *ngFor="let entry of gateEntries" class="activity-item">
+                    <div class="activity-left">
+                      <div
+                        class="avatar-sm bg-{{
+                          entry.iconClass
+                        }} bg-opacity-10 rounded-circle"
+                      >
+                        <i
+                          class="fas fa-{{ entry.icon }} text-{{
+                            entry.iconClass
+                          }}"
+                        ></i>
+                      </div>
+                      <div class="activity-info">
+                        <h6 class="mb-0">{{ entry.driverName }}</h6>
+                        <div class="activity-meta">
+                          <span
+                            ><i class="fas fa-truck me-1"></i
+                            >{{ entry.truckNumber }}</span
+                          >
+                          <span class="dot">•</span>
+                          <span
+                            ><i class="fas fa-map-marker-alt me-1"></i
+                            >{{ entry.terminal }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="activity-right">
+                      <span class="badge badge-{{ entry.statusClass }}">{{
+                        entry.status
+                      }}</span>
+                      <small class="text-muted time">{{ entry.time }}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quiz Drivers -->
+              <div class="tab-pane" [class.active]="activeTab === 'quiz'">
+                <div class="activity-list">
+                  <div *ngFor="let driver of quizDrivers" class="activity-item">
+                    <div class="activity-left">
+                      <div
+                        class="avatar-sm bg-{{
+                          driver.iconClass
+                        }} bg-opacity-10 rounded-circle"
+                      >
+                        <i
+                          class="fas fa-{{ driver.icon }} text-{{
+                            driver.iconClass
+                          }}"
+                        ></i>
+                      </div>
+                      <div class="activity-info">
+                        <div class="d-flex align-items-center gap-2">
+                          <h6 class="mb-0">{{ driver.name }}</h6>
+                          <span
+                            class="badge badge-{{ driver.quizStatusClass }}"
+                            >{{ driver.quizStatus }}</span
+                          >
+                        </div>
+                        <div class="activity-meta">
+                          <span
+                            ><i class="fas fa-language me-1"></i
+                            >{{ driver.language }}</span
+                          >
+                          <span class="dot">•</span>
+                          <span
+                            ><i class="fas fa-check-circle me-1"></i
+                            >{{ driver.score }}/{{
+                              driver.totalQuestions
+                            }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="activity-right">
+                      <span class="badge badge-{{ driver.attemptClass }}"
+                        >{{ driver.attempts }} attempt{{
+                          driver.attempts > 1 ? "s" : ""
+                        }}</span
+                      >
+                      <small class="text-muted time">{{ driver.time }}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Compliance Overview + Language Distribution -->
+      <div class="col-12 col-lg-6 d-flex flex-column gap-4">
+        <!-- Compliance Overview -->
+        <div class="card panel-card border-0 shadow-sm flex-grow-1">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="panel-icon-chip bg-success">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div>
+                <h5 class="card-title mb-1 fw-semibold">Compliance Overview</h5>
+                <p class="text-muted small mb-0">Today's compliance metrics</p>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="metric-tile metric-tile--success h-100">
+                  <div class="metric-tile-icon">
+                    <i class="fas fa-check-circle"></i>
+                  </div>
+                  <h6 class="text-muted mb-1">Pass Rate</h6>
+                  <h3 class="text-success mb-0">
+                    {{ complianceData.passRate }}%
+                  </h3>
+                  <small class="text-success"
+                    >{{ complianceData.passRateChange }} vs yesterday</small
+                  >
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="metric-tile metric-tile--primary h-100">
+                  <div class="metric-tile-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                  </div>
+                  <h6 class="text-muted mb-1">Mobile Usage</h6>
+                  <h3 class="text-primary mb-0">
+                    {{ complianceData.mobileUsage }}%
+                  </h3>
+                  <small class="text-muted"
+                    >{{ complianceData.kioskUsage }}% Kiosk</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Language Distribution -->
+        <div class="card panel-card border-0 shadow-sm flex-grow-1">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="panel-icon-chip bg-info">
+                <i class="fas fa-language"></i>
+              </div>
+              <div>
+                <h5 class="card-title mb-1 fw-semibold">
+                  Language Distribution
+                </h5>
+                <p class="text-muted small mb-0">Most popular: Hindi</p>
+              </div>
+            </div>
+            <div class="chart-wrapper" style="height: 140px">
+              <canvas #languageChart></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 3: Terminal Performance & Hourly Distribution -->
+    <div class="row mt-2 g-4">
+      <div class="col-12 col-lg-6">
+        <div class="card panel-card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <div class="panel-icon-chip bg-warning">
+                <i class="fas fa-map-marked-alt"></i>
+              </div>
+              <div>
+                <h5 class="card-title mb-1 fw-semibold">
+                  Terminal Performance
+                </h5>
+                <p class="text-muted small mb-0">Certifications by location</p>
+              </div>
+            </div>
+            <div class="chart-wrapper" style="height: 220px">
+              <canvas #terminalChart></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="card panel-card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <div class="panel-icon-chip bg-info">
+                <i class="fas fa-chart-area"></i>
+              </div>
+              <div>
+                <h5 class="card-title mb-1 fw-semibold">Hourly Distribution</h5>
+                <p class="text-muted small mb-0">Peak: 7-9 AM & 4-6 PM</p>
+              </div>
+            </div>
+            <div class="chart-wrapper" style="height: 220px">
+              <canvas #hourlyChart></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Driver Categories -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card panel-card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <div class="panel-icon-chip bg-primary">
+                <i class="fas fa-id-badge"></i>
+              </div>
+              <div>
+                <h5 class="card-title mb-1 fw-semibold">Driver Categories</h5>
+                <p class="text-muted small mb-0">
+                  Distribution of driver types
+                </p>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div
+                *ngFor="let category of driverCategories"
+                class="col-12 col-sm-6 col-md-3"
+              >
+                <div
+                  class="driver-category driver-category--{{
+                    category.iconClass
+                  }} h-100"
+                >
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <h6 class="text-muted mb-1">{{ category.name }}</h6>
+                      <h4 class="mb-0 fw-bold">
+                        {{ category.count | number }}
+                      </h4>
+                    </div>
+                    <div
+                      class="category-icon-wrapper text-{{
+                        category.iconClass
+                      }}"
+                    >
+                      <i class="fas fa-{{ category.icon }}"></i>
+                    </div>
+                  </div>
+                  <small class="text-{{ category.growthClass }}">
+                    <i class="fas {{ getTrendIcon(category.trend) }} me-1"></i>
+                    {{ category.growth }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compliance Reports -->
+    <div class="row mt-4 g-4">
+      <div class="col-12">
+        <div class="card panel-card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div class="d-flex align-items-center gap-3">
+                <div class="panel-icon-chip bg-success">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+                <div>
+                  <h5 class="card-title mb-1 fw-semibold">
+                    Compliance Reports
+                  </h5>
+                  <p class="text-muted small mb-0">
+                    Weekly summary, monthly terminal reports, driver insights
+                  </p>
+                </div>
+              </div>
+              <button
+                class="btn btn-modern-export btn-sm"
+                (click)="exportComplianceExcel()"
+              >
+                <i class="fas fa-file-excel me-1"></i> Export All Reports
+              </button>
+            </div>
+
+            <!-- Four report cards -->
+            <div class="row g-4">
+              <!-- Weekly Summary -->
+              <div class="col-12 col-lg-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-2"
+                    >
+                      <h6
+                        class="text-uppercase text-muted fw-semibold small mb-0"
+                      >
+                        <i class="fas fa-calendar-week me-1"></i> Weekly Summary
+                      </h6>
+                      <span class="badge bg-light text-dark">{{
+                        selectedWeekLabel
+                      }}</span>
+                    </div>
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-2"
+                    >
+                      <p class="text-muted small mb-0">
+                        Training completions per terminal
+                      </p>
+                      <div class="d-flex gap-2">
+                        <select
+                          class="form-select form-select-sm"
+                          style="width: auto"
+                          (change)="onWeekChange($event)"
+                        >
+                          <option value="0">This Week</option>
+                          <option value="1">Last Week</option>
+                          <option value="2">2 Weeks Ago</option>
+                        </select>
+                        <button
+                          class="btn btn-outline-primary btn-sm"
+                          (click)="exportWeekly()"
+                        >
+                          <i class="fas fa-file-excel"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      class="report-table-container"
+                      style="max-height: 200px; overflow-y: auto"
+                    >
+                      <table class="table table-sm table-borderless mb-0">
+                        <thead class="sticky-top bg-white">
+                          <tr>
+                            <th>Terminal</th>
+                            <th class="text-end" style="width: 80px">
+                              Completions
+                            </th>
+                            <th style="width: 40%">Progress</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of weeklyData">
+                            <td>{{ item.terminal }}</td>
+                            <td class="text-end fw-bold">
+                              {{ item.completions }}
+                            </td>
+                            <td>
+                              <div class="progress" style="height: 8px">
+                                <div
+                                  class="progress-bar bg-primary"
+                                  [style.width.%]="
+                                    (item.completions / maxWeeklyCompletions) *
+                                    100
+                                  "
+                                ></div>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Monthly Terminal Report -->
+              <div class="col-12 col-lg-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-2"
+                    >
+                      <h6
+                        class="text-uppercase text-muted fw-semibold small mb-0"
+                      >
+                        <i class="fas fa-calendar-alt me-1"></i> Monthly
+                        Terminal Report
+                      </h6>
+                      <span class="badge bg-light text-dark">{{
+                        selectedMonthLabel
+                      }}</span>
+                    </div>
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-2"
+                    >
+                      <p class="text-muted small mb-0">
+                        Certifications by terminal
+                      </p>
+                      <div class="d-flex gap-2">
+                        <select
+                          class="form-select form-select-sm"
+                          style="width: auto"
+                          (change)="onMonthChange($event)"
+                        >
+                          <option value="0">This Month</option>
+                          <option value="1">Last Month</option>
+                          <option value="2">2 Months Ago</option>
+                        </select>
+                        <button
+                          class="btn btn-outline-primary btn-sm"
+                          (click)="exportMonthly()"
+                        >
+                          <i class="fas fa-file-excel"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      class="report-table-container"
+                      style="max-height: 200px; overflow-y: auto"
+                    >
+                      <table class="table table-sm table-borderless mb-0">
+                        <thead class="sticky-top bg-white">
+                          <tr>
+                            <th>Terminal</th>
+                            <th class="text-end" style="width: 80px">
+                              Certifications
+                            </th>
+                            <th style="width: 40%">Progress</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of monthlyData">
+                            <td>{{ item.terminal }}</td>
+                            <td class="text-end fw-bold">
+                              {{ item.certifications }}
+                            </td>
+                            <td>
+                              <div class="progress" style="height: 8px">
+                                <div
+                                  class="progress-bar bg-success"
+                                  [style.width.%]="
+                                    (item.certifications /
+                                      maxMonthlyCertifications) *
+                                    100
+                                  "
+                                ></div>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Driver Breakdown -->
+              <div class="col-12 col-lg-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-2"
+                    >
+                      <h6
+                        class="text-uppercase text-muted fw-semibold small mb-0"
+                      >
+                        <i class="fas fa-users me-1"></i> Driver Breakdown
+                      </h6>
+                      <button
+                        class="btn btn-outline-primary btn-sm"
+                        (click)="exportDriverBreakdown()"
+                      >
+                        <i class="fas fa-file-excel"></i>
+                      </button>
+                    </div>
+                    <p class="text-muted small">Unique vs Repeat drivers</p>
+                    <div class="row align-items-center">
+                      <div class="col-7">
+                        <div class="chart-wrapper" style="height: 160px">
+                          <canvas #driverBreakdownChart></canvas>
+                        </div>
+                      </div>
+                      <div class="col-5">
+                        <div class="d-flex flex-column gap-2">
+                          <div>
+                            <span
+                              class="badge bg-primary"
+                              style="
+                                width: 12px;
+                                height: 12px;
+                                display: inline-block;
+                                border-radius: 50%;
+                              "
+                            ></span>
+                            <span class="ms-1 small">Unique</span>
+                            <span class="fw-bold float-end">{{
+                              uniqueDrivers | number
+                            }}</span>
+                          </div>
+                          <div>
+                            <span
+                              class="badge bg-secondary"
+                              style="
+                                width: 12px;
+                                height: 12px;
+                                display: inline-block;
+                                border-radius: 50%;
+                              "
+                            ></span>
+                            <span class="ms-1 small">Repeat</span>
+                            <span class="fw-bold float-end">{{
+                              repeatDrivers | number
+                            }}</span>
+                          </div>
+                          <div class="mt-2 pt-2 border-top">
+                            <span class="small text-muted">Unique rate</span>
+                            <span class="fw-bold float-end"
+                              >{{ uniquePercentage }}%</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Volume by Location -->
+              <div class="col-12 col-lg-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-2"
+                    >
+                      <h6
+                        class="text-uppercase text-muted fw-semibold small mb-0"
+                      >
+                        <i class="fas fa-map-marker-alt me-1"></i> Volume by
+                        Location
+                      </h6>
+                      <button
+                        class="btn btn-outline-primary btn-sm"
+                        (click)="exportVolume()"
+                      >
+                        <i class="fas fa-file-excel"></i>
+                      </button>
+                    </div>
+                    <p class="text-muted small">
+                      Certification counts per terminal
+                    </p>
+                    <div
+                      class="report-table-container"
+                      style="max-height: 200px; overflow-y: auto"
+                    >
+                      <table class="table table-sm table-hover mb-0">
+                        <thead class="sticky-top bg-white">
+                          <tr>
+                            <th>Terminal</th>
+                            <th class="text-end">This Week</th>
+                            <th class="text-end">This Month</th>
+                            <th class="text-end">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let loc of locationVolume">
+                            <td>{{ loc.terminal }}</td>
+                            <td class="text-end">{{ loc.weekly | number }}</td>
+                            <td class="text-end">{{ loc.monthly | number }}</td>
+                            <td class="text-end fw-bold">
+                              {{ loc.total | number }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

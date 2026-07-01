@@ -6,6 +6,7 @@ import { ErrorPageComponent } from '@shared/component/error-page/error-page.comp
 import { AdminGuard } from '@shared/guard/admin.guard';
 import { TrainingComponent } from '@modules/masters/training/training.component';
 import { DriverRegistrationComponent } from './driver/driver-registration/driver-registration.component';
+import { DashboardNewComponent } from '@modules/dashboard/dashboard-new/dashboard-new.component';
 
 
 export const routes: Routes = [
@@ -28,6 +29,8 @@ export const routes: Routes = [
         children: dashData,
         canActivate: [AdminGuard],
     },
+    {path: 'new-dashboard', component: DashboardNewComponent,},
+     
     {
         path: '**',
         component: ErrorPageComponent

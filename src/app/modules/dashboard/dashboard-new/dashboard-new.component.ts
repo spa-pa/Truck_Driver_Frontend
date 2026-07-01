@@ -7,38 +7,38 @@ import {
   ViewChild,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
 import { DashboardService } from "@shared/_http/dashboard.service";
 import { Chart, registerables } from "chart.js";
 
-Chart.register(...registerables);
-
 import * as XLSX from "xlsx";
 
+Chart.register(...registerables);
+
 @Component({
-  selector: "app-dashboard",
+  selector: 'app-dashboard-new',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: "./dashboard.component.html",
-  styleUrl: "./dashboard.component.scss",
+  templateUrl: './dashboard-new.component.html',
+  styleUrl: './dashboard-new.component.scss'
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
-  @ViewChild("trendsChart") trendsChartCanvas!: ElementRef;
+export class DashboardNewComponent implements OnInit, AfterViewInit{
+@ViewChild("trendsChart") trendsChartCanvas!: ElementRef;
   @ViewChild("languageChart") languageChartCanvas!: ElementRef;
   @ViewChild("terminalChart") terminalChartCanvas!: ElementRef;
   @ViewChild("hourlyChart") hourlyChartCanvas!: ElementRef;
+
+  
+  @ViewChild("driverBreakdownChart") driverBreakdownChartCanvas!: ElementRef;
+
 
   private charts: Chart[] = [];
 
   activeTab: string = "gate";
 
-  // ----- Driver Certifications -----
-  driverCertificationsPeriod: string = "weekly";
-  driverCertificationsData: any[] = [];
-
-  // ----- Scanned Certifications -----
-  scannedCertificationsPeriod: string = "weekly";
-  scannedCertificationsData: any[] = [];
+  currentMonth: string = new Date().toLocaleString("default", {
+    month: "long",
+    year: "numeric",
+  });
 
   counts: any = {
     total_drivers: 0,
@@ -249,15 +249,95 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     { name: "English", count: 8 },
   ];
 
-  constructor(
-    private dashboardService: DashboardService,
-    private router: Router,
-  ) {}
+   weeklyDataMap: { [offset: number]: { terminal: string, completions: number }[] } = {
+    0: [
+      { terminal: "Terminal A", completions: 120 },
+      { terminal: "Terminal B", completions: 98 },
+      { terminal: "Terminal C", completions: 85 },
+      { terminal: "Terminal D", completions: 72 },
+      { terminal: "Terminal E", completions: 55 },
+      { terminal: "Terminal F", completions: 40 },
+      { terminal: "Terminal G", completions: 35 },
+    ],
+    1: [
+      { terminal: "Terminal A", completions: 105 },
+      { terminal: "Terminal B", completions: 88 },
+      { terminal: "Terminal C", completions: 75 },
+      { terminal: "Terminal D", completions: 60 },
+      { terminal: "Terminal E", completions: 45 },
+      { terminal: "Terminal F", completions: 30 },
+      { terminal: "Terminal G", completions: 25 },
+    ],
+    2: [
+      { terminal: "Terminal A", completions: 95 },
+      { terminal: "Terminal B", completions: 80 },
+      { terminal: "Terminal C", completions: 65 },
+      { terminal: "Terminal D", completions: 50 },
+      { terminal: "Terminal E", completions: 35 },
+      { terminal: "Terminal F", completions: 20 },
+      { terminal: "Terminal G", completions: 15 },
+    ],
+  };
+
+   monthlyDataMap: { [offset: number]: { terminal: string, certifications: number }[] } = {
+    0: [
+      { terminal: "Terminal A", certifications: 480 },
+      { terminal: "Terminal B", certifications: 390 },
+      { terminal: "Terminal C", certifications: 320 },
+      { terminal: "Terminal D", certifications: 280 },
+      { terminal: "Terminal E", certifications: 210 },
+      { terminal: "Terminal F", certifications: 150 },
+      { terminal: "Terminal G", certifications: 120 },
+    ],
+    1: [
+      { terminal: "Terminal A", certifications: 450 },
+      { terminal: "Terminal B", certifications: 370 },
+      { terminal: "Terminal C", certifications: 300 },
+      { terminal: "Terminal D", certifications: 260 },
+      { terminal: "Terminal E", certifications: 190 },
+      { terminal: "Terminal F", certifications: 130 },
+      { terminal: "Terminal G", certifications: 100 },
+    ],
+    2: [
+      { terminal: "Terminal A", certifications: 420 },
+      { terminal: "Terminal B", certifications: 340 },
+      { terminal: "Terminal C", certifications: 280 },
+      { terminal: "Terminal D", certifications: 230 },
+      { terminal: "Terminal E", certifications: 170 },
+      { terminal: "Terminal F", certifications: 110 },
+      { terminal: "Terminal G", certifications: 85 },
+    ],
+  };
+
+  uniqueDrivers = 15890;
+  repeatDrivers = 8699;
+  uniquePercentage: number;
+
+  selectedWeekOffset: number = 0;
+  selectedMonthOffset: number = 0;
+
+   weeklyData: { terminal: string, completions: number }[] = [];
+  monthlyData: { terminal: string, certifications: number }[] = [];
+
+  locationVolume = [
+    { terminal: "Terminal A", weekly: 120, monthly: 480, total: 2450 },
+    { terminal: "Terminal B", weekly: 98, monthly: 390, total: 2100 },
+    { terminal: "Terminal C", weekly: 85, monthly: 320, total: 1800 },
+    { terminal: "Terminal D", weekly: 72, monthly: 280, total: 1500 },
+    { terminal: "Terminal E", weekly: 55, monthly: 210, total: 1200 },
+    { terminal: "Terminal F", weekly: 40, monthly: 150, total: 800 },
+    { terminal: "Terminal G", weekly: 35, monthly: 120, total: 650 },
+  ];
+
+  constructor(private dashboardService: DashboardService) {
+    this.uniquePercentage = Math.round((this.uniqueDrivers / (this.uniqueDrivers + this.repeatDrivers)) * 100);
+    // Initialize with default offsets
+    this.weeklyData = this.weeklyDataMap[this.selectedWeekOffset];
+    this.monthlyData = this.monthlyDataMap[this.selectedMonthOffset]
+  }
 
   ngOnInit(): void {
     this.getDashboardCounts();
-    this.loadDriverCertifications();
-    this.loadScannedCertifications();
   }
 
   ngAfterViewInit(): void {
@@ -266,51 +346,38 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }, 500);
   }
 
+    get selectedWeekLabel(): string {
+    const labels = ['This Week', 'Last Week', '2 Weeks Ago'];
+    return labels[this.selectedWeekOffset] || 'This Week';
+  }
+  get selectedMonthLabel(): string {
+    const labels = ['This Month', 'Last Month', '2 Months Ago'];
+    return labels[this.selectedMonthOffset] || 'This Month';
+  }
+
+  // Computed values for progress bars
+ get maxWeeklyCompletions(): number {
+    return Math.max(...this.weeklyData.map(d => d.completions), 1);
+  }
+  get maxMonthlyCertifications(): number {
+    return Math.max(...this.monthlyData.map(d => d.certifications), 1);
+  }
+
   // Get dashboard counts from API
   getDashboardCounts(): void {
     this.dashboardService.getDashboardCount().subscribe({
       next: (response) => {
         console.log("Success:", response);
-        if (response?.success && response.data) {
+        if (response && response.success && response.data) {
           this.counts = response.data;
         }
       },
       error: (error) => {
         console.error("Error fetching dashboard counts:", error);
+        // Keep default values if API fails
       },
-    });
-  }
-
-  loadDriverCertifications() {
-    this.dashboardService
-      .getAllDriverCertificationsData(this.driverCertificationsPeriod)
-      .subscribe({
-        next: (response) => {
-          if (response?.success && Array.isArray(response.data)) {
-            this.driverCertificationsData = response.data;
-          } else {
-            this.driverCertificationsData = [];
-          }
-        },
-        error: (error) => {
-          console.error("Error fetching dashboard all data:", error);
-          this.driverCertificationsData = [];
-        },
-      });
-  }
-
-  loadScannedCertifications() {
-    this.dashboardService.getAllScannedCertificationsData("weekly").subscribe({
-      next: (response) => {
-        if (response?.success && Array.isArray(response.data)) {
-          this.scannedCertificationsData = response.data;
-        } else {
-          this.scannedCertificationsData = [];
-        }
-      },
-      error: (error) => {
-        console.error("Error fetching dashboard all data:", error);
-        this.scannedCertificationsData = [];
+      complete: () => {
+        console.log("Dashboard counts API call completed");
       },
     });
   }
@@ -325,6 +392,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.initializeLanguageChart();
     this.initializeTerminalChart();
     this.initializeHourlyChart();
+
+    this.initializeDriverBreakdownChart();
   }
 
   initializeTrendsChart(): void {
@@ -574,94 +643,148 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     return icons[trend] || "fa-minus";
   }
 
-  // ---------- Labels for UI ----------
-  get selectedDriverCertificationsLabel(): string {
-    return this.driverCertificationsPeriod === "weekly" ? "Week" : "Month";
+
+  initializeDriverBreakdownChart(): void {
+    if (!this.driverBreakdownChartCanvas) return;
+    const ctx = this.driverBreakdownChartCanvas.nativeElement.getContext("2d");
+    const chart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: ["Unique", "Repeat"],
+        datasets: [
+          {
+            data: [this.uniqueDrivers, this.repeatDrivers],
+            backgroundColor: ["#1c2b3a", "#e9ecef"],
+            borderWidth: 2,
+            borderColor: "#fff",
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "70%",
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.label}: ${ctx.raw} drivers`,
+            },
+          },
+        },
+      },
+    });
+    this.charts.push(chart);
   }
 
-  get selectedScannedCertificationsLabel(): string {
-    return this.scannedCertificationsPeriod === "weekly" ? "Week" : "Month";
-  }
-
-  // ---------- Dropdown Handlers ----------
-  onDriverCertificationsChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.driverCertificationsPeriod = select.value;
-    this.loadDriverCertifications();
-  }
-
-  onScannedCertificationsChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.scannedCertificationsPeriod = select.value;
-    this.loadScannedCertifications();
-  }
-
-  // ---------- Export Functions ----------
-  exportDriverCertifications(): void {
-    if (!this.driverCertificationsData.length) return;
-
-    const headers = [
-      "Certification ID",
-      "Driver Name",
-      "Mobile",
-      "License No.",
-      "License Expiry",
-      "Cert Expiry",
-      "Created At",
+  // Export Weekly Summary
+  exportWeekly(): void {
+    const data = [
+      ['Terminal', 'Completions (Last 7 Days)'],
+      ...this.weeklyData.map(d => [d.terminal, d.completions])
     ];
-    const rows = this.driverCertificationsData.map((d) => [
-      d.certification_id,
-      d.full_name,
-      d.mobile_number,
-      d.driving_license_number,
-      d.driving_license_expiry_date,
-      d.expiry_date,
-      d.created_at,
-    ]);
-
-    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const ws = XLSX.utils.aoa_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Driver Certifications");
-    XLSX.writeFile(
-      wb,
-      `DriverCertifications_${this.driverCertificationsPeriod}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-    );
+    XLSX.utils.book_append_sheet(wb, ws, 'Weekly Summary');
+    XLSX.writeFile(wb, `Weekly_Summary_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 
-  exportScannedCertifications(): void {
-    if (!this.scannedCertificationsData.length) return;
-
-    const headers = [
-      "Certification ID",
-      "Driver Name",
-      "Mobile",
-      "Terminal",
-      "License No.",
-      "License Expiry",
-      "Cert Expiry",
-      "Scanned At",
+  // Export Monthly Report
+  exportMonthly(): void {
+    const data = [
+      ['Terminal', 'Certifications (Current Month)'],
+      ...this.monthlyData.map(d => [d.terminal, d.certifications])
     ];
-    const rows = this.scannedCertificationsData.map((d) => [
-      d.certification_id,
-      d.full_name,
-      d.mobile_number,
-      d.terminal_name || d.terminal_code,
-      d.driving_license_number,
-      d.driving_license_expiry_date,
-      d.certification_expiry_date,
-      d.created_at,
-    ]);
-
-    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const ws = XLSX.utils.aoa_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Scanned Certifications");
-    XLSX.writeFile(
-      wb,
-      `ScannedCertifications_${this.scannedCertificationsPeriod}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-    );
+    XLSX.utils.book_append_sheet(wb, ws, 'Monthly Report');
+    XLSX.writeFile(wb, `Monthly_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 
-  goToNewDashboard() {
-    this.router.navigate(["/new-dashboard"]);
+  // Export Driver Breakdown
+  exportDriverBreakdown(): void {
+    const data = [
+      ['Driver Type', 'Count'],
+      ['Unique', this.uniqueDrivers],
+      ['Repeat', this.repeatDrivers],
+      ['Total', this.uniqueDrivers + this.repeatDrivers],
+      ['Unique Percentage', `${this.uniquePercentage}%`]
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Driver Breakdown');
+    XLSX.writeFile(wb, `Driver_Breakdown_${new Date().toISOString().slice(0,10)}.xlsx`);
+  }
+
+   exportToExcel(): void {
+    // We can reuse the exportComplianceExcel logic, or make a combined export.
+    this.exportComplianceExcel();
+  }
+
+  // Export Volume by Location
+  exportVolume(): void {
+    const data = [
+      ['Terminal', 'This Week', 'This Month', 'Total'],
+      ...this.locationVolume.map(d => [d.terminal, d.weekly, d.monthly, d.total])
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Volume by Location');
+    XLSX.writeFile(wb, `Volume_By_Location_${new Date().toISOString().slice(0,10)}.xlsx`);
+  }
+
+    exportComplianceExcel(): void {
+    const wb = XLSX.utils.book_new();
+
+    // Weekly
+    const weeklyData = [
+      ['Terminal', 'Completions (Last 7 Days)'],
+      ...this.weeklyData.map(d => [d.terminal, d.completions])
+    ];
+    const ws1 = XLSX.utils.aoa_to_sheet(weeklyData);
+    XLSX.utils.book_append_sheet(wb, ws1, 'Weekly Summary');
+
+    // Monthly
+    const monthlyData = [
+      ['Terminal', 'Certifications (Current Month)'],
+      ...this.monthlyData.map(d => [d.terminal, d.certifications])
+    ];
+    const ws2 = XLSX.utils.aoa_to_sheet(monthlyData);
+    XLSX.utils.book_append_sheet(wb, ws2, 'Monthly Report');
+
+    // Driver Breakdown
+    const driverData = [
+      ['Driver Type', 'Count'],
+      ['Unique', this.uniqueDrivers],
+      ['Repeat', this.repeatDrivers],
+      ['Total', this.uniqueDrivers + this.repeatDrivers],
+      ['Unique Percentage', `${this.uniquePercentage}%`]
+    ];
+    const ws3 = XLSX.utils.aoa_to_sheet(driverData);
+    XLSX.utils.book_append_sheet(wb, ws3, 'Driver Breakdown');
+
+    // Volume by Location
+    const volumeData = [
+      ['Terminal', 'This Week', 'This Month', 'Total'],
+      ...this.locationVolume.map(d => [d.terminal, d.weekly, d.monthly, d.total])
+    ];
+    const ws4 = XLSX.utils.aoa_to_sheet(volumeData);
+    XLSX.utils.book_append_sheet(wb, ws4, 'Volume by Location');
+
+    XLSX.writeFile(wb, `Compliance_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
+  }
+
+
+    // ===== DATE FILTER HANDLERS =====
+  onWeekChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.selectedWeekOffset = parseInt(target.value, 10);
+    this.weeklyData = this.weeklyDataMap[this.selectedWeekOffset];
+  }
+
+  onMonthChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.selectedMonthOffset = parseInt(target.value, 10);
+    this.monthlyData = this.monthlyDataMap[this.selectedMonthOffset];
   }
 }

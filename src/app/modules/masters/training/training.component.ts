@@ -201,7 +201,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
       full_name: ['', [Validators.required, Validators.minLength(3)]],
       mobile_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       driving_license_number: ['', Validators.required],
-      driving_license_expiry_date: ['', Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]
+      driving_license_expiry_date: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]]
     });
   }
 

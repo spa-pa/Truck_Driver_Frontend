@@ -80,7 +80,7 @@
       }
     }
 
-    // ====== MODERN DROPDOWN MENU - FIXED ANIMATION ======
+    // ====== MODERN DROPDOWN MENU ======
     .dropdown {
       position: relative;
     }
@@ -104,7 +104,6 @@
       transform-origin: top left;
       pointer-events: none;
 
-      // Show state when dropdown is open
       &.show {
         opacity: 1;
         visibility: visible;
@@ -112,7 +111,6 @@
         pointer-events: all;
       }
 
-      // Right aligned dropdown
       &.dropdown-menu-end {
         right: 0;
         left: auto;
@@ -187,7 +185,6 @@
       height: 42px;
       gap: 8px;
 
-      // Shine animation overlay
       &::before {
         content: "";
         position: absolute;
@@ -238,112 +235,274 @@
     }
   }
 
-  // Stat Card styles
+  // ====== STAT CARD STYLES - REDESIGNED ======
   .stat-card {
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     position: relative;
     overflow: hidden;
     border-radius: 12px !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+
+    // Subtle gradient overlay on hover
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(28, 43, 58, 0.02) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      border-radius: 12px;
+    }
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(28, 43, 58, 0.12) !important;
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 12px 30px rgba(28, 43, 58, 0.12) !important;
+      border-color: rgba(28, 43, 58, 0.08) !important;
+
+      &::after {
+        opacity: 1;
+      }
+
+      .stat-icon-wrapper {
+        transform: scale(1.05) rotate(-3deg);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .stat-info {
+        h4 {
+          color: #1c2b3a;
+        }
+      }
     }
 
     .card-body {
-      padding: 1.5rem;
+      padding: 1.25rem 1.25rem !important;
     }
 
-    .stat-icon {
-      width: 48px;
-      height: 48px;
+    .stat-info {
+      flex: 1;
+      min-width: 0;
+
+      h6 {
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: #6b7785;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 2px !important;
+      }
+
+      h4 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2933;
+        line-height: 1.2;
+        transition: color 0.3s ease;
+        margin-bottom: 2px !important;
+      }
+
+      small {
+        font-size: 0.7rem;
+        font-weight: 500;
+
+        &.text-success {
+          color: #1f9d55 !important;
+        }
+
+        &.text-danger {
+          color: #d64545 !important;
+        }
+
+        i {
+          font-size: 0.6rem;
+        }
+      }
+    }
+
+    .stat-icon-wrapper {
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 12px;
       flex-shrink: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 14px;
+        background: inherit;
+        opacity: 0.15;
+        filter: blur(8px);
+        transform: scale(0.9);
+        transition: all 0.3s ease;
+      }
+
+      &:hover::before {
+        transform: scale(1.1);
+        opacity: 0.2;
+      }
 
       &.bg-primary {
-        background-color: #1c2b3a !important;
+        background: linear-gradient(135deg, #1c2b3a 0%, #2c4256 100%) !important;
       }
 
       &.bg-success {
-        background-color: #1f9d55 !important;
+        background: linear-gradient(135deg, #1f9d55 0%, #2ecc71 100%) !important;
       }
 
       &.bg-warning {
-        background-color: #f5a623 !important;
+        background: linear-gradient(135deg, #f5a623 0%, #f7c948 100%) !important;
       }
 
       &.bg-info {
-        background-color: #2c4256 !important;
+        background: linear-gradient(135deg, #2c4256 0%, #4a6a8a 100%) !important;
       }
 
       i {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
       }
     }
+  }
 
-    .trend-badge {
-      font-weight: 500;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      display: inline-flex;
+  // ====== PANEL CARD (standard section card w/ top accent) ======
+  .panel-card {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #1c2b3a 0%, #2c4256 100%);
+      opacity: 0.9;
+    }
+  }
+
+  // ====== PANEL ICON CHIP (section header icon) ======
+  .panel-icon-chip {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #ffffff;
+    font-size: 0.95rem;
+
+    &.bg-primary {
+      background: linear-gradient(135deg, #1c2b3a 0%, #2c4256 100%) !important;
+    }
+
+    &.bg-success {
+      background: linear-gradient(135deg, #1f9d55 0%, #2ecc71 100%) !important;
+    }
+
+    &.bg-warning {
+      background: linear-gradient(135deg, #f5a623 0%, #f7c948 100%) !important;
+    }
+
+    &.bg-info {
+      background: linear-gradient(135deg, #2c4256 0%, #4a6a8a 100%) !important;
+    }
+  }
+
+  // ====== METRIC TILE (compliance quick stats) ======
+  .metric-tile {
+    background: #f7f8fa;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: all 0.25s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .metric-tile-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
       align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.5rem;
+      font-size: 0.85rem;
+    }
 
-      &.bg-success {
-        background-color: #e4f6ea !important;
-        color: #1f9d55;
-      }
+    &.metric-tile--success .metric-tile-icon {
+      background: rgba(31, 157, 85, 0.1);
+      color: #1f9d55;
+    }
 
-      &.bg-danger {
-        background-color: #fde8e8 !important;
-        color: #d64545;
-      }
+    &.metric-tile--primary .metric-tile-icon {
+      background: rgba(28, 43, 58, 0.1);
+      color: #1c2b3a;
     }
 
     h6 {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #6b7785;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
     }
 
-    h4 {
-      font-size: 1.75rem;
+    h3 {
       font-weight: 700;
-      color: #1f2933;
+      font-size: 1.5rem;
     }
+  }
 
-    .progress {
-      height: 6px;
-      background-color: #e9ecef;
-      border-radius: 10px;
-      overflow: hidden;
+  // ====== STATUS DOT (certification status legend) ======
+  .status-row {
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
 
-      .progress-bar {
-        border-radius: 10px;
-
-        &.bg-primary {
-          background-color: #1c2b3a !important;
-        }
-
-        &.bg-success {
-          background-color: #1f9d55 !important;
-        }
-
-        &.bg-warning {
-          background-color: #f5a623 !important;
-        }
-
-        &.bg-info {
-          background-color: #2c4256 !important;
-        }
-      }
+      &.bg-success { background-color: #1f9d55 !important; }
+      &.bg-warning { background-color: #f5a623 !important; }
+      &.bg-danger { background-color: #d64545 !important; }
     }
+  }
+
+  // ====== CATEGORY ICON WRAPPER (driver categories) ======
+  .category-icon-wrapper {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.04);
+
+    &.text-primary { background: rgba(28, 43, 58, 0.08); }
+    &.text-success { background: rgba(31, 157, 85, 0.08); }
+    &.text-warning { background: rgba(245, 166, 35, 0.08); }
+    &.text-danger { background: rgba(214, 69, 69, 0.08); }
+    &.text-info { background: rgba(44, 66, 86, 0.08); }
   }
 
   // Card styles
@@ -413,6 +572,107 @@
     }
   }
 
+  // ====== CUSTOM TABS WITH ANIMATION ======
+  .custom-tabs {
+    display: flex;
+    gap: 4px;
+    background: #f1f3f5;
+    padding: 4px;
+    border-radius: 10px;
+
+    .nav-item {
+      flex: 1;
+
+      .nav-link {
+        border: none;
+        background: transparent;
+        color: #6b7785;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        width: 100%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+
+        i {
+          transition: transform 0.3s ease;
+        }
+
+        .tab-indicator {
+          position: absolute;
+          bottom: 4px;
+          left: 50%;
+          transform: translateX(-50%) scaleX(0);
+          width: 60%;
+          height: 2.5px;
+          background: #1c2b3a;
+          border-radius: 4px;
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        &:hover {
+          background: rgba(28, 43, 58, 0.06);
+          color: #1c2b3a;
+
+          i {
+            transform: scale(1.1);
+          }
+        }
+
+        &.active {
+          background: #ffffff;
+          color: #1c2b3a;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          font-weight: 600;
+
+          i {
+            transform: scale(1);
+            color: #1c2b3a;
+          }
+
+          .tab-indicator {
+            transform: translateX(-50%) scaleX(1);
+          }
+        }
+      }
+    }
+  }
+
+  // Tab content with fade animation
+  .tab-content {
+    position: relative;
+    min-height: 200px;
+
+    .tab-pane {
+      display: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.25s ease-in-out;
+      animation: fadeSlideIn 0.3s ease forwards;
+
+      &.active {
+        display: block;
+      }
+    }
+  }
+
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   // Certification list styles
   .certification-list {
     .certification-item {
@@ -454,14 +714,22 @@
 
   // Driver category styles
   .driver-category {
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
+    background-color: #f7f8fa;
+    border-radius: 10px;
+    padding: 1rem;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
 
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
+
+    &--primary { border-left-color: #1c2b3a; }
+    &--success { border-left-color: #1f9d55; }
+    &--warning { border-left-color: #f5a623; }
+    &--danger { border-left-color: #d64545; }
+    &--info { border-left-color: #2c4256; }
   }
 
   // Button group styles
@@ -517,7 +785,7 @@
     color: #2c4256 !important;
   }
 
-  // Dropdown toggle fix - Remove default arrow
+  // Dropdown toggle fix
   .dropdown-toggle::after {
     display: none;
   }
@@ -551,24 +819,36 @@
   }
 }
 
-// Responsive adjustments
+// ====== RESPONSIVE ADJUSTMENTS ======
 @media (max-width: 768px) {
+  // Stat card responsive
   .stat-card {
     .card-body {
-      padding: 1rem;
+      padding: 1rem 1rem !important;
     }
 
-    .stat-icon {
-      width: 40px;
-      height: 40px;
+    .stat-info {
+      h6 {
+        font-size: 0.55rem;
+        letter-spacing: 0.5px;
+      }
 
-      i {
-        font-size: 1rem;
+      h4 {
+        font-size: 1.25rem;
+      }
+
+      small {
+        font-size: 0.6rem;
       }
     }
 
-    h4 {
-      font-size: 1.25rem;
+    .stat-icon-wrapper {
+      width: 38px;
+      height: 38px;
+
+      i {
+        font-size: 0.9rem;
+      }
     }
   }
 
@@ -612,9 +892,54 @@
       }
     }
   }
+
+  .custom-tabs {
+    .nav-item {
+      .nav-link {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+
+        i {
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
 }
 
 @media (max-width: 576px) {
+  // Stat card responsive - extra small
+  .stat-card {
+    .card-body {
+      padding: 0.75rem 0.75rem !important;
+    }
+
+    .stat-info {
+      h6 {
+        font-size: 0.5rem;
+        letter-spacing: 0.3px;
+      }
+
+      h4 {
+        font-size: 1rem;
+      }
+
+      small {
+        font-size: 0.55rem;
+      }
+    }
+
+    .stat-icon-wrapper {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+
+      i {
+        font-size: 0.75rem;
+      }
+    }
+  }
+
   .header-section {
     .btn-modern-date {
       padding: 0.35rem 0.75rem;
