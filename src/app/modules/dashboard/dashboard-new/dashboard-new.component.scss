@@ -603,17 +603,37 @@
     display: flex;
     flex-direction: column;
     min-height: 220px; // Guarantees the card itself can never collapse to 0
+    overflow: hidden;
 
     .card-body {
       flex: 1;
       display: flex;
       flex-direction: column;
+      min-height: 0; // Critical: allows flex children to shrink below content size
+      overflow: hidden;
     }
 
     .chart-wrapper {
       flex: 1;
-      min-height: 140px; // Chart.js needs a real pixel height to render into
+      min-height: 120px; // Chart.js needs a real pixel height to render into
     }
+  }
+}
+
+// ========== LANGUAGE CHART - CONTAINED ==========
+.lang-chart-wrapper {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  max-height: 160px;
+  height: 160px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
   }
 }
 
