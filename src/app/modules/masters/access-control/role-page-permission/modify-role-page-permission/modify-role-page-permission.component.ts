@@ -187,7 +187,7 @@ export class ModifyRolePagePermissionComponent implements OnInit, AfterViewInit,
 
   handleSubmit(event: any): void {
     const formData = JSON.parse(JSON.stringify(event.formValue));
-
+    delete formData.permission_id;
     this.loader.showLoader();
     switch (this.routeName) {
       case 'create':

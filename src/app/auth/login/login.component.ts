@@ -65,54 +65,54 @@ export class LoginComponent {
 
         const config = new GlobalConfig();
         const user = value.user;
-        new EncryptedStorage().clearAll();
-        new EncryptedStorage().setItem(config.authToken, value.token, false);
-        new EncryptedStorage().setItem(config.userDetails, JSON.stringify(user), false);
-        new EncryptedStorage().setItem(config.roleId, JSON.stringify(user.role_id), false);
-        new EncryptedStorage().setItem(config.userName, JSON.stringify(user.name), false);
-        new EncryptedStorage().setItem(config.menu, JSON.stringify(AdminMenu.menu), false);
-        this.navmenu.intializeMenu(AdminMenu.menu);
-        new EncryptedStorage().setItem(config.menu, JSON.stringify(AdminMenu.menu), false);
-        this.router.navigate([config.dashboardRoute]);
+        // new EncryptedStorage().clearAll();
+        // new EncryptedStorage().setItem(config.authToken, value.token, false);
+        // new EncryptedStorage().setItem(config.userDetails, JSON.stringify(user), false);
+        // new EncryptedStorage().setItem(config.roleId, JSON.stringify(user.role_id), false);
+        // new EncryptedStorage().setItem(config.userName, JSON.stringify(user.name), false);
+        // new EncryptedStorage().setItem(config.menu, JSON.stringify(AdminMenu.menu), false);
+        // this.navmenu.intializeMenu(AdminMenu.menu);
+        // new EncryptedStorage().setItem(config.menu, JSON.stringify(AdminMenu.menu), false);
+        // this.router.navigate([config.dashboardRoute]);
 
-        this.toastService.open("Login Successful", "success");
+        // this.toastService.open("Login Successful", "success");
 
         // ====================== THIS IS MAIN DYNAMIC START================
-        // this.encryptedStorage.clearAll();
-        // const menuData = JSON.parse(value.user.menus);
+        this.encryptedStorage.clearAll();
+        const menuData = JSON.parse(value.user.menus);
 
-        // const permissions = value.user.role_page_permissions;
-        // // new EncryptedStorage().setItem(new GlobalConfig().pagePermissions, JSON.stringify(permissions), false);
+        const permissions = value.user.role_page_permissions;
+        new EncryptedStorage().setItem(new GlobalConfig().pagePermissions, JSON.stringify(permissions), false);
 
-        // this.encryptedStorage.setItem(this.globalConfig.authToken, value.token, false);
-        // if (value.user.role_id === 1) {
-        //   // new EncryptedStorage().setItem(new GlobalConfig().pagePermissions, JSON.stringify(permissions), false);
-        //   this.encryptedStorage.setItem(this.globalConfig.userDetails, JSON.stringify(value.user), false)
-        //   this.encryptedStorage.setItem(this.globalConfig.menu, JSON.stringify(menuData), false);
-        //   this.navmenu.intializeMenu(menuData);
-        //   this.router.navigate([this.globalConfig.dashboardRoute]);
-        // } else {
-        //   const filteredMenu = this.filterMenuByPermissions(menuData, permissions);
-        //   // const filteredMenu = menuData;
+        this.encryptedStorage.setItem(this.globalConfig.authToken, value.token, false);
+        if (value.user.role_id === 1) {
+          // new EncryptedStorage().setItem(new GlobalConfig().pagePermissions, JSON.stringify(permissions), false);
+          this.encryptedStorage.setItem(this.globalConfig.userDetails, JSON.stringify(value.user), false)
+          this.encryptedStorage.setItem(this.globalConfig.menu, JSON.stringify(menuData), false);
+          this.navmenu.intializeMenu(menuData);
+          this.router.navigate([this.globalConfig.dashboardRoute]);
+        } else {
+          const filteredMenu = this.filterMenuByPermissions(menuData, permissions);
+          // const filteredMenu = menuData;
 
-        //   new EncryptedStorage().setItem(new GlobalConfig().menu, JSON.stringify(filteredMenu), false);
-        //   new EncryptedStorage().setItem(new GlobalConfig().userDetails, JSON.stringify({
-        //     ...value.user,
-        //     menu: JSON.stringify(filteredMenu)  // Update with filtered menu
-        //   }), false);
-        //   this.navmenu.intializeMenu(filteredMenu);
-        //   this.permissionsService.loadPermissions();
-        //   if (permissions && permissions.length > 0) {
-        //     const sortedPermissions = permissions.sort((a: any, b: any) => a.role_page_permission_id - b.role_page_permission_id);
-        //     const firstRoute = sortedPermissions[0]?.page_url;
-        //     this.router.navigate([firstRoute]);
-        //   } else {
-        //     new EncryptedStorage().clearAll();
-        //     this.router.navigate(['/auth/login'])
-        //     this.toastService.open('Permission not granted. Please contact the administrator.', "error");
-        //     return;
-        //   }
-        // }
+          new EncryptedStorage().setItem(new GlobalConfig().menu, JSON.stringify(filteredMenu), false);
+          new EncryptedStorage().setItem(new GlobalConfig().userDetails, JSON.stringify({
+            ...value.user,
+            menu: JSON.stringify(filteredMenu)  // Update with filtered menu
+          }), false);
+          this.navmenu.intializeMenu(filteredMenu);
+          this.permissionsService.loadPermissions();
+          if (permissions && permissions.length > 0) {
+            const sortedPermissions = permissions.sort((a: any, b: any) => a.role_page_permission_id - b.role_page_permission_id);
+            const firstRoute = sortedPermissions[0]?.page_url;
+            this.router.navigate([firstRoute]);
+          } else {
+            new EncryptedStorage().clearAll();
+            this.router.navigate(['/auth/login'])
+            this.toastService.open('Permission not granted. Please contact the administrator.', "error");
+            return;
+          }
+        }
         // ====================== THIS IS MAIN DYNAMIC END================
         // this.router.navigate([this.globalConfig.dashboardRoute]);
       },
