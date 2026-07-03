@@ -1,209 +1,308 @@
-::ng-deep .p-datatable .p-datatable-thead>tr>th,
-td {
-  padding: 0.5rem 0.5rem !important;
+/*==================================================
+                Corporate Theme
+===================================================*/
+
+:root{
+  --primary:#004761;
+  --primary-light:#0b5f7f;
+  --primary-bg:#eef6f8;
+  --border:#e5e7eb;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --hover:#f8fafc;
+  --radius:10px;
 }
 
-::ng-deep .p-paginator {
-  padding: 0%;
+/*==================================================
+                    DataTable
+===================================================*/
+
+::ng-deep .p-datatable{
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 4px 18px rgba(0,0,0,.06);
+    background:#fff;
 }
 
-::ng-deep .p-datatable .p-datatable-header {
-  padding: 0.7rem 1.5rem;
-  border: 1px solid #f4f5f8;
-  background-color: white;
-  border-radius: 5px;
+/* Header */
+
+::ng-deep .p-datatable .p-datatable-header{
+    background:#ffffff;
+    padding:18px 24px;
+    border:none;
+    border-bottom:1px solid var(--border);
 }
 
-::ng-deep .p-datatable .p-sortable-column.p-highlight {
-  background: #f9fafb !important;
-  color: #004761 !important;
+/* Column Header */
+
+::ng-deep .p-datatable .p-datatable-thead>tr>th{
+
+    background:#f8f9fb;
+    color:#004761;
+    border:none;
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:.3px;
+    padding:14px 16px;
 }
 
-::ng-deep .p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
-  color: #004761 !important;
+::ng-deep .p-sortable-column:hover{
+    background:#0a5876 !important;
 }
 
-input[type="input"] {
-  font-size: 60% !important;
+::ng-deep .p-sortable-column.p-highlight{
+    background:#0a5876 !important;
+    color:#fff !important;
 }
 
-::ng-deep .p-inputtext {
-  padding-bottom: 0.5rem !important;
+::ng-deep .p-sortable-column-icon{
+    color:#004761 !important;
 }
 
-.cursor-pointer {
-  cursor: pointer;
+/* Body */
+
+::ng-deep .p-datatable .p-datatable-tbody>tr{
+    transition:.25s;
+    border-bottom:0.5px solid #edf2f7;
 }
 
-:host ::ng-deep {
-  .p-tag-array {
-    display: inline-block;
-    /* Ensures tags are displayed inline */
-    margin-right: 8px;
-    /* Space between tags */
-    border-radius: 6px;
-  }
+::ng-deep .p-datatable .p-datatable-tbody>tr>td{
 
-  .p-tag-array .p-tag {
-    background: #50b9b4;
-    /* Custom background color */
-    color: white;
-    /* Text color */
-  }
+    padding:14px 16px;
+    font-size:14px;
+    color:#374151;
+    border:none;
 }
 
-/* Optional: Custom styling for dropdown menu */
-.dropdown-menu {
-  border: none;
-  /* Remove default border */
+::ng-deep .p-datatable .p-datatable-tbody>tr:hover{
+    background:#f7fbfc;
 }
 
-.card {
-  background-color: #fff;
-  /* White background for card */
-  border: 1px solid #ccc;
-  /* Add border to card */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  /* Soft shadow effect */
+/* Alternate rows */
+
+// ::ng-deep .p-datatable .p-datatable-tbody>tr:nth-child(even){
+//     background:#fcfcfd;
+// }
+
+/*==================================================
+                Filter Row
+===================================================*/
+
+::ng-deep .p-column-filter input,
+::ng-deep .p-inputtext{
+
+    border:1px solid #d9dee5;
+    border-radius:8px;
+    padding:.65rem .85rem;
+    transition:.25s;
+    font-size:14px;
 }
 
-.card-body {
-  padding: 10px;
-  /* Adjust padding inside card body */
+::ng-deep .p-inputtext:focus{
+    border-color:#004761;
+    box-shadow:0 0 0 .15rem rgba(0,71,97,.15);
 }
 
-.dropdown-item {
-  font-size: 14px;
-  /* Adjust font size */
-  padding: 10px 20px;
-  /* Adjust padding for dropdown items */
-  color: #333;
-  /* Text color */
-  transition: background-color 0.3s ease;
-  /* Smooth transition for background color */
+/*==================================================
+                  Search Box
+===================================================*/
+
+::ng-deep .p-icon-field{
+    width:280px;
 }
 
-.dropdown-item:hover {
-  background-color: #f8f9fa;
-  /* Light background color on hover */
-  color: #333;
-  /* Text color on hover */
+::ng-deep .p-icon-field input{
+    border-radius:30px;
+    padding-left:40px;
 }
 
-.cursor-pointer {
-  cursor: pointer;
-  /* Change cursor to pointer on hoverable items */
+/*==================================================
+                    Buttons
+===================================================*/
+
+.btn-primary,
+.btn-custom{
+
+    background:#004761;
+    border:none;
+    border-radius:8px;
+    padding:10px 20px;
+    font-weight:500;
+    transition:.25s;
 }
 
-.custom-right {
-  margin-right: 1% !important;
+.btn-primary:hover,
+.btn-custom:hover{
+
+    background:#0b5f7f;
+    transform:translateY(-1px);
 }
 
-.btn-custom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #50b9b3;
-  /* Button color */
-  color: #fff;
-  /* Text color */
-  padding: 8px 16px;
-  /* Padding */
-  border-radius: 50px;
-  /* Rounded corners */
-  font-size: 14px;
-  /* Font size */
-  cursor: pointer;
-  border: none;
-  transition: background-color 0.3s ease;
+.btn-outline-primary{
+
+    border:1px solid #004761;
+    color:#004761;
+    border-radius:8px;
 }
 
-.btn-custom i {
-  margin-right: 8px;
-  /* Space between icon and text */
-  font-size: 16px;
-  /* Icon size */
+.btn-outline-primary:hover{
+
+    background:#004761;
+    color:white;
 }
 
-.btn-custom:hover {
-  background-color: #3a9a8f;
-  /* Darker color on hover */
+/*==================================================
+                Action Icons
+===================================================*/
+
+.action-button a{
+
+    width:34px;
+    height:34px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    transition:.25s;
+    margin-right:5px;
+    color:#004761;
 }
 
-.btn-custom:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(38, 143, 255, 0.5);
-  /* Focus outline */
+.action-button a:hover{
+
+    background:#eef6f8;
+    color:#004761;
 }
 
-/* Success button style */
-.btn-success {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #28a745;
-  /* Success color */
-  color: #fff;
-  /* Text color */
-  padding: 8px 16px;
-  /* Padding */
-  border-radius: 50px;
-  /* Rounded corners */
-  font-size: 14px;
-  /* Font size */
-  cursor: pointer;
-  border: none;
-  transition: background-color 0.3s ease;
+/*==================================================
+                    Tags
+===================================================*/
+
+::ng-deep .p-tag{
+
+    border-radius:30px;
+    padding:.35rem .8rem;
+    font-weight:600;
 }
 
-.btn-success i {
-  margin-right: 8px;
-  /* Space between icon and text */
-  font-size: 16px;
-  /* Icon size */
+/*==================================================
+                Dropdown Menu
+===================================================*/
+
+.dropdown-menu{
+
+    border:none;
+    border-radius:12px;
+    box-shadow:0 10px 35px rgba(0,0,0,.12);
+    overflow:hidden;
 }
 
-.btn-success:hover {
-  background-color: #218838;
-  /* Darker green on hover */
+.dropdown-item{
+
+    padding:12px 18px;
+    transition:.25s;
 }
 
-.btn-success:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(38, 143, 255, 0.5);
-  /* Focus outline */
+.dropdown-item:hover{
+
+    background:#eef6f8;
+    color:#004761;
 }
 
-.custom-link {
-  color: blue;
-  text-decoration: underline;
+/*==================================================
+                    Paginator
+===================================================*/
+
+::ng-deep .p-paginator{
+
+    padding:12px;
+    border-top:1px solid #edf2f7;
+    background:#fff;
 }
 
-.custom-td {
-  text-align: center;
+::ng-deep .p-paginator .p-paginator-page{
+
+    border-radius:8px;
+    min-width:36px;
+    height:36px;
 }
 
-::ng-deep .cdk-overlay-container {
-  position: fixed;
-  z-index: 2000 !important;
+::ng-deep .p-paginator .p-highlight{
+
+    background:#004761;
+    border-color:#004761;
+    color:white;
 }
 
-.disabled-link {
-  pointer-events: none;
-  color: gray;
-  cursor: not-allowed;
-  opacity: 0.5;
-  display: none;
+/*==================================================
+                    Calendar
+===================================================*/
+
+::ng-deep .p-calendar .p-inputtext{
+
+    height:42px;
+    border-radius:8px;
 }
 
-:host ::ng-deep .p-calendar .p-inputtext {
-  height: 39px !important;
-  padding: 2px 8px !important;
-  font-size: 15px !important;
+::ng-deep .p-datepicker-trigger{
+
+    background:#004761;
+    border:none;
 }
 
-:host ::ng-deep .p-datepicker-trigger {
-  background-color: #004761 !important;
-  border: none !important;
-  height: 39px !important;
+/*==================================================
+                    Card
+===================================================*/
+
+.card{
+
+    border:none;
+    border-radius:12px;
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+}
+
+/*==================================================
+                Links
+===================================================*/
+
+.custom-link{
+
+    color:#004761;
+    font-weight:500;
+}
+
+.custom-link:hover{
+
+    color:#0b5f7f;
+}
+
+/*==================================================
+                Disabled
+===================================================*/
+
+.disabled-link{
+
+    opacity:.35;
+    pointer-events:none;
+}
+
+/*==================================================
+            Scrollbar (Modern)
+===================================================*/
+
+::-webkit-scrollbar{
+
+    width:8px;
+    height:8px;
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#bfc7cf;
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#8fa3b1;
 }
