@@ -3,20 +3,6 @@ td {
   padding: 0.5rem 0.5rem !important;
 }
 
-.table-wrapper {
-  overflow-x: auto;
-  /* Enables horizontal scrolling when content overflows */
-  -webkit-overflow-scrolling: touch;
-  /* Smooth scrolling on iOS devices */
-  max-width: 100%;
-  /* Ensures the wrapper does not exceed the viewport width */
-}
-
-.p-table {
-  min-width: 100%;
-  /* Ensures that the table takes up the full width of the container */
-}
-
 ::ng-deep .p-paginator {
   padding: 0%;
 }
@@ -42,12 +28,8 @@ input[type="input"] {
 }
 
 ::ng-deep .p-inputtext {
-  padding-left: 0.5rem !important;
-    line-height: 2.3 !important;
-
-  // padding-bottom: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
 }
-
 
 .cursor-pointer {
   cursor: pointer;
@@ -208,207 +190,20 @@ input[type="input"] {
 
 .disabled-link {
   pointer-events: none;
-  /* Prevents click events */
   color: gray;
-  /* Changes text color to indicate disabled state */
   cursor: not-allowed;
-  /* Changes cursor to indicate disabled state */
   opacity: 0.5;
-  /* Makes it look disabled */
+  display: none;
 }
 
-.custom-flex {
-  display: flex !important;
+:host ::ng-deep .p-calendar .p-inputtext {
+  height: 39px !important;
+  padding: 2px 8px !important;
+  font-size: 15px !important;
 }
 
-.custom-red {
-  color: #F29491 !important;
-}
-
-.custom-green {
-  color: #69EB9D !important;
-}
-
-/* Overlay */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(6px);
-  z-index: 1000;
-}
-
-/* Container */
-.modal-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-height: 85%;
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 20px;
-  z-index: 1001;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-}
-
-/* Header */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.title {
-  font-weight: 600;
-  margin: 0;
-}
-
-.subtitle {
-  font-size: 12px;
-  color: #64748b;
-  margin: 0;
-}
-
-.close-btn {
-  border: none;
-  background: #f1f5f9;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-}
-
-/* Body */
-.modal-body {
-  overflow-y: auto;
-  max-height: 70vh;
-}
-
-/* Grid */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 14px;
-}
-
-/* Normal Card */
-.card-normal {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-}
-
-/* OCR = ISSUE (Light Red Card) */
-.card-ocr {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-left: 4px solid #dc2626;
-  /* strong red indicator */
-}
-
-/* Hover effect (keep smooth) */
-.card {
-  transition: all 0.25s ease;
-  border-radius: 14px;
-  padding: 14px;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-}
-
-/* Top */
-.card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.port-name {
-  font-weight: 600;
-  margin: 0;
-}
-
-/* Status Pills */
-.status-pill {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.status-pill.success {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.status-pill.fail {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-/* Info */
-.info {
-  font-size: 13px;
-  margin-top: 6px;
-  color: #334155;
-}
-
-.link {
-  color: #2563eb;
-}
-
-/* Bottom */
-.card-bottom {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
-/* Chips */
-.chip {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-/* Port Code */
-.info-chip {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-// /* OCR */
-// .ocr-chip {
-//   background: #fef3c7;
-//   color: #92400e;
-// }
-
-/* OCR = ISSUE (Danger) */
-.ocr-chip {
-  background: #fee2e2;
-  /* soft red */
-  color: #991b1b;
-  /* deep red text */
-  border: 1px solid #fecaca;
-}
-
-/* TEXT */
-.text-chip {
-  background: #e2e8f0;
-  color: #334155;
-}
-
-/* Time */
-.time {
-  font-size: 11px;
-  color: #94a3b8;
-  margin-top: 8px;
+:host ::ng-deep .p-datepicker-trigger {
+  background-color: #004761 !important;
+  border: none !important;
+  height: 39px !important;
 }
