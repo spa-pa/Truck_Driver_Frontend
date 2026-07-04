@@ -26,8 +26,7 @@
     "LICENSE_EXPIRY_PLACEHOLDER": "Enter driving license Expiry Date",
     "LICENSE_EXPIRY_ERROR": "Driving license Expiry Date is required",
     "START": "Start Training",
-    "REGISTERING": "Registering...",
-    
+    "REGISTERING": "Registering...",  
     "LICENSE_PHOTO": "Driver License Photo",
     "LICENSE_PHOTO_PLACEHOLDER": "Upload license photo",
     "LICENSE_PHOTO_ERROR": "Driver license photo is required",
