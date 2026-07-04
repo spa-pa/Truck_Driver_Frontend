@@ -2,12 +2,21 @@
 
 <div class="qr-editor-container">
     <!-- Header -->
-    <!-- <header class="editor-header">
+    <header class="editor-header">
         <div class="header-left">
             <h1>QR Editor</h1>
+            <span class="terminal-badge" *ngIf="terminalId">Terminal #{{ terminalId }}</span>
         </div>
         <div class="header-actions">
-            <button class="btn-import" (click)="fileInput.click()">
+            <button class="btn-save" (click)="saveQrConfig()" [disabled]="isSaving">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                    <polyline points="17 21 17 13 7 13 7 21" />
+                    <polyline points="7 3 7 8 15 8" />
+                </svg>
+                {{ isSaving ? 'Saving...' : 'Save' }}
+            </button>
+            <!-- <button class="btn-import" (click)="fileInput.click()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                     <polyline points="17 8 12 3 7 8" />
@@ -23,37 +32,30 @@
                     <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
                 Export
-            </button>
+            </button> -->
             <button class="btn-reset" (click)="resetConfig()">Reset</button>
         </div>
-    </header> -->
+    </header>
+
+    <!-- Loading State -->
+    <div class="loading-overlay" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Loading configuration...</p>
+    </div>
 
     <!-- Main Grid -->
-    <div class="editor-grid">
+    <div class="editor-grid" *ngIf="!isLoading">
         <!-- Left Panel - Controls -->
         <div class="controls-panel">
             <div class="panel-content">
                 <h2>Configuration</h2>
 
-
-
-
-                <!-- Terminal ID -->
-                <!-- <div class="control-group">
+                <!-- Terminal ID (Readonly) -->
+                <div class="control-group">
                     <label for="terminalId">Terminal ID</label>
-                    <input id="terminalId" type="number" class="control-input" [(ngModel)]="config.terminalId"
-                        (change)="updateConfig()" min="1" [readonly]="true" />
-                </div> -->
-
-                <!-- QR Data -->
-                <!-- <div class="control-group">
-                    <label for="qrData">QR Data (JSON)</label>
-                    <div class="textarea-wrapper">
-                        <textarea id="qrData" class="control-textarea" rows="4" [(ngModel)]="config.data"
-                            (input)="updateConfig()"></textarea>
-                        <button class="btn-format" (click)="formatJSON()">Format</button>
-                    </div>
-                </div> -->
+                    <input id="terminalId" type="number" class="control-input" [(ngModel)]="terminalId"
+                        [readonly]="true" />
+                </div>
 
                 <!-- QR Color -->
                 <div class="control-group color-group">
@@ -251,20 +253,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Response Display -->
-            <!-- <div class="response-card">
-                <div class="response-header">
-                    <h3>Backend Response</h3>
-                    <span class="status-badge" *ngIf="response">
-                        <span class="status-dot"></span>
-                        Active
-                    </span>
-                </div>
-                <div class="response-content">
-                    <pre>{{ getResponseJSON() }}</pre>
-                </div>
-            </div> -->
         </div>
     </div>
 </div>

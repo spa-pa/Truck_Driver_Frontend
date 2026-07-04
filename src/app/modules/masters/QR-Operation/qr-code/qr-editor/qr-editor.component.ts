@@ -6,6 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { QRDisplayComponent } from '../qr-display/qr-display.component';
 import { QRConfig, DEFAULT_QR_CONFIG, QRResponse } from '@shared/models/qr.model';
 import { QRConfigService } from '@shared/services/qr-config.service';
+import { QrConfigService } from '@shared/_http/qr-config.service';
+import { environment } from '@environments/environment';
+import { currentUser } from '@shared/utils/current-user';
+import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'app-qr-editor',
@@ -22,30 +26,332 @@ export class QREditorComponent implements OnInit {
   isDownloading: boolean = false;
   downloadProgress: string = '';
 
+  // IDs
+  terminalId: number = 0;
+  qrConfigId: number = 0;
+  isLoading: boolean = false;
+  isSaving: boolean = false;
+  isDataLoaded: boolean = false;
+
+  // Store original config from API
+  originalConfig: any = null;
+
   constructor(
     private qrConfigService: QRConfigService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private qrConfigApiService: QrConfigService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
-    this.qrConfigService.config$.subscribe(config => {
-      this.config = { ...config };
-      this.cdr.detectChanges();
-    });
+    // Get terminal_id from current user
+    this.getTerminalIdFromUser();
+  }
 
-    this.qrConfigService.response$.subscribe(response => {
-      this.response = response;
+  // ============================================
+  // GET TERMINAL ID FROM CURRENT USER
+  // ============================================
+
+  private getTerminalIdFromUser(): void {
+    const user = currentUser();
+    if (user && user.terminal_id) {
+      this.terminalId = user.terminal_id;
+      this.loadQrConfigById(1);
+    }
+  }
+
+  // ============================================
+  // LOAD QR CONFIG BY TERMINAL ID
+  // ============================================
+
+  loadQrConfig(terminalId: number): void {
+    if (!terminalId) {
+      console.warn('No terminal ID provided, loading by config ID 1');
+      this.loadQrConfigById(1);
+      return;
+    }
+
+    this.isLoading = true;
+    this.isDataLoaded = false;
+
+    this.qrConfigApiService.getQrConfig(terminalId).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+
+        console.log('API Response:', response);
+
+        if (response && response.success && response.data) {
+          this.originalConfig = response.data;
+
+          // Extract qr_config_id
+          this.qrConfigId = response.data.qr_config_id || 0;
+
+          // Extract json config
+          const jsonConfig = response.data.json || {};
+
+          // Parse data if it's a string
+          let parsedData = jsonConfig.data || '';
+          try {
+            if (typeof parsedData === 'string') {
+              // If it's a valid JSON string, parse it
+              JSON.parse(parsedData);
+            }
+          } catch (e) {
+            // If not valid JSON, keep as is
+          }
+
+          // Update config with API data
+          this.config = {
+            ...this.config,
+            data: parsedData,
+            qrColor: jsonConfig.qrColor || this.config.qrColor,
+            bgColor: jsonConfig.bgColor || this.config.bgColor,
+            qrSize: jsonConfig.qrSize || this.config.qrSize,
+            dotType: jsonConfig.dotType || this.config.dotType,
+            logoUrl: jsonConfig.logoUrl || this.config.logoUrl,
+            bottomText: jsonConfig.bottomText || this.config.bottomText,
+            textSize: jsonConfig.textSize || this.config.textSize,
+            textColor: jsonConfig.textColor || this.config.textColor,
+            fontFamily: jsonConfig.fontFamily || this.config.fontFamily,
+            fontWeight: jsonConfig.fontWeight || this.config.fontWeight,
+            terminalId: jsonConfig.terminalId || this.terminalId
+          };
+
+          // If no data, generate URL
+          if (!this.config.data || this.config.data === '') {
+            this.config.data = this.generateUrl(this.terminalId);
+          }
+
+          // Update service
+          this.qrConfigService.updateConfig(this.config);
+          this.isDataLoaded = true;
+
+          // Regenerate QR
+          setTimeout(() => {
+            if (this.qrDisplay) {
+              this.qrDisplay.generateQR();
+            }
+          }, 100);
+
+        } else {
+          console.warn('No config found for terminal:', terminalId);
+          this.initializeDefaultConfig(terminalId);
+        }
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading QR config:', err);
+        this.isLoading = false;
+        this.isDataLoaded = true;
+        this.initializeDefaultConfig(terminalId);
+        this.cdr.detectChanges();
+      }
     });
   }
+
+  // ============================================
+  // LOAD QR CONFIG BY CONFIG ID (Fallback)
+  // ============================================
+
+  loadQrConfigById(configId: number): void {
+    this.isLoading = true;
+    this.isDataLoaded = false;
+
+    this.qrConfigApiService.getQrConfig(configId).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+
+        console.log('API Response by ID:', response);
+
+        if (response && response.success && response.data) {
+          this.originalConfig = response.data;
+
+          // Extract qr_config_id
+          this.qrConfigId = response.data.qr_config_id || configId;
+
+          // Extract json config
+          const jsonConfig = response.data.json || {};
+
+          // Parse data if it's a string
+          let parsedData = jsonConfig.data || '';
+          try {
+            if (typeof parsedData === 'string') {
+              JSON.parse(parsedData);
+            }
+          } catch (e) {
+            // If not valid JSON, keep as is
+          }
+
+          // Update config with API data
+          this.config = {
+            ...this.config,
+            data: parsedData,
+            qrColor: jsonConfig.qrColor || this.config.qrColor,
+            bgColor: jsonConfig.bgColor || this.config.bgColor,
+            qrSize: jsonConfig.qrSize || this.config.qrSize,
+            dotType: jsonConfig.dotType || this.config.dotType,
+            logoUrl: jsonConfig.logoUrl || this.config.logoUrl,
+            bottomText: jsonConfig.bottomText || this.config.bottomText,
+            textSize: jsonConfig.textSize || this.config.textSize,
+            textColor: jsonConfig.textColor || this.config.textColor,
+            fontFamily: jsonConfig.fontFamily || this.config.fontFamily,
+            fontWeight: jsonConfig.fontWeight || this.config.fontWeight,
+            terminalId: jsonConfig.terminalId || this.terminalId
+          };
+
+          // If no data, generate URL
+          if (!this.config.data || this.config.data === '') {
+            this.config.data = this.generateUrl(this.terminalId || 0);
+          }
+
+          // Update service
+          this.qrConfigService.updateConfig(this.config);
+          this.isDataLoaded = true;
+
+          // Regenerate QR
+          setTimeout(() => {
+            if (this.qrDisplay) {
+              this.qrDisplay.generateQR();
+            }
+          }, 100);
+
+        } else {
+          console.warn('No config found for ID:', configId);
+          this.initializeDefaultConfig(0);
+        }
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading QR config by ID:', err);
+        this.isLoading = false;
+        this.isDataLoaded = true;
+        this.initializeDefaultConfig(0);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // ============================================
+  // INITIALIZE DEFAULT CONFIG
+  // ============================================
+
+  private initializeDefaultConfig(terminalId: number): void {
+    const url = this.generateUrl(terminalId || this.terminalId);
+
+    // Create default config with URL
+    const defaultConfig = {
+      ...DEFAULT_QR_CONFIG,
+      data: url,
+      terminalId: terminalId || this.terminalId || 0,
+      bottomText: `Terminal ${terminalId || this.terminalId || 0}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    this.config = defaultConfig;
+    this.qrConfigService.updateConfig(this.config);
+
+    setTimeout(() => {
+      if (this.qrDisplay) {
+        this.qrDisplay.generateQR();
+      }
+    }, 100);
+  }
+
+  // ============================================
+  // SAVE QR CONFIG TO BACKEND
+  // ============================================
+
+  saveQrConfig(): void {
+    this.isSaving = true;
+
+    // Prepare payload with all required fields
+    const payload = {
+      json: {
+        data: this.config.data,
+        qrColor: this.config.qrColor,
+        bgColor: this.config.bgColor,
+        qrSize: this.config.qrSize,
+        dotType: this.config.dotType,
+        logoUrl: this.config.logoUrl,
+        bottomText: this.config.bottomText,
+        textSize: this.config.textSize,
+        textColor: this.config.textColor,
+        fontFamily: this.config.fontFamily,
+        fontWeight: this.config.fontWeight,
+        terminalId: this.terminalId,
+        createdAt: this.config.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    };
+
+    // If we have a qr_config_id, update by ID
+    if (this.qrConfigId) {
+      this.qrConfigApiService.updateQrConfig(payload, this.qrConfigId).subscribe({
+        next: (response: any) => {
+          this.isSaving = false;
+
+          this.toastService.open('Configuration saved successfully!', 'success')
+          if (response && response.data) {
+            this.originalConfig = response.data;
+            if (response.data.qr_config_id) {
+              this.qrConfigId = response.data.qr_config_id;
+            }
+          }
+
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error saving QR config:', err);
+          this.isSaving = false;
+          alert('Failed to save configuration. Please try again.');
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  }
+
+  // ============================================
+  // GENERATE URL FROM ENVIRONMENT
+  // ============================================
+
+  private generateUrl(terminalId: number): string {
+    const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
+    return `${baseUrl}/driver-training?terminalId=${terminalId}`;
+  }
+
+  // ============================================
+  // UPDATE CONFIG
+  // ============================================
 
   updateConfig(): void {
     this.qrConfigService.updateConfig(this.config);
     setTimeout(() => {
       if (this.qrDisplay) {
-        this.qrDisplay.generateQR(); // Now public and accessible
+        this.qrDisplay.generateQR();
       }
     }, 100);
   }
+
+  // ============================================
+  // REFRESH FROM API
+  // ============================================
+
+  refreshFromApi(): void {
+    if (this.qrConfigId) {
+      this.loadQrConfigById(this.qrConfigId);
+    } else if (this.terminalId) {
+      this.loadQrConfig(this.terminalId);
+    } else {
+      this.getTerminalIdFromUser();
+    }
+  }
+
+  // ============================================
+  // OTHER METHODS
+  // ============================================
 
   formatJSON(): void {
     try {
@@ -67,7 +373,7 @@ export class QREditorComponent implements OnInit {
       this.updateConfig();
       setTimeout(() => {
         if (this.qrDisplay) {
-          this.qrDisplay.generateQR(); // Now public and accessible
+          this.qrDisplay.generateQR();
         }
       }, 200);
     };
@@ -79,17 +385,23 @@ export class QREditorComponent implements OnInit {
     this.updateConfig();
     setTimeout(() => {
       if (this.qrDisplay) {
-        this.qrDisplay.generateQR(); // Now public and accessible
+        this.qrDisplay.generateQR();
       }
     }, 100);
   }
 
   resetConfig(): void {
     if (confirm('Reset all configurations?')) {
-      this.qrConfigService.resetConfig();
+      const resetConfig = { ...DEFAULT_QR_CONFIG };
+      resetConfig.terminalId = this.terminalId;
+      resetConfig.data = this.generateUrl(this.terminalId);
+
+      this.config = resetConfig;
+      this.qrConfigService.updateConfig(this.config);
+
       setTimeout(() => {
         if (this.qrDisplay) {
-          this.qrDisplay.generateQR(); // Now public and accessible
+          this.qrDisplay.generateQR();
         }
       }, 100);
     }
@@ -97,10 +409,11 @@ export class QREditorComponent implements OnInit {
 
   exportConfig(): void {
     const configJson = this.qrConfigService.exportConfig();
+    console.log('configJson = ', configJson);
     const blob = new Blob([configJson], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.download = `qr-config-${this.config.terminalId}.json`;
+    link.download = `qr-config-${this.qrConfigId || this.terminalId}.json`;
     link.href = url;
     link.click();
     URL.revokeObjectURL(url);
@@ -115,9 +428,12 @@ export class QREditorComponent implements OnInit {
       const success = this.qrConfigService.importConfig(e.target.result);
       if (success) {
         alert('Configuration imported successfully!');
+        if (this.config.terminalId) {
+          this.terminalId = this.config.terminalId;
+        }
         setTimeout(() => {
           if (this.qrDisplay) {
-            this.qrDisplay.generateQR(); // Now public and accessible
+            this.qrDisplay.generateQR();
           }
         }, 100);
       } else {
@@ -131,7 +447,10 @@ export class QREditorComponent implements OnInit {
     return this.response ? JSON.stringify(this.response, null, 4) : '{}';
   }
 
-  // Download methods
+  // ============================================
+  // DOWNLOAD METHODS
+  // ============================================
+
   async downloadPNG(): Promise<void> {
     if (!this.qrDisplay) {
       alert('QR code not ready. Please wait.');

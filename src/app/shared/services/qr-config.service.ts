@@ -99,6 +99,7 @@ export class QRConfigService {
     }
 
     importConfig(jsonString: string): boolean {
+        console.log('jsonString = ', jsonString);
         try {
             const config = JSON.parse(jsonString);
             this.configSubject.next({ ...DEFAULT_QR_CONFIG, ...config });
