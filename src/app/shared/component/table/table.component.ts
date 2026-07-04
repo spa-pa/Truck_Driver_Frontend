@@ -176,7 +176,7 @@ export class TableComponent implements OnInit {
   }
 
   calculateHeaderSize(headerCount: any, colSize: any) {
-    if (colSize && colSize.length > 0) {
+    if (colSize) {
       return colSize;
     }
     else {
