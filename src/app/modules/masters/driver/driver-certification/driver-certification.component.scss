@@ -124,6 +124,7 @@ $shadow: 0 20px 60px rgba($primary, 0.12);
 // CERTIFICATION CARD
 // ============================================
 .certification-card {
+
   &.pdf-export .footer-right,
   &.pdf-export .btn-download,
   &.pdf-export .btn-print {
@@ -149,6 +150,10 @@ $shadow: 0 20px 60px rgba($primary, 0.12);
     border-radius: 20px;
     pointer-events: none;
     z-index: 1;
+
+    &.expired {
+      border-color: $danger;
+    }
   }
 
   // Background Pattern
@@ -426,12 +431,10 @@ $shadow: 0 20px 60px rgba($primary, 0.12);
     .divider-vertical {
       width: 2px;
       height: 120px;
-      background: linear-gradient(
-        to bottom,
-        transparent,
-        $border-color,
-        transparent
-      );
+      background: linear-gradient(to bottom,
+          transparent,
+          $border-color,
+          transparent);
     }
 
     .photo-container {
@@ -565,12 +568,10 @@ $shadow: 0 20px 60px rgba($primary, 0.12);
 
       .expiry-divider {
         width: 2px;
-        background: linear-gradient(
-          to bottom,
-          transparent,
-          $border-color,
-          transparent
-        );
+        background: linear-gradient(to bottom,
+            transparent,
+            $border-color,
+            transparent);
       }
 
       .expiry-item {
@@ -583,6 +584,11 @@ $shadow: 0 20px 60px rgba($primary, 0.12);
         border: 1px solid $border-color;
         transition: all 0.25s ease;
 
+        &.expired {
+          background: rgba($danger,0.4);
+          box-shadow: 0 2px 12px rgba($danger, 0.3);
+        }
+
         &:hover {
           border-color: rgba($primary, 0.15);
         }
@@ -592,8 +598,8 @@ $shadow: 0 20px 60px rgba($primary, 0.12);
           border-color: rgba($warning, 0.15);
 
           &.expired {
-            background: rgba($danger, 0.04);
-            border-color: rgba($danger, 0.15);
+            background: rgba($danger, 0.4);
+            border-color: $danger;
           }
         }
 
@@ -858,6 +864,7 @@ $shadow: 0 20px 60px rgba($primary, 0.12);
 }
 
 @keyframes pulse-dot {
+
   0%,
   100% {
     opacity: 1;
@@ -871,6 +878,7 @@ $shadow: 0 20px 60px rgba($primary, 0.12);
 }
 
 @keyframes sealPulse {
+
   0%,
   100% {
     transform: scale(1);
