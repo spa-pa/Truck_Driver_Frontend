@@ -1,0 +1,531 @@
+/* ---------- RESET & BASE ---------- */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  background: #f0f2f5;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+/* ---------- SHELL: FULL PAGE ---------- */
+.login-shell {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: none;
+  border-radius: 0;
+  min-height: 100vh;
+}
+
+/* ---------- Left illustration panel ---------- */
+.illustration-panel {
+  flex: 1 1 45%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 15% 12%, rgba(0, 169, 157, 0.08), transparent 45%),
+    radial-gradient(circle at 85% 88%, rgba(245, 166, 35, 0.08), transparent 45%),
+    #eaf6fb;
+  overflow: hidden;
+}
+
+.brand-mark {
+  position: absolute;
+  top: 28px;
+  left: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 3;
+}
+.brand-mark .port-image {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+.brand-mark .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.brand-mark .dot.amber {
+  background: #f5a623;
+}
+.brand-mark .dot.hazard {
+  background: #e0472c;
+}
+.brand-name {
+  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #1c2b3a;
+  font-size: 1.05rem;
+}
+
+/* ---- Circular stage that frames the truck-safety image ---- */
+.stage {
+  position: relative;
+  z-index: 2;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dff0f5;
+  box-shadow:
+    0 20px 40px -16px rgba(13, 36, 54, 0.25),
+    0 0 0 10px rgba(255, 255, 255, 0.55);
+}
+/* Soft outer ring that separates the circle from the floating shapes */
+.stage-ring {
+  position: absolute;
+  inset: -18px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(1, 125, 116, 0.25);
+  pointer-events: none;
+}
+.stage .port-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Floating shapes — pushed well clear of the circular stage */
+.shape {
+  position: absolute;
+  z-index: 1;
+}
+.shape.container {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #00a99d;
+  border-radius: 3px;
+  top: 15%;
+  right: 20%;
+  animation: float 6s ease-in-out infinite;
+}
+.shape.ring {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f5a623;
+  border-radius: 50%;
+  top: 25%;
+  left: 18%;
+  animation: float 7s ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+.shape.arrow {
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 14px solid #1c2b3a;
+  top: 50%;
+  right: 15%;
+  animation: float 5.5s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+.shape.triangle {
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-bottom: 18px solid #e0472c;
+  opacity: 0.85;
+  bottom: 20%;
+  left: 25%;
+  animation: float 6.5s ease-in-out infinite;
+  animation-delay: 0.9s;
+}
+.shape.dot-sm {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1c2b3a;
+  bottom: 16%;
+  right: 16%;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.caption {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 2;
+  color: #1c2b3a;
+  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+/* ---------- Right form panel ---------- */
+.form-panel {
+  flex: 1 1 55%;
+  padding: 56px 60px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  background: #ffffff;
+}
+
+/* Logo shown only on mobile / small screens (illustration panel is hidden there) */
+.mobile-logo {
+  display: none;
+  margin-top: 8px;
+  margin-bottom: 44px;
+}
+.mobile-logo img {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+
+.eyebrow {
+  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #017d74;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+h1.login-title {
+  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #1c2b3a;
+  margin: 0 0 30px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: #1c2b3a;
+  margin-bottom: 7px;
+}
+
+/* ----- FIELD GROUP: bordered shell + error slot stacked vertically ----- */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4px;
+}
+
+/* The actual bordered control: icon, input and toggle share one flex row,
+   which guarantees they are always vertically centered relative to each other
+   regardless of font metrics or SVG baseline quirks. */
+.field-shell {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  background: #f4f7f8;
+  border: 1.5px solid #dbe4e8;
+  border-radius: 12px;
+  padding: 0 14px;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+.field-shell:hover {
+  border-color: #c3d1d7;
+}
+.field-shell:focus-within {
+  background: #fff;
+  border-color: #2c4256;
+  box-shadow: 0 0 0 4px rgba(2, 46, 70, 0.14);
+}
+
+.field-shell .icon-wrap {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #017d74;
+  margin-right: 10px;
+}
+.field-shell .icon-wrap svg {
+  display: block;
+}
+
+.field-shell input.login-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: normal;
+  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  color: #1c2b3a;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field-shell input.login-input::placeholder {
+  color: #7c8b96;
+}
+
+/* ---- Show/Hide toggle: a normal flex item now, so it can never clip ---- */
+.toggle-visibility {
+  flex: 0 0 auto;
+  margin-left: 8px;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  color: #7c8b96;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 6px;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+  width: 32px;
+  height: 32px;
+}
+.toggle-visibility:hover {
+  color: #1c2b3a;
+  background: rgba(0, 0, 0, 0.04);
+}
+.toggle-visibility:focus-visible {
+  outline: 2px solid #00a99d;
+  outline-offset: 2px;
+}
+.toggle-visibility svg {
+  display: block;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+}
+
+/* ---- Error wrapper: fixed height to prevent layout shift ---- */
+.error-wrapper {
+  min-height: 22px; /* reserve space for one line of error */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 4px;
+}
+
+.error-wrapper .error-text {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #e74c3c;
+  line-height: 1.4;
+  min-height: 20px;
+}
+.error-wrapper .error-text.empty {
+  visibility: hidden;
+  height: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+.error-wrapper .text-danger {
+  color: #e74c3c;
+}
+
+/* ---- Login Button ---- */
+.btn-login {
+  height: 52px;
+  border-radius: 12px;
+  border: none;
+  background: #1c2b3a;
+  color: #ffffff;
+  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  letter-spacing: 2px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 14px 26px -10px rgba(28, 43, 58, 0.55);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+.btn-login:hover:not(:disabled) {
+  background: #00a99d;
+  transform: translateY(-2px);
+  box-shadow: 0 18px 30px -10px rgba(1, 125, 116, 0.6);
+}
+.btn-login:active:not(:disabled) {
+  transform: translateY(0);
+}
+.btn-login:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-login:focus-visible {
+  outline: 3px solid #f5a623;
+  outline-offset: 2px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+/* Illustration panel is desktop-only: below 860px we show just the JM Baxi
+   logo above the form instead of the full port-and-shapes illustration. */
+@media (max-width: 860px) {
+  .login-shell {
+    flex-direction: column;
+    height: 100vh;
+    min-height: 100vh;
+    border-radius: 0;
+  }
+
+  .illustration-panel {
+    display: none !important;
+  }
+
+  .mobile-logo {
+    display: flex;
+    justify-content: center;
+  }
+
+  .form-panel {
+    flex: 1 1 100%;
+    max-width: 100%;
+    padding: 40px 32px 36px;
+    justify-content: center;
+    background: #ffffff;
+    width: 100%;
+  }
+
+  .eyebrow,
+  h1.login-title {
+    text-align: center;
+  }
+
+  h1.login-title {
+    font-size: 1.7rem;
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-panel {
+    padding: 28px 20px 28px;
+  }
+
+  .mobile-logo {
+    margin-top: 2px;
+    margin-bottom: 36px;
+  }
+  .mobile-logo img {
+    height: 68px;
+  }
+
+  h1.login-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+  }
+
+  .field-shell {
+    height: 48px;
+    padding: 0 12px;
+  }
+  .field-shell input.login-input {
+    font-size: 0.9rem;
+  }
+
+  .field-shell .icon-wrap svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .toggle-visibility {
+    width: 30px;
+    height: 30px;
+  }
+  .toggle-visibility svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn-login {
+    height: 50px;
+    font-size: 0.92rem;
+    letter-spacing: 1.5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .form-panel {
+    padding: 20px 14px 24px;
+  }
+  h1.login-title {
+    font-size: 1.3rem;
+  }
+  .field-shell {
+    height: 44px;
+    padding: 0 10px;
+  }
+  .field-shell input.login-input {
+    font-size: 0.85rem;
+  }
+  .btn-login {
+    height: 44px;
+    font-size: 0.8rem;
+  }
+  .toggle-visibility {
+    width: 28px;
+    height: 28px;
+  }
+  .toggle-visibility svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* ---------- ACCESSIBILITY ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .shape {
+    animation: none !important;
+  }
+}

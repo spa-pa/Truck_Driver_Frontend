@@ -1,65 +1,184 @@
-<div class="container-fluid p-0">
-    <div class="row m-0">
-        <div class="col-12 p-0">
-            <div class="login-card login-dark">
-                <div>
-                    <div>
-                        <a class="logo" [routerLink]="['/dashboard/default']">
-                            <img class="img-fluid for-light" src="assets/images/logo/logo.png" alt="looginpage">
-                            <img class="img-fluid for-dark m-auto" src="assets/images/logo/logo.png" alt="logo">
-                        </a>
-                    </div>
-                    <div class="login-main">
-                        <form class="theme-form" [formGroup]="loginForm">
-                            <h2 class="text-center">Sign in to account</h2>
-                            <p class="text-center">Enter your username &amp; password to login</p>
-                            <div class="form-group">
-                                <label class="col-form-label">User Name</label>
-                                <input class="form-control" type="user_name" required="" placeholder="User Name"
-                                    formControlName="user_name">
-                                <div
-                                    *ngIf="loginForm.controls['user_name'].touched && loginForm.controls['user_name'].errors?.['required']">
-                                    <div class="text text-danger mt-1"> Username is required</div>
-                                </div>
-                                <div
-                                    *ngIf="loginForm.controls['user_name'].touched && loginForm.controls['user_name'].errors?.['user_name']">
-                                    <div class="text text-danger mt-1">Invalid Username</div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-form-label">Password</label>
-                                <div class="form-input position-relative">
-                                    <input class="form-control" [type]="show ? 'text' : 'password'" type="password"
-                                        name="login[password]" required="" placeholder="*********"
-                                        formControlName="password">
-                                    <div class="show-hide" (click)="showPassword()">
-                                        <span *ngIf="!show" class="show"></span>
-                                        <span *ngIf="show" class="hide"></span>
-                                    </div>
-                                    <div
-                                        *ngIf="loginForm.controls['password'].touched && loginForm.controls['password'].errors?.['required']">
-                                        <div class="text text-danger mt-1">Password is required</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group mb-0 checkbox-checked">
-                                <div class="form-check checkbox-solid-info">
-                                    <input class="form-check-input" id="solid6" type="checkbox">
-                                    <label class="form-check-label" for="solid6">Remember password</label>
-                                </div>
-                                <!-- <a class="link-two" (click)="forgotPaassword()">Forgot password?</a> -->
-                            </div>
-                            <div class="text-end mt-3">
-                                <button class="btn btn-primary btn-block w-100 text-white" [disabled]="!loginForm.valid"
-                                    (click)="login()">Sign in</button>
-                            </div>
-                            <!-- <p class="mt-4 mb-0 text-center">Don't have an account?
-                                <a class="ms-2" (click)="createAccount()">Create Account</a>
-                            </p> -->
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="login-shell">
+  <!-- LEFT: ILLUSTRATION -->
+  <div class="illustration-panel">
+    <div class="brand-mark">
+      <!-- <span class="brand-name">JM BAXI</span>
+      <span class="dot amber"></span>
+      <span class="dot hazard"></span> -->
+      <img
+        src="assets/images/logo/logo.png"
+        alt="Truck Driver Safety"
+        class="port-image"
+      />
     </div>
+
+    <span class="shape container"></span>
+    <span class="shape ring"></span>
+    <span class="shape arrow"></span>
+    <span class="shape triangle"></span>
+    <span class="shape dot-sm"></span>
+
+    <div class="stage">
+      <div class="stage-ring"></div>
+      <img
+        src="assets/images/truck-safety.jpg"
+        alt="Truck Driver Safety"
+        class="port-image"
+      />
+    </div>
+
+    <div class="caption">Port &amp; Terminal Access Portal</div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="form-panel">
+    <!-- Shown only on mobile / small screens, since the illustration panel is hidden there -->
+    <div class="mobile-logo">
+      <img src="assets/images/logo/logo.png" alt="JM Baxi" />
+    </div>
+
+    <div class="eyebrow">Secure Access</div>
+    <h1 class="login-title">Member Login</h1>
+
+    <form class="theme-form" [formGroup]="loginForm">
+      <!-- USERNAME -->
+      <label class="field-label" for="user_name">User Name</label>
+      <div class="field-group">
+        <div class="field-shell">
+          <span class="icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" />
+              <path d="m3.5 6 8.5 7 8.5-7" />
+            </svg>
+          </span>
+          <input
+            class="form-control login-input"
+            type="text"
+            required
+            placeholder="User Name"
+            formControlName="user_name"
+            id="user_name"
+          />
+        </div>
+        <!-- Error message with fixed height to prevent shift -->
+        <div class="error-wrapper">
+          <div
+            *ngIf="
+              loginForm.controls['user_name'].touched &&
+              loginForm.controls['user_name'].errors?.['required']
+            "
+            class="error-text"
+          >
+            <span class="text-danger">Username is required</span>
+          </div>
+          <div
+            *ngIf="
+              loginForm.controls['user_name'].touched &&
+              loginForm.controls['user_name'].errors?.['user_name']
+            "
+            class="error-text"
+          >
+            <span class="text-danger">Invalid Username</span>
+          </div>
+          <!-- Empty placeholder to maintain height -->
+          <div class="error-text empty">&nbsp;</div>
+        </div>
+      </div>
+
+      <!-- PASSWORD -->
+      <label class="field-label" for="password">Password</label>
+      <div class="field-group">
+        <div class="field-shell">
+          <span class="icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="5" y="11" width="14" height="10" rx="2" />
+              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+            </svg>
+          </span>
+          <input
+            class="form-control login-input"
+            [type]="show ? 'text' : 'password'"
+            required
+            placeholder="*********"
+            formControlName="password"
+            id="password"
+          />
+
+          <!-- FIXED: Show/Hide toggle with proper sizing -->
+          <button
+            type="button"
+            class="toggle-visibility"
+            (click)="showPassword()"
+            aria-label="Toggle password visibility"
+          >
+            <svg
+              *ngIf="!show"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            <svg
+              *ngIf="show"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+              <line x1="1" y1="1" x2="23" y2="23" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="error-wrapper">
+          <div
+            *ngIf="
+              loginForm.controls['password'].touched &&
+              loginForm.controls['password'].errors?.['required']
+            "
+            class="error-text"
+          >
+            <span class="text-danger">Password is required</span>
+          </div>
+          <div class="error-text empty">&nbsp;</div>
+        </div>
+      </div>
+
+      <!-- LOGIN BUTTON -->
+      <div class="text-end mt-3">
+        <button
+          class="btn btn-primary btn-block w-100 text-white btn-login"
+          [disabled]="!loginForm.valid"
+          (click)="login()"
+        >
+          Login
+        </button>
+      </div>
+    </form>
+
+    <!-- Optional footer -->
+    <!--
+    <div class="divider-note">New to the terminal</div>
+    <div class="create-account">
+      <a href="#">
+        Create your Account
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+          <path d="M1 6H15M15 6L10 1M15 6L10 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+    </div>
+    -->
+  </div>
 </div>

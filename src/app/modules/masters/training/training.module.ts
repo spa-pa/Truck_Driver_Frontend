@@ -11,7 +11,7 @@ import { DriverTrainingService } from '@shared/_http/driver-training.service';
 
 
 @NgModule({
-  declarations: [TrainingComponent],
+  declarations: [],
   imports: [
     CommonModule,
     ReactiveFormsModule,
