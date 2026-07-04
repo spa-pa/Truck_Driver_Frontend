@@ -1,22 +1,33 @@
-// src/app/modules/masters/training/training.component.ts
-
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ApiLanguageService } from '@shared/_http/language.service';
-import { VideoService } from '@shared/_http/video.service';
-import { QuestionsService } from '@shared/_http/questions.service';
-import { LanguageService } from '@shared/services/language.service';
-import { DriverMasterService } from '@shared/_http/driver-master.service';
-import { ToastService } from '@shared/services/toast.service';
-import { DriverTrainingService } from '@shared/_http/driver-training.service';
-import { DriverCertification } from '@shared/models/driver-certification.model';
-import { DriverCertificationService } from '@shared/_http/driver-certification.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { DriverCertificationComponent } from '../driver/driver-certification/driver-certification.component';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef,
+  TemplateRef,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from "@angular/forms";
+import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { ApiLanguageService } from "@shared/_http/language.service";
+import { VideoService } from "@shared/_http/video.service";
+import { QuestionsService } from "@shared/_http/questions.service";
+import { LanguageService } from "@shared/services/language.service";
+import { DriverMasterService } from "@shared/_http/driver-master.service";
+import { ToastService } from "@shared/services/toast.service";
+import { DriverTrainingService } from "@shared/_http/driver-training.service";
+import { DriverCertification } from "@shared/models/driver-certification.model";
+import { DriverCertificationService } from "@shared/_http/driver-certification.service";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { DriverCertificationComponent } from "../driver/driver-certification/driver-certification.component";
 
 interface Language {
   language_code: string;
@@ -100,23 +111,23 @@ interface QuizResult {
 }
 
 @Component({
-  selector: 'app-training',
+  selector: "app-training",
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     TranslateModule,
-    DriverCertificationComponent
+    DriverCertificationComponent,
   ],
-  templateUrl: './training.component.html',
-  styleUrls: ['./training.component.scss']
+  templateUrl: "./training.component.html",
+  styleUrls: ["./training.component.scss"],
 })
 export class TrainingComponent implements OnInit, OnDestroy {
-  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
+  @ViewChild("videoPlayer") videoPlayer!: ElementRef<HTMLVideoElement>;
 
-  @ViewChild('certificationModal') certificationModal!: TemplateRef<any>;
+  @ViewChild("certificationModal") certificationModal!: TemplateRef<any>;
 
-  // Driver 
+  // Driver
   driverDetails: any;
   // Languages
   languages: Language[] = [];
@@ -135,8 +146,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // Data
   selectedLanguage: number = 0;
   selectedLanguageId: number = 1;
-  selectedLanguageCode: string = 'en';
-  videoUrl: string = '';
+  selectedLanguageCode: string = "en";
+  videoUrl: string = "";
   questions: MappedQuestion[] = [];
   quizResult: QuizResult | null = null;
 
@@ -151,6 +162,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   private modalRef: NgbModalRef | null = null;
 
+  showTermsModal: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -164,11 +177,11 @@ export class TrainingComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private driverTrainingService: DriverTrainingService,
     private driverCertification: DriverCertificationService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
   ) {
     // Set default language
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+    this.translate.setDefaultLang("en");
+    this.translate.use("en");
   }
 
   ngOnInit(): void {
@@ -198,17 +211,25 @@ export class TrainingComponent implements OnInit, OnDestroy {
   private initRegistrationForm(): void {
     this.registrationForm = this.fb.group({
       language_id: [this.selectedLanguageId],
-      full_name: ['', [Validators.required, Validators.minLength(3)]],
-      mobile_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-      driving_license_number: ['', Validators.required],
-      driving_license_expiry_date: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]]
+      full_name: ["", [Validators.required, Validators.minLength(3)]],
+      mobile_number: [
+        "",
+        [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+      ],
+      driving_license_number: ["", Validators.required],
+      driving_license_expiry_date: [
+        "",
+        [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)],
+      ],
+      driving_license: [null, Validators.required],
+      terms_agreed: [false, Validators.requiredTrue],
     });
   }
 
   private initQuizForm(): void {
     const controls: any = {};
-    this.questions.forEach(q => {
-      controls[`question_${q.id}`] = ['', Validators.required];
+    this.questions.forEach((q) => {
+      controls[`question_${q.id}`] = ["", Validators.required];
     });
     this.quizForm = this.fb.group(controls);
   }
@@ -247,7 +268,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // LANGUAGE SELECTION
   // ============================================
   selectLanguage(languageId: number): void {
-    const selectedLang = this.languages.find(l => l.language_id === languageId);
+    const selectedLang = this.languages.find(
+      (l) => l.language_id === languageId,
+    );
     if (selectedLang) {
       this.selectedLanguage = languageId;
       this.selectedLanguageId = selectedLang.language_id || 1;
@@ -264,15 +287,17 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   private getLanguageCode(languageName: string): string {
     const map: { [key: string]: string } = {
-      'english': 'en',
-      'hindi': 'hi',
-      'marathi': 'mr',
-      'gujarati': 'gu',
-      "tamil": "ta",
-      "telugu": "te"
+      bangla: "bn",
+      english: "en",
+      gujarati: "gu",
+      hindi: "hi",
+      marathi: "mr",
+      Oriya: "or",
+      tamil: "ta",
+      telugu: "te",
     };
 
-    return map[languageName?.toLowerCase()] || 'en';
+    return map[languageName?.toLowerCase()] || "en";
   }
 
   private loadTrainingContent(languageId: number): void {
@@ -287,7 +312,11 @@ export class TrainingComponent implements OnInit, OnDestroy {
             if (video.path) {
               // Use the path directly from the response
               this.videoUrl = response.data.path || video.path;
-              if (!this.videoUrl.startsWith('http://') && !this.videoUrl.startsWith('https://')) {                // If it's a relative path, construct the full URL
+              if (
+                !this.videoUrl.startsWith("http://") &&
+                !this.videoUrl.startsWith("https://")
+              ) {
+                // If it's a relative path, construct the full URL
                 this.videoUrl = `${video.path}`;
               }
 
@@ -297,11 +326,11 @@ export class TrainingComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Error loading video:', err);
+          console.error("Error loading video:", err);
           // this.videoUrl = 'http://localhost:3000/resources/video/1782118519595-330376523.mp4';
           this.cdr.detectChanges();
-        }
-      })
+        },
+      }),
     );
 
     // Load Questions
@@ -317,11 +346,11 @@ export class TrainingComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Error loading questions:', err);
+          console.error("Error loading questions:", err);
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
-      })
+        },
+      }),
     );
   }
 
@@ -331,7 +360,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
   private mapQuestions(questionHeaders: QuestionHeader[]): MappedQuestion[] {
     return questionHeaders.map((qh, index) => {
       // Get question text for selected language
-      const questionTextObj = qh.question_header_text?.find(t => t.language_id === this.selectedLanguageId);
+      const questionTextObj = qh.question_header_text?.find(
+        (t) => t.language_id === this.selectedLanguageId,
+      );
       const questionText = questionTextObj?.text || `Question ${index + 1}`;
 
       // Map options
@@ -339,14 +370,16 @@ export class TrainingComponent implements OnInit, OnDestroy {
       const optionMap: { [key: string]: string } = {};
       const optionImageMap: { [key: string]: string | null } = {};
       const optionMediaMap: { [key: string]: string | null } = {};
-      let correctAnswer = 'A';
-      const optionLabels = ['A', 'B', 'C', 'D'];
+      let correctAnswer = "A";
+      const optionLabels = ["A", "B", "C", "D"];
 
       options.forEach((opt, idx) => {
         const label = optionLabels[idx] || String.fromCharCode(65 + idx);
 
         // Get option text for selected language
-        const textObj = opt.texts?.find(t => t.language_id === this.selectedLanguageId);
+        const textObj = opt.texts?.find(
+          (t) => t.language_id === this.selectedLanguageId,
+        );
         const optionText = textObj?.text || `Option ${label}`;
         optionMap[label] = optionText;
 
@@ -354,7 +387,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
         optionImageMap[label] = opt.media_url || null;
 
         // Store media URL for image type options
-        if (opt.option_type === 'image' && opt.media_url) {
+        if (opt.option_type === "image" && opt.media_url) {
           optionMediaMap[label] = opt.media_url;
         } else {
           optionMediaMap[label] = null;
@@ -369,15 +402,15 @@ export class TrainingComponent implements OnInit, OnDestroy {
       return {
         id: qh.question_header_id,
         question_text: questionText,
-        option_a: optionMap['A'] || 'Option A',
-        option_b: optionMap['B'] || 'Option B',
-        option_c: optionMap['C'] || 'Option C',
-        option_d: optionMap['D'] || 'Option D',
+        option_a: optionMap["A"] || "Option A",
+        option_b: optionMap["B"] || "Option B",
+        option_c: optionMap["C"] || "Option C",
+        option_d: optionMap["D"] || "Option D",
         correct_answer: correctAnswer,
         audio_path: qh.audio_path || null,
         image_path: qh.image_path || null,
         option_images: optionImageMap,
-        option_media: optionMediaMap
+        option_media: optionMediaMap,
       };
     });
   }
@@ -387,18 +420,29 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // ============================================
   registerDriver(): void {
     if (this.registrationForm.invalid) {
-      Object.keys(this.registrationForm.controls).forEach(key => {
+      Object.keys(this.registrationForm.controls).forEach((key) => {
         this.registrationForm.get(key)?.markAsTouched();
       });
       return;
     }
 
     this.isLoading = true;
-    const formData = this.registrationForm.value;
+    const formValue = this.registrationForm.value;
 
-    // Simulate API call - Replace with actual registration API
+    // Build FormData
+    const formData = new FormData();
+    formData.append("language_id", formValue.language_id);
+    formData.append("full_name", formValue.full_name);
+    formData.append("mobile_number", formValue.mobile_number);
+    formData.append("driving_license_number", formValue.driving_license_number);
+    formData.append(
+      "driving_license_expiry_date",
+      formValue.driving_license_expiry_date,
+    );
+    formData.append("driving_license", formValue.driving_license); // the File object
+
+    // Call the API with FormData
     this.subscriptions.add(
-      // Replace with your actual registration service
       this.driverMasterService.createdriverMaster(formData).subscribe({
         next: (response) => {
           this.driverDetails = response.data;
@@ -408,14 +452,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.log("err " + JSON.stringify(err))
+          console.log("err " + JSON.stringify(err));
           if (err.data) {
             if (err.data.certification) {
               this.certificationId = err.data.certification.certification_id;
               this.modalRef = this.modalService.open(this.certificationModal, {
-                size: 'xl',
+                size: "xl",
                 centered: true,
-                backdrop: 'static'
+                backdrop: "static",
               });
               this.initRegistrationForm();
               this.showRegistration = true;
@@ -427,14 +471,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
               this.showVideo = true;
               this.cdr.detectChanges();
             } else {
-              this.toastService.open(err.message, 'error');
+              this.toastService.open(err.message, "error");
             }
           }
-          console.error('Registration error:', err);
+          console.error("Registration error:", err);
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
-      })
+        },
+      }),
 
       // Simulated response
     );
@@ -461,6 +505,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   onVideoComplete(): void {
     this.videoProgress = 100;
+    this.proceedToQuiz();
   }
 
   proceedToQuiz(): void {
@@ -469,6 +514,22 @@ export class TrainingComponent implements OnInit, OnDestroy {
     }
     this.showVideo = false;
     this.showQuiz = true;
+    this.cdr.detectChanges();
+  }
+
+  // Add method to watch video again (used in result modal)
+  watchVideoAgain(): void {
+    this.showResultModal = false;
+    this.showQuiz = false;
+    this.showVideo = true;
+    this.videoProgress = 0;
+    this.quizResult = null; // clear previous result
+    this.initQuizForm(); // reset all radio selections
+    const video = this.videoPlayer?.nativeElement;
+    if (video) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    }
     this.cdr.detectChanges();
   }
 
@@ -482,7 +543,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     const answers = this.quizForm.value;
 
     let correct = 0;
-    this.questions.forEach(q => {
+    this.questions.forEach((q) => {
       if (answers[`question_${q.id}`] === q.correct_answer) {
         correct++;
       }
@@ -492,22 +553,23 @@ export class TrainingComponent implements OnInit, OnDestroy {
     const passed = score >= 70;
 
     // Get translated messages
-    const passedMessage = this.translate.instant('MODAL.PASSED') ||
-      'You have successfully passed the safety training! Your certificate is ready.';
+    const passedMessage =
+      this.translate.instant("MODAL.PASSED") ||
+      "You have successfully passed the safety training! Your certificate is ready.";
 
-    const failedMessage = this.translate.instant('MODAL.FAILED') ||
-      'You did not meet the passing score of 70%. Please review the material and try again.';
+    const failedMessage =
+      this.translate.instant("MODAL.FAILED") ||
+      "You did not meet the passing score of 70%. Please review the material and try again.";
 
     this.quizResult = {
       passed,
       score,
-      message: passed ? passedMessage : failedMessage
+      message: passed ? passedMessage : failedMessage,
     };
 
     this.isSubmitting = false;
     this.showQuiz = false;
-    if (!passed)
-      this.showResultModal = true;
+    if (!passed) this.showResultModal = true;
     this.cdr.detectChanges();
 
     // this.saveQuizResult(score, correct, passed);
@@ -517,10 +579,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
     // }, 3500); // 3.5 seconds delay
   }
 
-  private saveQuizResult(score: number, correct: number, passed: boolean): void {
+  private saveQuizResult(
+    score: number,
+    correct: number,
+    passed: boolean,
+  ): void {
     // Simulate API call - Replace with actual API
     setTimeout(() => {
-      console.log('Quiz Result Saved:', { score, passed });
+      console.log("Quiz Result Saved:", { score, passed });
     }, 2000);
 
     const formData = {
@@ -529,42 +595,40 @@ export class TrainingComponent implements OnInit, OnDestroy {
       total_question: this.questions.length,
       correct_question: correct,
       questions: this.questions,
-
-    }
+    };
     this.subscriptions.add(
       this.driverTrainingService.createdriverTraining(formData).subscribe({
-        next: (response) => {
-        },
-        error: (err) => {
-        }
-      })
+        next: (response) => {},
+        error: (err) => {},
+      }),
     );
 
     if (passed) {
       const certificationFormData = {
         driver_id: this.driverDetails.driver_id,
-        expiry_date: this.getOneYearExpiryDate()
-      }
+        expiry_date: this.getOneYearExpiryDate(),
+      };
       this.subscriptions.add(
-        this.driverCertification.createDriverCertification(certificationFormData).subscribe({
-          next: (response) => {
-            if (response.data.certification_id) {
-              this.showResultModal = false;
-              this.certificationId = response.data.certification_id;
-              this.initRegistrationForm();
-              this.showRegistration = false;
-              this.showVideo = false;
-              this.showCertification = true;
-              // this.modalRef = this.modalService.open(this.certificationModal, {
-              //   size: 'xl',
-              //   centered: true,
-              //   backdrop: 'static'
-              // });
-            }
-          },
-          error: (err) => {
-          }
-        })
+        this.driverCertification
+          .createDriverCertification(certificationFormData)
+          .subscribe({
+            next: (response) => {
+              if (response.data.certification_id) {
+                this.showResultModal = false;
+                this.certificationId = response.data.certification_id;
+                this.initRegistrationForm();
+                this.showRegistration = false;
+                this.showVideo = false;
+                this.showCertification = true;
+                // this.modalRef = this.modalService.open(this.certificationModal, {
+                //   size: 'xl',
+                //   centered: true,
+                //   backdrop: 'static'
+                // });
+              }
+            },
+            error: (err) => {},
+          }),
       );
     }
   }
@@ -581,8 +645,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // CERTIFICATE
   // ============================================
   downloadCertificate(): void {
-    const downloadText = this.translate.instant('MODAL.DOWNLOAD_SUCCESS') ||
-      'Certificate downloaded successfully!';
+    const downloadText =
+      this.translate.instant("MODAL.DOWNLOAD_SUCCESS") ||
+      "Certificate downloaded successfully!";
     alert(downloadText);
   }
 
@@ -595,11 +660,15 @@ export class TrainingComponent implements OnInit, OnDestroy {
       this.modalRef = null;
     }
     this.showResultModal = false;
+    // If failed, show quiz again so they can review/retry
+    if (this.quizResult && !this.quizResult.passed) {
+      this.showQuiz = true;
+    }
     this.cdr.detectChanges();
   }
 
   closeModalOnOverlay(event: MouseEvent): void {
-    if ((event.target as HTMLElement).classList.contains('modal-overlay')) {
+    if ((event.target as HTMLElement).classList.contains("modal-overlay")) {
       this.closeModal();
     }
   }
@@ -608,8 +677,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // HELPER METHODS
   // ============================================
   getOptionText(question: MappedQuestion, option: string): string {
-    const key = 'option_' + option.toLowerCase();
-    return (question as any)[key] || '';
+    const key = "option_" + option.toLowerCase();
+    return (question as any)[key] || "";
   }
 
   getOptionImage(question: MappedQuestion, option: string): string | null {
@@ -632,7 +701,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
     const languageId = parseInt(select.value);
 
     // Find the selected language
-    const selectedLang = this.languages.find(l => l.language_id === languageId);
+    const selectedLang = this.languages.find(
+      (l) => l.language_id === languageId,
+    );
     if (selectedLang) {
       // Reset current state
       this.languageSelected = false;
@@ -657,22 +728,28 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   // Also update the getAllLanguage method to set default language
   getAllLanguage() {
-    this.subscriptions.add(this.apiLanguageService.getAllLanguages().subscribe({
-      next: (value) => {
-        this.languages = value.data;
-        // Set default language as first language or English
-        if (this.languages.length > 0) {
-          const defaultLang = this.languages.find(l => l.language_name === 'English') || this.languages[0];
-          this.selectedLanguageId = defaultLang.language_id;
-          this.selectedLanguageCode = this.getLanguageCode(defaultLang.language_name);
-          this.languageService.setLanguage(this.selectedLanguageCode);
-          this.loadTrainingContent(this.selectedLanguageId);
-        }
-      },
-      error: (err) => {
-        console.error('Error loading languages:', err);
-      }
-    }));
+    this.subscriptions.add(
+      this.apiLanguageService.getAllLanguages().subscribe({
+        next: (value) => {
+          this.languages = value.data;
+          // Set default language as first language or English
+          if (this.languages.length > 0) {
+            const defaultLang =
+              this.languages.find((l) => l.language_name === "English") ||
+              this.languages[0];
+            this.selectedLanguageId = defaultLang.language_id;
+            this.selectedLanguageCode = this.getLanguageCode(
+              defaultLang.language_name,
+            );
+            this.languageService.setLanguage(this.selectedLanguageCode);
+            this.loadTrainingContent(this.selectedLanguageId);
+          }
+        },
+        error: (err) => {
+          console.error("Error loading languages:", err);
+        },
+      }),
+    );
   }
 
   // Helper method to get date one year from now
@@ -682,8 +759,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
     expiryDate.setFullYear(today.getFullYear() + 1);
 
     // Format as 'DD/MM/YYYY' or 'YYYY-MM-DD' based on your API requirement
-    const day = String(expiryDate.getDate()).padStart(2, '0');
-    const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
+    const day = String(expiryDate.getDate()).padStart(2, "0");
+    const month = String(expiryDate.getMonth() + 1).padStart(2, "0");
     const year = expiryDate.getFullYear();
 
     // Option 1: DD/MM/YYYY format
@@ -691,5 +768,49 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
     // Option 2: YYYY-MM-DD format (if your API expects this)
     // return `${year}-${month}-${day}`;
+  }
+
+  // Driving License Photo Upload
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.registrationForm.patchValue({ driving_license: file });
+      this.registrationForm.get("driving_license")?.updateValueAndValidity();
+    } else {
+      this.registrationForm.patchValue({ driving_license: null });
+    }
+  }
+
+  // Terms Modal methods
+  openTermsModal(event: Event): void {
+    event.preventDefault(); // Prevent checkbox toggle
+    this.showTermsModal = true;
+  }
+
+  closeTermsModal(): void {
+    this.showTermsModal = false;
+  }
+
+  closeTermsModalOnOverlay(event: MouseEvent): void {
+    if ((event.target as HTMLElement).classList.contains("modal-overlay")) {
+      this.closeTermsModal();
+    }
+  }
+
+  acceptTerms(): void {
+    const control = this.registrationForm.get("terms_agreed");
+    control?.patchValue(true);
+    control?.markAsTouched();
+    control?.updateValueAndValidity(); // ensure validation runs immediately
+    this.closeTermsModal();
+  }
+
+  declineTerms(): void {
+    const control = this.registrationForm.get("terms_agreed");
+    control?.patchValue(false);
+    control?.markAsTouched();
+    control?.updateValueAndValidity();
+    this.closeTermsModal();
   }
 }
