@@ -63,7 +63,7 @@
                 <li class="custom-dropdown">
                     <app-qr></app-qr>
                 </li>
-                <li class="custom-dropdown custom-messages">
+                <li class="custom-dropdown custom-messages" *ngIf="profileDetails?.terminal_name">
                     <div class="d-flex align-items-center">
                         <span>{{this.profileDetails?.terminal_name}}</span>
                     </div>

@@ -231,4 +231,70 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     const days = this.getDaysUntilExpiry(dateString);
     return days !== null ? days : 0;
   }
+
+  isCertificationActive(): boolean {
+    if (!this.certification || !this.certification.expiry_date) {
+      return false;
+    }
+
+    const expiryDate = new Date(this.certification.expiry_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    expiryDate.setHours(0, 0, 0, 0);
+
+    return expiryDate >= today;
+  }
+
+  /**
+ * Check if the certification is expired
+ * @returns boolean - true if expired
+ */
+  isCertificationExpired(): boolean {
+    return !this.isCertificationActive();
+  }
+
+  /**
+   * Check if license is expired
+   * @returns boolean - true if expired
+   */
+  isLicenseExpired(): boolean {
+    const days = this.getLicenseDaysUntilExpiry();
+    return days !== null && days <= 0;
+  }
+
+  /**
+ * Get days until license expiry
+ * @returns number of days or null if invalid
+ */
+  getLicenseDaysUntilExpiry(): number | null {
+    if (!this.certification || !this.certification.driving_license_expiry_date) {
+      return null;
+    }
+
+    const expiryDate = new Date(this.certification.driving_license_expiry_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    expiryDate.setHours(0, 0, 0, 0);
+
+    const diffTime = expiryDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays;
+  }
+
+  /**
+ * Get days until license expiry with display text
+ * @returns string - formatted days remaining or expired message
+ */
+  getLicenseDaysDisplay(): string {
+    const days = this.getLicenseDaysUntilExpiry();
+    if (days === null) {
+      return 'N/A';
+    }
+    if (days > 0) {
+      return `${days} days remaining`;
+    }
+    return `EXPIRED ${Math.abs(days)} days ago`;
+  }
+
 }

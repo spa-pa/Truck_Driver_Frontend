@@ -3,7 +3,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiLanguageService } from '@shared/_http/language.service';
@@ -150,6 +150,8 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
   certificationId: any;
 
   private modalRef: NgbModalRef | null = null;
+  // Add this property
+  terminalId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -164,7 +166,8 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private driverTrainingService: DriverTrainingService,
     private driverCertification: DriverCertificationService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private activatedRoute: ActivatedRoute,
   ) {
     // Set default language
     this.translate.setDefaultLang('en');
@@ -172,6 +175,7 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.getTerminalIdFromUrl();
     this.getAllLanguage();
     this.initRegistrationForm();
   }
@@ -183,6 +187,28 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
   // ============================================
   // FORM INITIALIZATION
   // ============================================
+
+  // Add this method to extract terminalId from URL
+  private getTerminalIdFromUrl(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      const terminalIdParam = params['terminalId'];
+      if (terminalIdParam) {
+        this.terminalId = parseInt(terminalIdParam, 10);
+        console.log('Terminal ID captured:', this.terminalId);
+
+        // You can use this.terminalId in your API calls or form submissions
+        // For example, add it to the registration form
+        if (this.registrationForm) {
+          this.registrationForm.patchValue({
+            terminal_id: this.terminalId
+          });
+        }
+      } else {
+        console.warn('No terminalId found in URL');
+      }
+    });
+  }
+
 
   // getAllLanguage() {
   //   this.subscriptions.add(this.apiLanguageService.getAllLanguages().subscribe({
@@ -201,7 +227,8 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
       full_name: ['', [Validators.required, Validators.minLength(3)]],
       mobile_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       driving_license_number: ['', Validators.required],
-      driving_license_expiry_date: ['', Validators.required]
+      driving_license_expiry_date: ['', Validators.required],
+      terminal_id: [this.terminalId] // Add this field to capture terminalId
     });
   }
 
@@ -544,7 +571,7 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
     if (passed) {
       const certificationFormData = {
         driver_id: this.driverDetails.driver_id,
-        expiry_date: this.getOneYearExpiryDate()
+        // expiry_date: this.getOneYearExpiryDate()
       }
       this.subscriptions.add(
         this.driverCertification.createDriverCertification(certificationFormData).subscribe({

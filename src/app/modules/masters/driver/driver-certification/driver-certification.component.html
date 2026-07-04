@@ -27,7 +27,7 @@
     <!-- Certification Card -->
     <div class="certification-card" #certificationCard *ngIf="certification && !isLoading && !error">
         <!-- Decorative Border -->
-        <div class="cert-border"></div>
+        <div class="cert-border" [class.expired]="!isCertificationActive()"></div>
 
         <!-- Background Pattern -->
         <div class="bg-pattern">
@@ -45,8 +45,8 @@
         </div> -->
 
         <!-- Certification Ribbon -->
-        <div class="cert-ribbon" [class.expired]="!certification.is_active">
-            <span>{{ certification.is_active ? '✓ VALID' : '✗ EXPIRED' }}</span>
+        <div class="cert-ribbon" [class.expired]="!isCertificationActive()">
+            <span>{{ isCertificationActive() ? '✓ VALID' : '✗ EXPIRED' }}</span>
         </div>
 
         <!-- Header -->
@@ -57,9 +57,9 @@
                     <span class="value">#{{ certification.certification_id }}</span>
                 </div>
                 <div class="cert-status">
-                    <span class="status-badge" [class.active]="certification.is_active">
+                    <span class="status-badge" [class.active]="isCertificationActive()">
                         <span class="dot"></span>
-                        {{ certification.is_active ? 'ACTIVE' : 'EXPIRED' }}
+                        {{ isCertificationActive() ? 'ACTIVE' : 'EXPIRED' }}
                     </span>
                 </div>
             </div>
@@ -149,7 +149,7 @@
         <!-- Expiry Section -->
         <div class="expiry-section">
             <div class="expiry-grid">
-                <div class="expiry-item">
+                <div class="expiry-item" [class.expired]="isLicenseExpired()"> 
                     <div class="expiry-icon">
                         <i class="fa fa-calendar"></i>
                     </div>
@@ -158,9 +158,11 @@
                         <span class="expiry-value">{{ certification.driving_license_expiry_date | date:'dd MMM yyyy'
                             }}</span>
                         <span class="expiry-days"
-                            [class.urgent]="getDaysUntilExpiry(certification.driving_license_expiry_date) !== null && getDaysUntilExpiry(certification.driving_license_expiry_date)! <= 30">
+                            [class.urgent]="getLicenseDaysUntilExpiry() !== null && getLicenseDaysUntilExpiry()! <= 30 && getLicenseDaysUntilExpiry()! > 0"
+                            [class.expired]="getLicenseDaysUntilExpiry() !== null && getLicenseDaysUntilExpiry()! <= 0"
+                            [class.healthy]="getLicenseDaysUntilExpiry() !== null && getLicenseDaysUntilExpiry()! > 30">
                             <i class="fa fa-clock-o"></i>
-                            {{ getDaysUntilExpiry(certification.driving_license_expiry_date) }} days remaining
+                            {{ getLicenseDaysDisplay() }}
                         </span>
                     </div>
                 </div>
