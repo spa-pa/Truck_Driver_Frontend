@@ -10,91 +10,29 @@ $warning: #f59e0b;
 $danger: #ef4444;
 $shadow: 0 20px 60px rgba($primary, 0.08);
 
-// ============================================
-// CONTAINER
-// ============================================
 .training-container {
   min-height: 100vh;
   background: #ffffff;
-  // background: $white;
-  // padding: 40px 20px;
-  // max-width: 900px;
   margin: 0 auto;
 }
 
-// ============================================
-// HOME BUTTON
-// ============================================
-.home-button {
-  margin-bottom: 32px;
-
-  .btn-home {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 20px;
-    background: $white;
-    color: $primary;
-    border: 2px solid $border-color;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.25s ease;
-
-    &:hover {
-      border-color: $primary;
-      transform: translateX(-4px);
-      box-shadow: $shadow;
-    }
-  }
-}
-
-// ============================================
-// STEP CONTAINER
-// ============================================
 .step-container {
   animation: fadeSlideUp 0.5s ease;
 }
 
-// ============================================
-// STEP CARD
-// ============================================
 .step-card {
-  // background: $white;
-  // border-radius: 24px;
-  // border: 2px solid $border-color;
-  // padding: 40px;
-  // box-shadow: $shadow;
-  // transition: all 0.3s ease;
   background: #ffffff;
-  /* border-radius: 24px; */
-  /* border: 2px solid rgba(0, 71, 97, 0.08); */
   padding: 40px;
-  /* box-shadow: 0 20px 60px rgba(0, 71, 97, 0.08); */
   transition: all 0.3s ease;
-
-  // &:hover {
-  //     border-color: rgba($primary, 0.15);
-  //     box-shadow: 0 24px 72px rgba($primary, 0.08);
-  // }
-
-  // @media (max-width: 768px) {
-  //     padding: 24px 20px;
-  // }
 
   @media (max-width: 768px) {
     padding: 10px 10px !important;
   }
-
   @media (max-width: 480px) {
     padding: 10px 10px !important;
   }
 }
 
-// ============================================
-// STEP HEADER
-// ============================================
 .step-header {
   text-align: center;
   margin-bottom: 32px;
@@ -119,7 +57,6 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
         border-color: $primary;
         box-shadow: 0 2px 8px rgba($primary, 0.08);
       }
-
       &:focus-within {
         border-color: $primary;
         box-shadow: 0 0 0 4px rgba($primary, 0.06);
@@ -197,11 +134,6 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     cursor: pointer;
     transition: all 0.25s ease;
 
-    &:hover {
-      // color: $primary;
-      // background: rgba($primary, 0.04);
-    }
-
     @media (max-width: 480px) {
       position: static;
       margin-bottom: 12px;
@@ -211,54 +143,6 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   }
 }
 
-// ============================================
-// LANGUAGE SELECTION
-// ============================================
-.language-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
-
-  .btn-language {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 14px 20px;
-    background: $white;
-    border: 2px solid $border-color;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 500;
-    color: $primary;
-    cursor: pointer;
-    transition: all 0.25s ease;
-
-    i {
-      font-size: 18px;
-      color: $text-secondary;
-      transition: all 0.25s ease;
-    }
-
-    &:hover {
-      border-color: $primary;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba($primary, 0.08);
-
-      i {
-        color: $primary;
-      }
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-  }
-}
-
-// ============================================
-// FORM
-// ============================================
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -347,16 +231,8 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
         }
 
         &::file-selector-button {
-          display: none; // hide default button, we rely on the icon and styling
+          display: none;
         }
-      }
-
-      // Add a pseudo placeholder for the file name (optional)
-      input[type="file"]::before {
-        content: "{{ 'REGISTRATION.LICENSE_PHOTO_PLACEHOLDER' | translate }}";
-        display: inline-block;
-        color: rgba($primary, 0.3);
-        // you can't easily translate this in SCSS, so we'll handle via HTML placeholder attribute if possible
       }
     }
   }
@@ -368,9 +244,6 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   }
 }
 
-// ============================================
-// BUTTONS
-// ============================================
 .btn-primary,
 .btn-success,
 .btn-full {
@@ -439,9 +312,6 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   }
 }
 
-// ============================================
-// VIDEO SECTION
-// ============================================
 .video-container {
   background: #000;
   border-radius: 12px;
@@ -450,7 +320,6 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
   .video-player {
     width: 100%;
-    // max-height: 400px;
     display: block;
   }
 }
@@ -482,9 +351,6 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   }
 }
 
-// ============================================
-// QUIZ
-// ============================================
 .question-card {
   background: $light-bg;
   border-radius: 14px;
@@ -587,13 +453,30 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
         color: $primary;
         transition: all 0.25s ease;
       }
+
+      .option-image-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+
+        .option-image {
+          width: 40px;
+          height: 40px;
+          object-fit: cover;
+          border-radius: 6px;
+          border: 1px solid $border-color;
+        }
+
+        .option-text {
+          font-size: 14px;
+          color: $primary;
+        }
+      }
     }
   }
 }
 
-// ============================================
-// ALERT
-// ============================================
 .alert-info {
   display: flex;
   align-items: center;
@@ -611,19 +494,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   }
 }
 
-// ============================================
-// MODAL
-// ============================================
-// ============================================
-// RESULT MODAL - Only #004761 and #ffffff
-// ============================================
-
-$primary: #004761;
-$white: #ffffff;
-$success: #10b981; // Keep for status indicator
-$danger: #ef4444; // Keep for status indicator
-$warning: #f59e0b; // Keep for status indicator
-
+// Modal Overlay & Cards (shared)
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -653,7 +524,6 @@ $warning: #f59e0b; // Keep for status indicator
       &.success {
         border-top: 4px solid $success;
       }
-
       &.failed {
         border-top: 4px solid $danger;
       }
@@ -700,7 +570,6 @@ $warning: #f59e0b; // Keep for status indicator
 
       &.success .modal-icon {
         background: rgba($success, 0.1);
-
         i {
           color: $success;
         }
@@ -708,7 +577,6 @@ $warning: #f59e0b; // Keep for status indicator
 
       &.failed .modal-icon {
         background: rgba($danger, 0.1);
-
         i {
           color: $danger;
         }
@@ -725,7 +593,6 @@ $warning: #f59e0b; // Keep for status indicator
           &.text-success {
             color: $success;
           }
-
           &.text-danger {
             color: $danger;
           }
@@ -774,11 +641,9 @@ $warning: #f59e0b; // Keep for status indicator
               &.success {
                 background: $success;
               }
-
               &.warning {
                 background: $warning;
               }
-
               &.danger {
                 background: $danger;
               }
@@ -797,11 +662,9 @@ $warning: #f59e0b; // Keep for status indicator
             &.success {
               color: $success;
             }
-
             &.warning {
               color: $warning;
             }
-
             &.danger {
               color: $danger;
             }
@@ -812,51 +675,43 @@ $warning: #f59e0b; // Keep for status indicator
       .modal-footer {
         padding: 16px 24px 24px;
         display: flex;
+        flex-direction: column;
         gap: 10px;
-        flex-wrap: wrap;
 
         button {
-          flex: 1;
-          min-width: 120px;
-          display: inline-flex;
-          align-items: center;
+          width: 100%;
           justify-content: center;
-          gap: 8px;
-          padding: 10px 16px;
+          padding: 12px 16px;
           border: none;
           border-radius: 10px;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 600;
+          color: $white;
           cursor: pointer;
           transition: all 0.25s ease;
-          color: $white;
 
           &:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba($primary, 0.2);
           }
 
-          &.btn-download {
-            background: $success;
-
+          &.btn-watch-video {
+            background: $warning;
             &:hover {
-              background: darken($success, 5%);
-              box-shadow: 0 4px 12px rgba($success, 0.3);
+              background: darken($warning, 8%);
+              box-shadow: 0 4px 12px rgba($warning, 0.4);
             }
           }
 
-          &.btn-retake {
-            background: $warning;
-
+          &.btn-take-quiz {
+            background: $primary;
             &:hover {
-              background: darken($warning, 5%);
-              box-shadow: 0 4px 12px rgba($warning, 0.3);
+              background: darken($primary, 8%);
+              box-shadow: 0 4px 12px rgba($primary, 0.4);
             }
           }
 
           &.btn-close-modal {
             background: $primary;
-
             &:hover {
               background: darken($primary, 5%);
               box-shadow: 0 4px 12px rgba($primary, 0.3);
@@ -868,119 +723,7 @@ $warning: #f59e0b; // Keep for status indicator
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-// ============================================
-// RESPONSIVE
-// ============================================
-
-@media (max-width: 768px) {
-  .modal-overlay {
-    .modal-container {
-      width: 95%;
-      margin: 10px;
-
-      .modal-card {
-        .modal-body {
-          padding: 12px 20px 20px;
-
-          h3 {
-            font-size: 20px;
-          }
-
-          .score-section {
-            padding: 15px;
-
-            .score-value {
-              font-size: 36px;
-            }
-          }
-        }
-
-        .modal-footer {
-          flex-direction: column;
-          gap: 10px;
-
-          button {
-            width: 100%;
-            justify-content: center;
-          }
-        }
-      }
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .modal-overlay {
-    padding: 12px;
-
-    .modal-container {
-      .modal-card {
-        border-radius: 16px;
-
-        .modal-header {
-          padding: 16px 16px 0;
-
-          .modal-icon {
-            width: 50px;
-            height: 50px;
-
-            i {
-              font-size: 24px;
-            }
-          }
-        }
-
-        .modal-body {
-          padding: 10px 16px 16px;
-
-          h3 {
-            font-size: 18px;
-          }
-
-          .score-section {
-            .score-value {
-              font-size: 30px;
-            }
-          }
-        }
-
-        .modal-footer {
-          padding: 12px 16px 16px;
-
-          button {
-            padding: 8px 14px;
-            font-size: 12px;
-          }
-        }
-      }
-    }
-  }
-}
-
-// Add these styles for question images and audio
-
+// Additional shared styles
 .question-image {
   margin: 12px 0;
   text-align: center;
@@ -1002,268 +745,6 @@ $warning: #f59e0b; // Keep for status indicator
   }
 }
 
-.option-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  background: $white;
-  border-radius: 8px;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba($primary, 0.02);
-    border-color: $border-color;
-  }
-
-  .option-image-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 1;
-
-    .option-image {
-      width: 40px;
-      height: 40px;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid $border-color;
-    }
-
-    .option-text {
-      font-size: 14px;
-      color: $primary;
-    }
-  }
-
-  input[type="radio"] {
-    display: none;
-
-    &:checked + .option-marker {
-      background: $primary;
-      color: $white;
-      border-color: $primary;
-    }
-  }
-
-  .option-marker {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 24px;
-    height: 24px;
-    border: 2px solid $border-color;
-    border-radius: 50%;
-    font-size: 12px;
-    font-weight: 600;
-    color: $text-secondary;
-    transition: all 0.25s ease;
-    flex-shrink: 0;
-  }
-}
-
-$primary: #004761;
-$secondary: #f25f36;
-$white: #ffffff;
-$border-color: rgba($primary, 0.1);
-$text-secondary: rgba($primary, 0.7);
-
-// ============ MODAL CONTENT ============
-.modal-content {
-  border: none;
-  border-radius: 20px;
-  overflow: hidden;
-  max-height: 90vh;
-  background: $white;
-}
-
-// ============ MODAL HEADER ============
-.modern-header {
-  padding: 20px 28px;
-  background: $white;
-  border-bottom: 2px solid $border-color;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  .header-content {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-
-    .header-icon {
-      width: 42px;
-      height: 42px;
-      background: rgba($primary, 0.08);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      i {
-        font-size: 22px;
-        color: $primary;
-      }
-    }
-
-    .header-text {
-      .modal-title {
-        font-size: 20px;
-        font-weight: 600;
-        color: $primary;
-        margin: 0;
-        letter-spacing: -0.3px;
-      }
-
-      .header-subtitle {
-        font-size: 13px;
-        color: $text-secondary;
-        margin: 0;
-        margin-top: 2px;
-      }
-    }
-  }
-
-  .close-btn {
-    width: 38px;
-    height: 38px;
-    border: none;
-    border-radius: 50%;
-    background: rgba($primary, 0.06);
-    color: $text-secondary;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    i {
-      font-size: 18px;
-    }
-
-    &:hover {
-      background: rgba($primary, 0.12);
-      color: $primary;
-      transform: rotate(90deg);
-    }
-  }
-}
-
-// ============ MODAL BODY ============
-.modal-body {
-  padding: 24px 28px !important;
-  background: #f5f6f8;
-  max-height: calc(90vh - 150px);
-  overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: $border-color;
-    border-radius: 4px;
-  }
-}
-
-// Responsive
-@media (max-width: 768px) {
-  .step-header {
-    .language-select-wrapper {
-      justify-content: center;
-
-      .language-select-container {
-        width: 100%;
-        margin-bottom: 5%;
-
-        .language-select {
-          flex: 1;
-        }
-      }
-    }
-  }
-}
-
-// ============================================
-// ANIMATIONS
-// ============================================
-@keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.custom-right {
-  position: absolute !important;
-  right: 0 !important;
-  justify-content: end !important;
-  width: 20% !important;
-
-  @media (max-width: 480px) {
-    position: absolute !important;
-    right: 0 !important;
-    justify-content: end !important;
-    width: auto !important;
-  }
-}
-
-.custom-left {
-  position: absolute !important;
-  left: 0 !important;
-  justify-content: left !important;
-  width: 20% !important;
-
-  @media (max-width: 480px) {
-    position: absolute !important;
-    left: 0 !important;
-    justify-content: left !important;
-    width: auto !important;
-  }
-}
-
-// ... existing styles ...
-
-// Terms Consent
 .terms-group {
   margin-top: 16px;
   margin-bottom: 8px;
@@ -1306,7 +787,6 @@ $text-secondary: rgba($primary, 0.7);
   }
 }
 
-// Terms Modal (reuse existing modal styles, adjust as needed)
 .terms-modal {
   max-width: 600px;
   width: 100%;
@@ -1339,37 +819,24 @@ $text-secondary: rgba($primary, 0.7);
   }
 
   .modal-footer {
-    flex-direction: column; // stack buttons vertically
-    gap: 10px;
+    padding: 16px 24px;
+    border-top: 1px solid $border-color;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
 
     button {
-      width: 100%; // full width of the footer
-      justify-content: center;
-      padding: 12px 16px;
-      font-size: 14px;
-      border-radius: 10px;
-
-      &.btn-watch-video {
-        background: $warning; // or any color
-        color: $white;
-        &:hover {
-          background: darken($warning, 8%);
-          box-shadow: 0 4px 12px rgba($warning, 0.4);
-        }
-      }
-      &.btn-take-quiz {
-        background: $primary;
-        color: $white;
-        &:hover {
-          background: darken($primary, 8%);
-          box-shadow: 0 4px 12px rgba($primary, 0.4);
-        }
-      }
+      padding: 8px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      min-width: 100px;
 
       &.btn-agree {
         background: $primary;
         color: $white;
-
         &:hover {
           background: darken($primary, 5%);
         }
@@ -1379,10 +846,152 @@ $text-secondary: rgba($primary, 0.7);
         color: $text-secondary !important;
         font-size: 14px !important;
         border: 2px solid $border-color;
-
         &:hover {
           border-color: $danger;
           color: $danger;
+        }
+      }
+    }
+  }
+}
+
+// Utility classes
+.custom-right {
+  position: absolute !important;
+  right: 0 !important;
+  justify-content: end !important;
+  width: 20% !important;
+
+  @media (max-width: 480px) {
+    position: absolute !important;
+    right: 0 !important;
+    justify-content: end !important;
+    width: auto !important;
+  }
+}
+
+.custom-left {
+  position: absolute !important;
+  left: 0 !important;
+  justify-content: left !important;
+  width: 20% !important;
+
+  @media (max-width: 480px) {
+    position: absolute !important;
+    left: 0 !important;
+    justify-content: left !important;
+    width: auto !important;
+  }
+}
+
+// Animations
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive tweaks for modals on smaller screens
+@media (max-width: 768px) {
+  .modal-overlay {
+    .modal-container {
+      width: 95%;
+      margin: 10px;
+
+      .modal-card {
+        .modal-body {
+          padding: 12px 20px 20px;
+          h3 {
+            font-size: 20px;
+          }
+          .score-section {
+            padding: 15px;
+            .score-value {
+              font-size: 36px;
+            }
+          }
+        }
+        .modal-footer {
+          flex-direction: column;
+          gap: 10px;
+          button {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 12px;
+
+    .modal-container {
+      .modal-card {
+        border-radius: 16px;
+
+        .modal-header {
+          padding: 16px 16px 0;
+          .modal-icon {
+            width: 50px;
+            height: 50px;
+            i {
+              font-size: 24px;
+            }
+          }
+        }
+
+        .modal-body {
+          padding: 10px 16px 16px;
+          h3 {
+            font-size: 18px;
+          }
+          .score-section {
+            .score-value {
+              font-size: 30px;
+            }
+          }
+        }
+
+        .modal-footer {
+          padding: 12px 16px 16px;
+          button {
+            padding: 8px 14px;
+            font-size: 12px;
+          }
         }
       }
     }

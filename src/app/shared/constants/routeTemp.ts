@@ -106,6 +106,11 @@ export const AdminMenu = {
           "path": "/city",
           "title": "City",
           "type": "link"
+        },
+        {
+          "path": "/consent",
+          "title": "Consent",
+          "type": "link"
         }
       ],
       "icon": "Document",

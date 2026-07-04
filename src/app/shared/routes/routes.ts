@@ -66,6 +66,16 @@ const mastersData: Routes = [
         loadChildren: () => import('../../modules/masters/terminal/terminal.module').then(r => r.TerminalModule),
         // canActivate: [PermissionGuard]
     },
+     {
+        path: 'consent',
+        data: {
+            title: "Consent",
+            breadcrumb: "Consent",
+            pageId: 2
+        },
+        loadChildren: () => import('../../modules/masters/consent/consent.module').then(r => r.ConsentModule),
+        // canActivate: [PermissionGuard]
+    },
     {
         path: 'video-configuration',
         data: {
