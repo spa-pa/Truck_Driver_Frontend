@@ -45,7 +45,7 @@
         <tr>
             <ng-container *ngFor="let header of jsonData.headers">
                 <ng-container *ngIf="header.key == 'SR.NO' || header.key == 'action'; else sortHeader">
-                    <th [style.min-width]="header.minSize || '50px'"
+                    <th [style.min-width]="header.minSize || '150px'"
                         [style.width]="calculateHeaderSize(jsonData.headers.length, header.size)">
                         {{ header.label }}
                     </th>
