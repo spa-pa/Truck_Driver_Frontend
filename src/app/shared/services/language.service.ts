@@ -5,7 +5,9 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
+
 export class LanguageService {
+
     private currentLangSubject = new BehaviorSubject<string>('en');
     currentLang$ = this.currentLangSubject.asObservable();
 

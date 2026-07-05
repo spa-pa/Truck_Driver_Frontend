@@ -27,7 +27,7 @@ import { DriverTrainingService } from "@shared/_http/driver-training.service";
 import { DriverCertificationService } from "@shared/_http/driver-certification.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { DriverCertificationComponent } from "../driver/driver-certification/driver-certification.component";
-
+import { ConsentService } from "@shared/_http/consent.service";
 interface Language {
   language_code: string;
   language_name: string;
@@ -155,6 +155,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private modalRef: NgbModalRef | null = null;
   showTermsModal: boolean = false;
+ 
+  termsContent: string = '';
+  isLoadingTerms: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -169,7 +172,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private driverTrainingService: DriverTrainingService,
     private driverCertification: DriverCertificationService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private consentService: ConsentService
   ) {
     this.translate.setDefaultLang("en");
     this.translate.use("en");
@@ -295,6 +299,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
       this.questions = [];
       this.quizResult = null;
       this.initRegistrationForm();
+       this.termsContent = ''; 
 
       if (this.videoPlayer) {
         this.videoPlayer.nativeElement.pause();
@@ -659,9 +664,40 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // Terms Modal
   // ------------------------------------------------------------
   openTermsModal(event: Event): void {
-    event.preventDefault();
-    this.showTermsModal = true;
-  }
+  event.preventDefault(); // Prevents the checkbox from toggling when clicking the link
+
+  this.showTermsModal = true;
+  this.isLoadingTerms = true;
+
+  const langId = this.selectedLanguageId;
+
+  this.consentService.getConsentByLanguageId(langId).subscribe({
+    next: (res) => {
+      this.isLoadingTerms = false;
+      // Extract description from response
+      if (res?.success && res?.data?.length > 0) {
+        const description = res.data[0].description;
+        if (description && description.trim().length > 0) {
+          this.termsContent = description;
+        } else {
+          // Fallback to translation file if description is null/empty
+          this.termsContent = this.translate.instant('TERMS.CONTENT');
+        }
+      } else {
+        // No data returned, fallback to translation
+        this.termsContent = this.translate.instant('TERMS.CONTENT');
+      }
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('Failed to load consent:', err);
+      this.isLoadingTerms = false;
+      // Fallback to translation on error
+      this.termsContent = this.translate.instant('TERMS.CONTENT');
+      this.cdr.detectChanges();
+    }
+  });
+}
 
   closeTermsModal(): void {
     this.showTermsModal = false;
