@@ -1,0 +1,114 @@
+import { IFormStructure } from "@shared/models/form";
+import { RowData } from "@shared/models/table";
+
+export const UserMasterDetailsData: RowData = {
+    "headers": [{ label: "Sr.No", key: "SR.NO", type: 'autoIncrementNumber', size: '4%' },
+    { label: "Full Name", key: "name", type: '' },
+    { label: "User Name", key: "user_name", type: '' },
+    { label: "Email", key: "email", type: '' },
+    { label: "Contact Number", key: "contact_number", type: '' },
+    // { label: "Country", key: "countryName", type: '' },
+    { label: "Action", key: "action", type: 'action', size: '10%', buttonNames: ['edit', 'view', 'delete'] }],
+    "data": [],
+    "dataKey": 'user_id',
+    "buttonname": 'Create User ',
+    "button": true,
+    "statuses": [
+        { label: 'false', value: 'danger' },
+        { label: 'true', value: 'success' },
+    ],
+    "filterfields": ['user_name'],
+    "isSearch": false
+}
+
+export const UserMasterTypeSearchGroup: IFormStructure[] = [
+    {
+        name: "user_id",
+        placeholder: "city Id",
+        label: "City Id",
+        type: "text",
+        value: "",
+        hiddenControl: true,
+        disable: false
+    },
+    {
+        name: "name",
+        label: "Full Name",
+        placeholder: "Enter Full Name",
+        type: "text",
+        value: "",
+        required: true,
+        disable: false,
+    },
+    {
+        name: "user_name",
+        label: "User Name",
+        placeholder: "Enter User",
+        type: "text",
+        value: "",
+        required: true,
+        disable: false,
+    },
+    {
+        name: "password",
+        label: "Password",
+        placeholder: "Enter Password",
+        type: "text",
+        value: "",
+        required: true,
+        disable: false,
+    },
+    {
+        name: "email",
+        label: "Email",
+        placeholder: "Enter Email",
+        type: "text",
+        value: "",
+        required: false,
+        disable: false,
+    },
+    {
+        name: "contact_number",
+        label: "Contact Number",
+        placeholder: "Enter Contact Number",
+        type: "number",
+        value: "",
+        required: false,
+        disable: false,
+    },
+    {
+        name: "role_id",
+        label: "Role",
+        placeholder: "Enter Role",
+        type: "select",
+        value: "",
+        required: false,
+        disable: false,
+        bindValue: 'role_id',
+        bindLabel: 'role',
+        listName: 'role',
+        listData: []
+    },
+    // {
+    //     name: "terminal",
+    //     label: "terminal",
+    //     placeholder: "Enter terminal",
+    //     type: "number",
+    //     value: "",
+    //     required: false,
+    //     hiddenControl: true,
+    //     disable: false,
+    // },
+    {
+        name: "is_active",
+        label: "Is Active",
+        placeholder: "Is Active",
+        type: "select",
+        value: "",
+        bindValue: 'status_id',
+        bindLabel: 'name',
+        listName: 'yesno',
+        required: true,
+        disable: false,
+    }
+]

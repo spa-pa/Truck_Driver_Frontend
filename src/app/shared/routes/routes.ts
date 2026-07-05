@@ -149,6 +149,16 @@ const mastersData: Routes = [
         },
         loadChildren: () => import('../../modules/gateSecurity/driver-entry-list/driver-entry-list.module').then(r => r.DriverEntryListModule),
         // canActivate: [PermissionGuard]
+    },
+    {
+        path: 'user-master',
+        data: {
+            title: "User",
+            breadcrumb: "User",
+            pageId: 21
+        },
+        loadChildren: () => import('../../modules/masters/user-master/user-master.module').then(r => r.UserMasterModule),
+        // canActivate: [PermissionGuard]
     }
 
 ]

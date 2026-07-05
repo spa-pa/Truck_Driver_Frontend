@@ -111,7 +111,13 @@ export const AdminMenu = {
           "path": "/consent",
           "title": "Consent",
           "type": "link"
-        }
+        },
+        {
+          "path": "/user-master",
+          "title": "User Master",
+          "type": "link"
+        },
+
       ],
       "icon": "Document",
       "id": 3,
