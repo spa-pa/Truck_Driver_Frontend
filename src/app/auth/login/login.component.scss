@@ -79,19 +79,16 @@ body {
 
 /* ---- Circular stage that frames the truck-safety image ---- */
 .stage {
-  position: relative;
-  z-index: 2;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #dff0f5;
-  box-shadow:
-    0 20px 40px -16px rgba(13, 36, 54, 0.25),
-    0 0 0 10px rgba(255, 255, 255, 0.55);
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    /* border-radius: 50%; */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
 }
 /* Soft outer ring that separates the circle from the floating shapes */
 .stage-ring {
@@ -102,11 +99,11 @@ body {
   pointer-events: none;
 }
 .stage .port-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
+    width: 100%;
+    height: 100%;
+    /* object-fit: cover; */
+    object-position: center;
+    display: block;
 }
 
 /* Floating shapes — pushed well clear of the circular stage */
@@ -218,7 +215,7 @@ body {
   font-size: 0.72rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #017d74;
+  color: #004761;
   font-weight: 700;
   margin-bottom: 6px;
 }
@@ -260,7 +257,7 @@ h1.login-title {
   padding: 0 14px;
   transition:
     border-color 0.18s ease,
-    box-shadow 0.18s ease,
+    // box-shadow 0.18s ease,
     background 0.18s ease;
 }
 .field-shell:hover {
@@ -269,7 +266,7 @@ h1.login-title {
 .field-shell:focus-within {
   background: #fff;
   border-color: #2c4256;
-  box-shadow: 0 0 0 4px rgba(2, 46, 70, 0.14);
+  // box-shadow: 0 0 0 4px rgba(2, 46, 70, 0.14);
 }
 
 .field-shell .icon-wrap {
@@ -282,6 +279,7 @@ h1.login-title {
 }
 .field-shell .icon-wrap svg {
   display: block;
+  color: #004761 !important;
 }
 
 .field-shell input.login-input {
@@ -291,7 +289,7 @@ h1.login-title {
   height: 100%;
   background: transparent;
   border: none;
-  padding: 0;
+  padding: 2%;
   margin: 0;
   font-size: 0.95rem;
   line-height: normal;
@@ -379,16 +377,16 @@ h1.login-title {
   letter-spacing: 2px;
   font-size: 1rem;
   cursor: pointer;
-  box-shadow: 0 14px 26px -10px rgba(28, 43, 58, 0.55);
+  // box-shadow: 0 14px 26px -10px rgba(28, 43, 58, 0.55);
   transition:
     transform 0.15s ease,
-    box-shadow 0.15s ease,
+    // box-shadow 0.15s ease,
     background 0.15s ease;
 }
 .btn-login:hover:not(:disabled) {
   background: #00a99d;
   transform: translateY(-2px);
-  box-shadow: 0 18px 30px -10px rgba(1, 125, 116, 0.6);
+  // box-shadow: 0 18px 30px -10px rgba(1, 125, 116, 0.6);
 }
 .btn-login:active:not(:disabled) {
   transform: translateY(0);
