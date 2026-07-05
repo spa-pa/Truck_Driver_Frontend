@@ -13,6 +13,7 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  FormsModule,
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -28,6 +29,7 @@ import { DriverCertificationService } from "@shared/_http/driver-certification.s
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { DriverCertificationComponent } from "../driver/driver-certification/driver-certification.component";
 import { ConsentService } from "@shared/_http/consent.service";
+
 interface Language {
   language_code: string;
   language_name: string;
@@ -115,6 +117,7 @@ interface QuizResult {
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     TranslateModule,
     DriverCertificationComponent,
   ],
@@ -155,8 +158,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private modalRef: NgbModalRef | null = null;
   showTermsModal: boolean = false;
- 
-  termsContent: string = '';
+
+  termsContent: string = "";
   isLoadingTerms: boolean = false;
 
   constructor(
@@ -173,7 +176,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     private driverTrainingService: DriverTrainingService,
     private driverCertification: DriverCertificationService,
     private modalService: NgbModal,
-    private consentService: ConsentService
+    private consentService: ConsentService,
   ) {
     this.translate.setDefaultLang("en");
     this.translate.use("en");
@@ -195,7 +198,10 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.registrationForm = this.fb.group({
       language_id: [this.selectedLanguageId],
       full_name: ["", [Validators.required, Validators.minLength(3)]],
-      mobile_number: ["", [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      mobile_number: [
+        "",
+        [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+      ],
       driving_license_number: ["", Validators.required],
       driving_license_expiry_date: [
         "",
@@ -250,78 +256,97 @@ export class TrainingComponent implements OnInit, OnDestroy {
         next: (value) => {
           this.languages = value.data;
           if (this.languages.length > 0) {
-            const defaultLang =
-              this.languages.find((l) => l.language_name === "English") ||
-              this.languages[0];
-            this.selectedLanguageId = defaultLang.language_id;
-            this.selectedLanguageCode = this.getLanguageCode(
-              defaultLang.language_name
+            // 1. Try stored language from localStorage
+            const storedLangCode = this.languageService.getCurrentLanguage();
+            let defaultLang = this.languages.find(
+              (l) =>
+                l.language_code.toLowerCase() === storedLangCode.toLowerCase(),
             );
-            this.languageService.setLanguage(this.selectedLanguageCode);
+
+            // 2. If not found, fallback to ENGLISH (case‑insensitive)
+            if (!defaultLang) {
+              defaultLang = this.languages.find(
+                (l) => l.language_name.toLowerCase() === "english",
+              );
+            }
+
+            // 3. If still not found, fallback to language_code 'en'
+            if (!defaultLang) {
+              defaultLang = this.languages.find(
+                (l) => l.language_code.toLowerCase() === "en",
+              );
+            }
+
+            // 4. Last resort – pick the first language
+            if (!defaultLang) {
+              defaultLang = this.languages[0];
+            }
+
+            // Set state
+            this.selectedLanguageId = defaultLang.language_id;
+            const langCode = defaultLang.language_code.toLowerCase();
+            this.selectedLanguageCode = langCode;
+
+            // Update Translate and localStorage
+            this.languageService.setLanguage(langCode);
+
+            // Load training content for this language
             this.loadTrainingContent(this.selectedLanguageId);
           }
         },
         error: (err) => {
           console.error("Error loading languages:", err);
         },
-      })
+      }),
     );
   }
 
   selectLanguage(languageId: number): void {
     const selectedLang = this.languages.find(
-      (l) => l.language_id === languageId
+      (l) => l.language_id === languageId,
     );
     if (selectedLang) {
-      this.selectedLanguageId = selectedLang.language_id || 1;
-      const langCode = this.getLanguageCode(selectedLang.language_name);
+      this.selectedLanguageId = selectedLang.language_id;
+      const langCode = selectedLang.language_code.toLowerCase();
       this.selectedLanguageCode = langCode;
       this.languageService.setLanguage(langCode);
       this.languageSelected = true;
       this.showRegistration = true;
-      this.loadTrainingContent(selectedLang.language_id || 1);
+      this.loadTrainingContent(selectedLang.language_id);
     }
   }
 
-  onLanguageChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const languageId = parseInt(select.value);
+  onLanguageChange(newLanguageId: number | string): void {
+    const languageId =
+      typeof newLanguageId === "string"
+        ? parseInt(newLanguageId, 10)
+        : newLanguageId;
     const selectedLang = this.languages.find(
-      (l) => l.language_id === languageId
+      (l) => l.language_id === languageId,
     );
-    if (selectedLang) {
-      this.languageSelected = false;
-      this.showRegistration = false;
-      this.showVideo = false;
-      this.showQuiz = false;
-      this.showResultModal = false;
-      this.videoProgress = 0;
-      this.questions = [];
-      this.quizResult = null;
-      this.initRegistrationForm();
-       this.termsContent = ''; 
+    if (!selectedLang) return;
 
-      if (this.videoPlayer) {
-        this.videoPlayer.nativeElement.pause();
-        this.videoPlayer.nativeElement.currentTime = 0;
-      }
+    // Reset UI state (but keep registration form intact until after content loads)
+    this.languageSelected = false;
+    this.showRegistration = false;
+    this.showVideo = false;
+    this.showQuiz = false;
+    this.showResultModal = false;
+    this.videoProgress = 0;
+    this.questions = [];
+    this.quizResult = null;
+    this.termsContent = "";
 
-      this.selectLanguage(selectedLang.language_id);
+    if (this.videoPlayer) {
+      this.videoPlayer.nativeElement.pause();
+      this.videoPlayer.nativeElement.currentTime = 0;
     }
-  }
 
-  private getLanguageCode(languageName: string): string {
-    const map: { [key: string]: string } = {
-      english: "en", 
-      hindi: "hi",
-      marathi: "mr",
-      tamil: "ta",
-      telugu: "te",
-      gujrati: "gu",
-      bangla: "bn",
-      oriya: "or",
-    };
-    return map[languageName?.toLowerCase()] || "en";
+    // Load new language content (updates selectedLanguageId and loads video/questions)
+    this.selectLanguage(selectedLang.language_id);
+
+    // Re‑initialise the registration form with the new language ID
+    this.initRegistrationForm();
   }
 
   private loadTrainingContent(languageId: number): void {
@@ -340,7 +365,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
           console.error("Error loading video:", err);
           this.cdr.detectChanges();
         },
-      })
+      }),
     );
 
     // Questions
@@ -360,14 +385,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.cdr.detectChanges();
         },
-      })
+      }),
     );
   }
 
   private mapQuestions(questionHeaders: QuestionHeader[]): MappedQuestion[] {
     return questionHeaders.map((qh, index) => {
       const questionTextObj = qh.question_header_text?.find(
-        (t) => t.language_id === this.selectedLanguageId
+        (t) => t.language_id === this.selectedLanguageId,
       );
       const questionText = questionTextObj?.text || `Question ${index + 1}`;
 
@@ -381,7 +406,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
       options.forEach((opt, idx) => {
         const label = optionLabels[idx] || String.fromCharCode(65 + idx);
         const textObj = opt.texts?.find(
-          (t) => t.language_id === this.selectedLanguageId
+          (t) => t.language_id === this.selectedLanguageId,
         );
         const optionText = textObj?.text || `Option ${label}`;
         optionMap[label] = optionText;
@@ -430,7 +455,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     formData.append("driving_license_number", formValue.driving_license_number);
     formData.append(
       "driving_license_expiry_date",
-      formValue.driving_license_expiry_date
+      formValue.driving_license_expiry_date,
     );
     formData.append("driving_license", formValue.driving_license);
 
@@ -469,7 +494,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.cdr.detectChanges();
         },
-      })
+      }),
     );
   }
 
@@ -541,7 +566,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   private saveQuizResult(
     score: number,
     correct: number,
-    passed: boolean
+    passed: boolean,
   ): void {
     const formData = {
       driver_id: this.driverDetails.driver_id,
@@ -554,7 +579,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
       this.driverTrainingService.createdriverTraining(formData).subscribe({
         next: () => {},
         error: () => {},
-      })
+      }),
     );
 
     if (passed) {
@@ -577,7 +602,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
               }
             },
             error: () => {},
-          })
+          }),
       );
     }
   }
@@ -664,40 +689,36 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // Terms Modal
   // ------------------------------------------------------------
   openTermsModal(event: Event): void {
-  event.preventDefault(); // Prevents the checkbox from toggling when clicking the link
+    event.preventDefault(); // Prevents checkbox from toggling
 
-  this.showTermsModal = true;
-  this.isLoadingTerms = true;
+    this.showTermsModal = true;
+    this.isLoadingTerms = true;
 
-  const langId = this.selectedLanguageId;
+    const langId = this.selectedLanguageId;
 
-  this.consentService.getConsentByLanguageId(langId).subscribe({
-    next: (res) => {
-      this.isLoadingTerms = false;
-      // Extract description from response
-      if (res?.success && res?.data?.length > 0) {
-        const description = res.data[0].description;
-        if (description && description.trim().length > 0) {
-          this.termsContent = description;
+    this.consentService.getConsentByLanguageId(langId).subscribe({
+      next: (res) => {
+        this.isLoadingTerms = false;
+        if (res?.success && res?.data?.length > 0) {
+          const description = res.data[0].description;
+          if (description && description.trim().length > 0) {
+            this.termsContent = description;
+          } else {
+            this.termsContent = this.translate.instant("TERMS.CONTENT");
+          }
         } else {
-          // Fallback to translation file if description is null/empty
-          this.termsContent = this.translate.instant('TERMS.CONTENT');
+          this.termsContent = this.translate.instant("TERMS.CONTENT");
         }
-      } else {
-        // No data returned, fallback to translation
-        this.termsContent = this.translate.instant('TERMS.CONTENT');
-      }
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      console.error('Failed to load consent:', err);
-      this.isLoadingTerms = false;
-      // Fallback to translation on error
-      this.termsContent = this.translate.instant('TERMS.CONTENT');
-      this.cdr.detectChanges();
-    }
-  });
-}
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Failed to load consent:", err);
+        this.isLoadingTerms = false;
+        this.termsContent = this.translate.instant("TERMS.CONTENT");
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
   closeTermsModal(): void {
     this.showTermsModal = false;
@@ -711,9 +732,12 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   acceptTerms(): void {
     const control = this.registrationForm.get("terms_agreed");
-    control?.patchValue(true);
-    control?.markAsTouched();
-    control?.updateValueAndValidity();
+    if (control) {
+      control.patchValue(true);
+      control.markAsTouched();
+      control.updateValueAndValidity({ emitEvent: false }); // suppress validation events
+      this.cdr.detectChanges(); // force UI update before closing modal
+    }
     this.closeTermsModal();
   }
 

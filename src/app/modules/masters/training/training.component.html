@@ -8,8 +8,8 @@
             <i class="fas fa-globe language-icon"></i>
             <select
               class="language-select"
-              (change)="onLanguageChange($event)"
-              [value]="selectedLanguageId"
+              [(ngModel)]="selectedLanguageId"
+              (ngModelChange)="onLanguageChange($event)"
             >
               <option *ngFor="let lang of languages" [value]="lang.language_id">
                 {{ lang.language_name }}
@@ -175,7 +175,7 @@
             </div>
           </div>
         </div>
-
+        
         <!-- Terms Consent -->
         <div class="form-group terms-group">
           <label class="terms-label">
@@ -194,7 +194,8 @@
             class="error-message"
             *ngIf="
               registrationForm.get('terms_agreed')?.invalid &&
-              registrationForm.get('terms_agreed')?.touched
+              registrationForm.get('terms_agreed')?.touched &&
+              !showTermsModal
             "
           >
             {{ "REGISTRATION.TERMS_REQUIRED" | translate }}
