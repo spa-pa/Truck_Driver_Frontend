@@ -211,7 +211,7 @@ body {
   flex-direction: column;
   justify-content: center;
   min-width: 0;
-  background: #ffffff;
+  background: #d9f6f4;
 }
 
 /* Logo shown only on mobile / small screens (illustration panel is hidden there) */
@@ -270,7 +270,7 @@ h1.login-title {
   align-items: center;
   width: 100%;
   height: 50px;
-  background: #f4f7f8;
+  background: #fff;
   border: 1.5px solid #dbe4e8;
   border-radius: 12px;
   padding: 0 14px;
@@ -369,9 +369,10 @@ h1.login-title {
   min-height: 22px;
   /* reserve space for one line of error */
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   justify-content: flex-start;
   margin-top: 4px;
+  background-color: #d9f6f4;
 }
 
 .error-wrapper .error-text {
@@ -472,6 +473,10 @@ h1.login-title {
     font-size: 1.7rem;
     margin-bottom: 24px;
   }
+
+   .error-wrapper {
+    background-color: #fff;
+  }
 }
 
 @media (max-width: 480px) {
@@ -527,6 +532,10 @@ h1.login-title {
     font-size: 0.92rem;
     letter-spacing: 1.5px;
   }
+
+  .error-wrapper {
+    background-color: #fff;
+  }
 }
 
 @media (max-width: 360px) {
@@ -561,6 +570,10 @@ h1.login-title {
     width: 16px;
     height: 16px;
   }
+
+  .error-wrapper {
+    background-color: #fff;
+  }
 }
 
 /* ---------- ACCESSIBILITY ---------- */
@@ -570,47 +583,54 @@ h1.login-title {
   }
 }
 
-  .img-caption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 3;
-    padding: 36px 40px;
-  }
+.img-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding: 36px 40px;
+}
 
-  .img-caption .tag {
-    display: inline-block;
-    background: #00c4b7;
-    color: #fff;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 14px;
-  }
+.img-caption .tag {
+  display: inline-block;
+  background: #00c4b7;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
 
-  .img-caption h2 {
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-size: clamp(1.6rem, 2.4vw, 2.4rem);
-    color: #fff;
-    font-weight: 400;
-    line-height: 1.3;
-    // max-width: 320px;
-  }
+.img-caption h2 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  color: #fff;
+  font-weight: 400;
+  line-height: 1.3;
+  // max-width: 320px;
+}
 
-  .img-caption h2 em {
-    font-style: italic;
-    color: #00c4b7;
-  }
+.img-caption h2 em {
+  font-style: italic;
+  color: #00c4b7;
+}
 
-  .img-caption p {
-    margin-top: 10px;
-    color: rgba(255,255,255,0.55);
-    font-size: 0.82rem;
-    letter-spacing: 0.3px;
-    // max-width: 300px;
-    line-height: 1.6;
-  }
+.img-caption p {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.82rem;
+  letter-spacing: 0.3px;
+  // max-width: 300px;
+  line-height: 1.6;
+}
+
+.field-shell input:-webkit-autofill,
+.field-shell input:-webkit-autofill:hover,
+.field-shell input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #1c2b3a !important;
+}
