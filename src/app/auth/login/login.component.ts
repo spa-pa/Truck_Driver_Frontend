@@ -62,7 +62,6 @@ export class LoginComponent {
 
     this.loginService.login(this.loginForm.value).subscribe({
       next: (value) => {
-
         const config = new GlobalConfig();
         const user = value.user;
         // new EncryptedStorage().clearAll();

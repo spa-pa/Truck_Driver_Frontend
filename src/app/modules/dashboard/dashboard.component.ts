@@ -1,19 +1,9 @@
 import { CommonModule } from "@angular/common";
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  ElementRef,
-  ViewChild,
-} from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { DashboardService } from "@shared/_http/dashboard.service";
-import { Chart, registerables } from "chart.js";
-
-Chart.register(...registerables);
-
-import * as XLSX from "xlsx";
+import { DriverTrainingService } from "@shared/_http/driver-training.service";
 
 @Component({
   selector: "app-dashboard",
@@ -22,37 +12,20 @@ import * as XLSX from "xlsx";
   templateUrl: "./dashboard.component.html",
   styleUrl: "./dashboard.component.scss",
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
-  @ViewChild("trendsChart") trendsChartCanvas!: ElementRef;
-  @ViewChild("languageChart") languageChartCanvas!: ElementRef;
-  @ViewChild("terminalChart") terminalChartCanvas!: ElementRef;
-  @ViewChild("hourlyChart") hourlyChartCanvas!: ElementRef;
-
-  private charts: Chart[] = [];
-
+export class DashboardComponent implements OnInit {
   activeTab: string = "gate";
 
-  // ----- Driver Certifications -----
-  driverCertificationsPeriod: string = "weekly";
-  driverCertificationsData: any[] = [];
-
   // ----- Scanned Certifications -----
-  scannedCertificationsPeriod: string = "weekly";
   scannedCertificationsData: any[] = [];
+
+  // ----- Drivers Training Data -----
+  driversTrainingData: any[] = [];
 
   counts: any = {
     total_drivers: 0,
     active_certificates: 0,
     todays_gate_entries: 0,
     todays_certificates_generated: 0,
-  };
-
-  // Statistics data
-  stats = {
-    totalDrivers: 24589,
-    activeCertificates: 14789,
-    gateEntries: 1589,
-    certificatesGenerated: 45289,
   };
 
   // Gate Entries Data
@@ -178,99 +151,33 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     },
   ];
 
-  // Driver categories
-  driverCategories = [
-    {
-      name: "Regular Drivers",
-      count: 8234,
-      icon: "user-check",
-      iconClass: "primary",
-      growth: "3.2%",
-      growthClass: "success",
-      trend: "up",
-    },
-    {
-      name: "New Drivers",
-      count: 1456,
-      icon: "user-plus",
-      iconClass: "success",
-      growth: "8.7%",
-      growthClass: "success",
-      trend: "up",
-    },
-    {
-      name: "Returning Drivers",
-      count: 3567,
-      icon: "sync-alt",
-      iconClass: "warning",
-      growth: "0.8%",
-      growthClass: "warning",
-      trend: "minus",
-    },
-    {
-      name: "Blocked Drivers",
-      count: 342,
-      icon: "user-slash",
-      iconClass: "danger",
-      growth: "2.1%",
-      growthClass: "danger",
-      trend: "down",
-    },
-  ];
+  //Show Certifications Scanned Summary
+  get displayedCertifications(): any[] {
+    return this.scannedCertificationsData.slice(0, 10);
+  }
 
-  // Compliance data
-  complianceData = {
-    passRate: 94,
-    passRateChange: "+2.5%",
-    mobileUsage: 75,
-    kioskUsage: 25,
-    statuses: [
-      { label: "Verified", count: 1245, percentage: 78, class: "success" },
-      { label: "Pending", count: 246, percentage: 15, class: "warning" },
-      { label: "Failed", count: 112, percentage: 7, class: "danger" },
-    ],
-  };
-
-  // Terminal data
-  terminalData = [
-    { name: "Terminal A", count: 450 },
-    { name: "Terminal B", count: 380 },
-    { name: "Terminal C", count: 320 },
-    { name: "Terminal D", count: 290 },
-    { name: "Terminal E", count: 210 },
-  ];
-
-  // Language data
-  languageData = [
-    { name: "Hindi", count: 35 },
-    { name: "Tamil", count: 25 },
-    { name: "Telugu", count: 20 },
-    { name: "Marathi", count: 12 },
-    { name: "English", count: 8 },
-  ];
+  //Show Gate Entries 
+  get displayedGateEntries(): any[] {
+    return this.scannedCertificationsData.slice(0, 5);
+  }
 
   constructor(
     private dashboardService: DashboardService,
+    private driverTrainingService: DriverTrainingService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.getDashboardCounts();
-    this.loadDriverCertifications();
+    //this.loadDriverCertifications();
     this.loadScannedCertifications();
-  }
-
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.initializeCharts();
-    }, 500);
+    //this.loadAlldriversTraining();
   }
 
   // Get dashboard counts from API
   getDashboardCounts(): void {
     this.dashboardService.getDashboardCount().subscribe({
       next: (response) => {
-        console.log("Success:", response);
         if (response?.success && response.data) {
           this.counts = response.data;
         }
@@ -281,26 +188,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  loadDriverCertifications() {
-    this.dashboardService
-      .getAllDriverCertificationsData(this.driverCertificationsPeriod)
-      .subscribe({
-        next: (response) => {
-          if (response?.success && Array.isArray(response.data)) {
-            this.driverCertificationsData = response.data;
-          } else {
-            this.driverCertificationsData = [];
-          }
-        },
-        error: (error) => {
-          console.error("Error fetching dashboard all data:", error);
-          this.driverCertificationsData = [];
-        },
-      });
-  }
-
   loadScannedCertifications() {
-    this.dashboardService.getAllScannedCertificationsData("weekly").subscribe({
+    this.dashboardService.getAllScannedCertificationsData().subscribe({
       next: (response) => {
         if (response?.success && Array.isArray(response.data)) {
           this.scannedCertificationsData = response.data;
@@ -315,353 +204,30 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  loadAlldriversTraining(){
+    debugger
+   this.driverTrainingService.getAlldriverTraining().subscribe({
+      next: (response) => {
+        if (response?.success && Array.isArray(response.data)) {
+          this.driversTrainingData = response.data;
+        } else {
+          this.driversTrainingData = [];
+        }
+      },
+      error: (error) => {
+        console.error("Error fetching dashboard all data:", error);
+        this.driversTrainingData = [];
+      },
+   })
+  }
+
   // Tab switching method
   setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
 
-  initializeCharts(): void {
-    this.initializeTrendsChart();
-    this.initializeLanguageChart();
-    this.initializeTerminalChart();
-    this.initializeHourlyChart();
-  }
 
-  initializeTrendsChart(): void {
-    if (!this.trendsChartCanvas) return;
-
-    const ctx = this.trendsChartCanvas.nativeElement.getContext("2d");
-    const chart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        datasets: [
-          {
-            label: "Certifications",
-            data: [65, 78, 82, 95, 88, 72, 60],
-            borderColor: "#1c2b3a",
-            backgroundColor: "rgba(28, 43, 58, 0.1)",
-            tension: 0.4,
-            fill: true,
-            pointRadius: 4,
-            pointBackgroundColor: "#1c2b3a",
-          },
-          {
-            label: "Gate Entries",
-            data: [45, 52, 58, 65, 60, 48, 40],
-            borderColor: "#1f9d55",
-            backgroundColor: "rgba(31, 157, 85, 0.1)",
-            tension: 0.4,
-            fill: true,
-            pointRadius: 4,
-            pointBackgroundColor: "#1f9d55",
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: true,
-            position: "top",
-            labels: {
-              usePointStyle: true,
-              padding: 20,
-              font: {
-                size: 12,
-              },
-            },
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: "rgba(0,0,0,0.05)",
-            },
-          },
-          x: {
-            grid: {
-              display: false,
-            },
-          },
-        },
-      },
-    });
-    this.charts.push(chart);
-  }
-
-  initializeLanguageChart(): void {
-    if (!this.languageChartCanvas) return;
-
-    const ctx = this.languageChartCanvas.nativeElement.getContext("2d");
-    const chart = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: ["Hindi", "Tamil", "Telugu", "Marathi", "English"],
-        datasets: [
-          {
-            data: [35, 25, 20, 12, 8],
-            backgroundColor: [
-              "#1c2b3a",
-              "#2c4256",
-              "#f5a623",
-              "#1f9d55",
-              "#d64545",
-            ],
-            borderWidth: 2,
-            borderColor: "#ffffff",
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: "bottom",
-            labels: {
-              padding: 15,
-              usePointStyle: true,
-              pointStyle: "circle",
-              font: {
-                size: 11,
-              },
-            },
-          },
-        },
-        cutout: "65%",
-      },
-    });
-    this.charts.push(chart);
-  }
-
-  initializeTerminalChart(): void {
-    if (!this.terminalChartCanvas) return;
-
-    const ctx = this.terminalChartCanvas.nativeElement.getContext("2d");
-    const chart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: this.terminalData.map((t) => t.name),
-        datasets: [
-          {
-            label: "Certifications",
-            data: this.terminalData.map((t) => t.count),
-            backgroundColor: [
-              "#1c2b3a",
-              "#2c4256",
-              "#f5a623",
-              "#1f9d55",
-              "#d64545",
-            ],
-            borderRadius: 6,
-            borderSkipped: false,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: "rgba(0,0,0,0.05)",
-            },
-          },
-          x: {
-            grid: {
-              display: false,
-            },
-          },
-        },
-      },
-    });
-    this.charts.push(chart);
-  }
-
-  initializeHourlyChart(): void {
-    if (!this.hourlyChartCanvas) return;
-
-    const ctx = this.hourlyChartCanvas.nativeElement.getContext("2d");
-    const hourlyData = [
-      15, 45, 55, 40, 25, 30, 35, 42, 38, 45, 50, 55, 48, 35, 30, 25,
-    ];
-    const maxValue = Math.max(...hourlyData);
-    const peakIndex = hourlyData.indexOf(maxValue);
-
-    const chart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: [
-          "6 AM",
-          "7 AM",
-          "8 AM",
-          "9 AM",
-          "10 AM",
-          "11 AM",
-          "12 PM",
-          "1 PM",
-          "2 PM",
-          "3 PM",
-          "4 PM",
-          "5 PM",
-          "6 PM",
-          "7 PM",
-          "8 PM",
-          "9 PM",
-        ],
-        datasets: [
-          {
-            label: "Entries",
-            data: hourlyData,
-            backgroundColor: hourlyData.map((_, index) =>
-              index === peakIndex ? "#f5a623" : "rgba(28, 43, 58, 0.6)",
-            ),
-            borderRadius: 4,
-            borderSkipped: false,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: "rgba(0,0,0,0.05)",
-            },
-          },
-          x: {
-            grid: {
-              display: false,
-            },
-          },
-        },
-      },
-    });
-    this.charts.push(chart);
-  }
-
-  getStatusIcon(status: string): string {
-    const icons: { [key: string]: string } = {
-      Verified: "fa-check-circle",
-      Pending: "fa-clock",
-      Failed: "fa-times-circle",
-    };
-    return icons[status] || "fa-circle";
-  }
-
-  getTrendIcon(trend: string): string {
-    const icons: { [key: string]: string } = {
-      up: "fa-arrow-up",
-      down: "fa-arrow-down",
-      minus: "fa-minus",
-    };
-    return icons[trend] || "fa-minus";
-  }
-
-  // ---------- Labels for UI ----------
-  get selectedDriverCertificationsLabel(): string {
-    return this.driverCertificationsPeriod === "weekly" ? "Week" : "Month";
-  }
-
-  get selectedScannedCertificationsLabel(): string {
-    return this.scannedCertificationsPeriod === "weekly" ? "Week" : "Month";
-  }
-
-  // ---------- Dropdown Handlers ----------
-  onDriverCertificationsChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.driverCertificationsPeriod = select.value;
-    this.loadDriverCertifications();
-  }
-
-  onScannedCertificationsChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.scannedCertificationsPeriod = select.value;
-    this.loadScannedCertifications();
-  }
-
-  // ---------- Export Functions ----------
-  exportDriverCertifications(): void {
-    if (!this.driverCertificationsData.length) return;
-
-    const headers = [
-      "Certification ID",
-      "Driver Name",
-      "Mobile",
-      "License No.",
-      "License Expiry",
-      "Cert Expiry",
-      "Created At",
-    ];
-    const rows = this.driverCertificationsData.map((d) => [
-      d.certification_id,
-      d.full_name,
-      d.mobile_number,
-      d.driving_license_number,
-      d.driving_license_expiry_date,
-      d.expiry_date,
-      d.created_at,
-    ]);
-
-    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Driver Certifications");
-    XLSX.writeFile(
-      wb,
-      `DriverCertifications_${this.driverCertificationsPeriod}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-    );
-  }
-
-  exportScannedCertifications(): void {
-    if (!this.scannedCertificationsData.length) return;
-
-    const headers = [
-      "Certification ID",
-      "Driver Name",
-      "Mobile",
-      "Terminal",
-      "License No.",
-      "License Expiry",
-      "Cert Expiry",
-      "Scanned At",
-    ];
-    const rows = this.scannedCertificationsData.map((d) => [
-      d.certification_id,
-      d.full_name,
-      d.mobile_number,
-      d.terminal_name || d.terminal_code,
-      d.driving_license_number,
-      d.driving_license_expiry_date,
-      d.certification_expiry_date,
-      d.created_at,
-    ]);
-
-    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Scanned Certifications");
-    XLSX.writeFile(
-      wb,
-      `ScannedCertifications_${this.scannedCertificationsPeriod}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-    );
-  }
-
-  goToNewDashboard() {
-    this.router.navigate(["/new-dashboard"]);
+   navigateToAllCertifications(): void {
+    this.router.navigate(['/driver-entry']); // Adjust route as needed
   }
 }

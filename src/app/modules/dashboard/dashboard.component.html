@@ -1,11 +1,6 @@
-<link
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  rel="stylesheet"
-/>
-
 <div class="dashboard-container">
   <div class="container-fluid py-2">
-    <!-- Statistics Cards - Row 1 (Redesigned) -->
+    <!-- Statistics Cards - Row 1 -->
     <div class="row g-3">
       <div class="col-12 col-sm-6 col-xl-3">
         <div class="card stat-card border-0 shadow-sm h-100">
@@ -100,13 +95,14 @@
       </div>
     </div>
 
-    <!-- Bottom Section -->
-    <div class="row mt-2 g-4">
-      <!-- Recent Activity with Tabs -->
-      <div class="col-12 col-lg-6">
-        <div class="card panel-card border-0 shadow-sm h-100">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Recent Activity + Certifications Scanned Summary -->
+    <div class="row mt-2 mb-4 g-4 align-items-stretch">
+      <!-- Recent Activity -->
+      <div class="col-12 col-lg-6 d-flex">
+        <div class="card panel-card border-0 shadow-sm w-100">
+          <div class="card-body d-flex flex-column">
+            <!-- Header -->
+            <div class="panel-header d-flex justify-content-between align-items-center">
               <div class="d-flex align-items-center gap-3">
                 <div class="panel-icon-chip bg-primary">
                   <i class="fas fa-stream"></i>
@@ -118,8 +114,8 @@
               </div>
             </div>
 
-            <!-- Tabs with Animation -->
-            <ul class="nav nav-tabs custom-tabs border-0 mb-3" role="tablist">
+            <!-- Tabs -->
+            <ul class="nav nav-tabs custom-tabs border-0" role="tablist">
               <li class="nav-item" role="presentation">
                 <button
                   class="nav-link"
@@ -144,13 +140,13 @@
               </li>
             </ul>
 
-            <!-- Tab Content with Fade Animation -->
-            <div class="tab-content">
+            <!-- Tab Content -->
+            <div class="tab-content panel-scroll-area">
               <!-- Gate Entries Tab -->
               <div class="tab-pane" [class.active]="activeTab === 'gate'">
                 <div class="certification-list">
                   <div
-                    *ngFor="let entry of gateEntries"
+                    *ngFor="let entry of displayedGateEntries"
                     class="certification-item d-flex align-items-center py-3 border-bottom"
                   >
                     <div
@@ -165,12 +161,12 @@
                       ></i>
                     </div>
                     <div class="flex-grow-1">
-                      <h6 class="mb-1">{{ entry.driverName }}</h6>
+                      <h6 class="mb-1">{{ entry.full_name }}</h6>
                       <p class="text-muted small mb-0">
-                        <i class="fas fa-truck me-1"></i>{{ entry.truckNumber }}
+                        <i class="fas fa-truck me-1"></i>{{ entry.certification_id }}
                         <span class="mx-1">•</span>
                         <i class="fas fa-map-marker-alt me-1"></i
-                        >{{ entry.terminal }}
+                        >{{ entry.terminal_name }}
                       </p>
                     </div>
                     <div class="text-end">
@@ -236,140 +232,45 @@
         </div>
       </div>
 
-      <!-- Compliance Overview -->
-      <div class="col-12 col-lg-6">
-        <div class="card panel-card border-0 shadow-sm h-100">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+      <!-- Certifications Scanned Summary -->
+      <div class="col-12 col-lg-6 d-flex">
+        <div class="card panel-card border-0 shadow-sm w-100">
+          <div class="card-body d-flex flex-column">
+            <!-- Header -->
+            <div class="panel-header d-flex justify-content-between align-items-center">
               <div class="d-flex align-items-center gap-3">
                 <div class="panel-icon-chip bg-success">
                   <i class="fas fa-shield-alt"></i>
                 </div>
                 <div>
                   <h5 class="card-title mb-1 fw-semibold">
-                    Compliance Overview
+                    Certifications Scanned Summary
                   </h5>
                   <p class="text-muted small mb-0">
-                    Today's compliance metrics
+                    All Driver Certifications
                   </p>
                 </div>
               </div>
-            </div>
-
-            <!-- Quick Stats -->
-            <div class="row g-3 mb-4">
-              <div class="col-6">
-                <div class="metric-tile metric-tile--success h-100">
-                  <div class="metric-tile-icon">
-                    <i class="fas fa-check-circle"></i>
-                  </div>
-                  <h6 class="text-muted mb-1">Pass Rate</h6>
-                  <h3 class="text-success mb-0">
-                    {{ complianceData.passRate }}%
-                  </h3>
-                  <small class="text-success"
-                    >{{ complianceData.passRateChange }} vs yesterday</small
-                  >
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="metric-tile metric-tile--primary h-100">
-                  <div class="metric-tile-icon">
-                    <i class="fas fa-mobile-alt"></i>
-                  </div>
-                  <h6 class="text-muted mb-1">Mobile Usage</h6>
-                  <h3 class="text-primary mb-0">
-                    {{ complianceData.mobileUsage }}%
-                  </h3>
-                  <small class="text-muted"
-                    >{{ complianceData.kioskUsage }}% Kiosk</small
-                  >
-                </div>
-              </div>
-            </div>
-
-            <!-- Status Distribution -->
-            <h6 class="text-muted mb-3 text-uppercase fw-semibold small">
-              <i class="fas fa-chart-pie me-1"></i>Certification Status
-            </h6>
-            <div
-              *ngFor="let status of complianceData.statuses"
-              class="status-row mb-3"
-            >
-              <div
-                class="d-flex justify-content-between align-items-center mb-1"
+              <a
+                (click)="navigateToAllCertifications()"
+                class="text-primary small fw-semibold text-decoration-none"
+                style="cursor: pointer;"
               >
-                <span class="d-flex align-items-center gap-2">
-                  <span class="status-dot bg-{{ status.class }}"></span>
-                  {{ status.label }}
-                </span>
-                <span class="fw-bold"
-                  >{{ status.count | number }}
-                  <span class="text-muted fw-normal"
-                    >({{ status.percentage }}%)</span
-                  ></span
-                >
-              </div>
-              <div class="progress" style="height: 8px">
-                <div
-                  class="progress-bar bg-{{ status.class }}"
-                  style="width: {{ status.percentage }}%"
-                ></div>
-              </div>
+                View All <i class="fas fa-arrow-right ms-1"></i>
+              </a>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="row mt-2 g-4">
-      <!-- Driver Certifications Summary -->
-      <div class="col-12 col-lg-6">
-        <div class="card h-100 border-0 shadow-sm">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <h6 class="text-uppercase text-muted fw-semibold small mb-0">
-                <i class="fas fa-calendar-week me-1"></i>Driver Certifications
-                Summary
-              </h6>
-              <span class="badge bg-light text-dark">{{
-                selectedDriverCertificationsLabel
-              }}</span>
+            <!-- Toolbar row (matches tabs bar height on the left card) -->
+            <div class="panel-toolbar d-flex align-items-center">
+              <span class="text-muted small">
+                Showing latest {{ displayedCertifications.length }} of
+                {{ scannedCertificationsData.length }} records
+              </span>
             </div>
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <p class="text-muted small mb-0">All Driver Certifications</p>
-              <div class="d-flex gap-2">
-                <select
-                  class="form-select form-select-sm"
-                  style="width: auto"
-                  (change)="onDriverCertificationsChange($event)"
-                >
-                  <option
-                    value="weekly"
-                    [selected]="driverCertificationsPeriod === 'weekly'"
-                  >
-                    Week
-                  </option>
-                  <option
-                    value="monthly"
-                    [selected]="driverCertificationsPeriod === 'monthly'"
-                  >
-                    Month
-                  </option>
-                </select>
-                <button
-                  class="btn btn-outline-primary btn-sm"
-                  (click)="exportDriverCertifications()"
-                >
-                  <i class="fas fa-file-excel"></i>
-                </button>
-              </div>
-            </div>
-            <div
-              class="report-table-container"
-              style="max-height: 200px; overflow-y: auto"
-            >
-              <table class="table table-sm table-borderless mb-0">
+
+            <!-- Table -->
+            <div class="panel-scroll-area">
+              <table class="table table-sm table-borderless mb-0 report-table">
                 <thead class="sticky-top bg-white">
                   <tr>
                     <th>Certification ID</th>
@@ -378,79 +279,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let item of driverCertificationsData">
+                  <tr *ngFor="let item of displayedCertifications">
                     <td>{{ item.certification_id }}</td>
                     <td>{{ item.full_name }}</td>
                     <td>{{ item.mobile_number }}</td>
                   </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Certifications Scanned Summary -->
-      <div class="col-12 col-lg-6">
-        <div class="card h-100 border-0 shadow-sm">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <h6 class="text-uppercase text-muted fw-semibold small mb-0">
-                <i class="fas fa-calendar-alt me-1"></i> Certifications Scanned
-                Summary
-              </h6>
-              <span class="badge bg-light text-dark">{{
-                selectedScannedCertificationsLabel
-              }}</span>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <p class="text-muted small mb-0">
-                All Driver Certifications
-              </p>
-              <div class="d-flex gap-2">
-                <select
-                  class="form-select form-select-sm"
-                  style="width: auto"
-                  (change)="onScannedCertificationsChange($event)"
-                >
-                  <option
-                    value="weekly"
-                    [selected]="scannedCertificationsPeriod === 'weekly'"
-                  >
-                    Week
-                  </option>
-                  <option
-                    value="monthly"
-                    [selected]="scannedCertificationsPeriod === 'monthly'"
-                  >
-                    Month
-                  </option>
-                </select>
-                <button
-                  class="btn btn-outline-primary btn-sm"
-                  (click)="exportScannedCertifications()"
-                >
-                  <i class="fas fa-file-excel"></i>
-                </button>
-              </div>
-            </div>
-            <div
-              class="report-table-container"
-              style="max-height: 200px; overflow-y: auto"
-            >
-              <table class="table table-sm table-borderless mb-0">
-                <thead class="sticky-top bg-white">
-                  <tr>
-                    <th>Certification ID</th>
-                    <th>Driver Name</th>
-                    <th>Mobile Number</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of scannedCertificationsData">
-                    <td>{{ item.certification_id }}</td>
-                    <td>{{ item.full_name }}</td>
-                    <td>{{ item.mobile_number }}</td>
+                  <tr *ngIf="displayedCertifications.length === 0">
+                    <td colspan="3" class="text-center text-muted py-4">
+                      No records found
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -459,113 +296,5 @@
         </div>
       </div>
     </div>
-
-    <!-- Charts Row 2 -->
-    <div class="row mt-2 g-4">
-      <div class="col-12 col-lg-6">
-        <div class="card panel-card border-0 shadow-sm h-100">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <div class="d-flex align-items-center gap-3">
-                <div class="panel-icon-chip bg-warning">
-                  <i class="fas fa-map-marked-alt"></i>
-                </div>
-                <div>
-                  <h5 class="card-title mb-1 fw-semibold">
-                    Terminal Performance
-                  </h5>
-                  <p class="text-muted small mb-0">
-                    Certifications by location
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="chart-wrapper">
-              <canvas #terminalChart></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-lg-6">
-        <div class="card panel-card border-0 shadow-sm h-100">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <div class="d-flex align-items-center gap-3">
-                <div class="panel-icon-chip bg-info">
-                  <i class="fas fa-chart-area"></i>
-                </div>
-                <div>
-                  <h5 class="card-title mb-1 fw-semibold">
-                    Hourly Distribution
-                  </h5>
-                  <p class="text-muted small mb-0">Peak: 7-9 AM & 4-6 PM</p>
-                </div>
-              </div>
-            </div>
-            <div class="chart-wrapper">
-              <canvas #hourlyChart></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Driver Categories -->
-    <div class="row mt-4">
-      <div class="col-12">
-        <div class="card panel-card border-0 shadow-sm">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <div class="d-flex align-items-center gap-3">
-                <div class="panel-icon-chip bg-primary">
-                  <i class="fas fa-id-badge"></i>
-                </div>
-                <div>
-                  <h5 class="card-title mb-1 fw-semibold">Driver Categories</h5>
-                  <p class="text-muted small mb-0">
-                    Distribution of driver types
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="row g-3">
-              <div
-                *ngFor="let category of driverCategories"
-                class="col-12 col-sm-6 col-md-3"
-              >
-                <div
-                  class="driver-category driver-category--{{
-                    category.iconClass
-                  }} h-100"
-                >
-                  <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                      <h6 class="text-muted mb-1">{{ category.name }}</h6>
-                      <h4 class="mb-0 fw-bold">
-                        {{ category.count | number }}
-                      </h4>
-                    </div>
-                    <div
-                      class="category-icon-wrapper text-{{
-                        category.iconClass
-                      }}"
-                    >
-                      <i class="fas fa-{{ category.icon }}"></i>
-                    </div>
-                  </div>
-                  <small class="text-{{ category.growthClass }}">
-                    <i class="fas {{ getTrendIcon(category.trend) }} me-1"></i>
-                    {{ category.growth }}
-                  </small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- <button (click)="goToNewDashboard()">New Dashboard</button> -->
   </div>
 </div>

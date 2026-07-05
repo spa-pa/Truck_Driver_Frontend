@@ -22,7 +22,7 @@ export class DriverTrainingService {
      * @returns Observable containing role list
      */
     getAlldriverTraining(): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}driverTraining/`);
+        return this.httpClient.get(`${this.baseUrl}driverTraining`);
     }
 
     /**

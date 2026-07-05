@@ -4,7 +4,7 @@ import { RowData } from "@shared/models/table";
 export const ConsentDetailsData: RowData = {
   headers: [
     { label: "Sr.No", key: "SR.NO", type: "autoIncrementNumber", size: "4%" },
-    { label: "Language", key: "language_id", type: "" },
+    { label: "Language", key: "language_name", type: "" },
     { label: "Description", key: "description", type: "" },
     {
       label: "Action",
@@ -22,7 +22,7 @@ export const ConsentDetailsData: RowData = {
     { label: "false", value: "danger" },
     { label: "true", value: "success" },
   ],
-  filterfields: ["language_id"],
+  filterfields: ["language_name"],
   isSearch: false,
 };
 
