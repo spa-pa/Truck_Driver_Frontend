@@ -60,7 +60,7 @@ export class QrComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.qrConfigApiService.getQrConfig(terminalId).subscribe({
+    this.qrConfigApiService.getQrConfig(1).subscribe({
       next: (response: any) => {
         this.isLoading = false;
 
