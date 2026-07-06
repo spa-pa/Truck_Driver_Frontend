@@ -15,7 +15,7 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ApiLanguageService } from "@shared/_http/language.service";
@@ -162,6 +162,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
   termsContent: string = "";
   isLoadingTerms: boolean = false;
 
+  terminalId: number | null = null;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -177,12 +179,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
     private driverCertification: DriverCertificationService,
     private modalService: NgbModal,
     private consentService: ConsentService,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.translate.setDefaultLang("en");
     this.translate.use("en");
   }
 
   ngOnInit(): void {
+    this.getTerminalIdFromUrl();
     this.getAllLanguage();
     this.initRegistrationForm();
   }
@@ -194,6 +198,29 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // ------------------------------------------------------------
   // Forms
   // ------------------------------------------------------------
+
+  // Add this method to extract terminalId from URL
+  private getTerminalIdFromUrl(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      const terminalIdParam = params['terminalId'];
+
+      if (terminalIdParam) {
+        this.terminalId = parseInt(terminalIdParam, 10);
+        console.log('Terminal ID captured:', this.terminalId);
+
+        // You can use this.terminalId in your API calls or form submissions
+        // For example, add it to the registration form
+        if (this.registrationForm) {
+          this.registrationForm.patchValue({
+            terminal_id: this.terminalId
+          });
+        }
+      } else {
+        console.warn('No terminalId found in URL');
+      }
+    });
+  }
+
   private initRegistrationForm(): void {
     this.registrationForm = this.fb.group({
       language_id: [this.selectedLanguageId],
@@ -209,6 +236,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
       ],
       driving_license: [null, Validators.required],
       terms_agreed: [false, Validators.requiredTrue],
+      terminal_id: [this.terminalId] // Add this field to capture terminalId
     });
   }
 
@@ -474,6 +502,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     const formValue = this.registrationForm.value;
+    console.log(this.terminalId);
+    debugger
     const formData = new FormData();
     formData.append("language_id", formValue.language_id);
     formData.append("full_name", formValue.full_name);
@@ -484,6 +514,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
       formValue.driving_license_expiry_date,
     );
     formData.append("driving_license", formValue.driving_license);
+    formData.append("terminal_id", formValue.terminal_id);
 
     this.subscriptions.add(
       this.driverMasterService.createdriverMaster(formData).subscribe({
@@ -603,8 +634,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
     };
     this.subscriptions.add(
       this.driverTrainingService.createdriverTraining(formData).subscribe({
-        next: () => {},
-        error: () => {},
+        next: () => { },
+        error: () => { },
       }),
     );
 
@@ -627,7 +658,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
                 this.showCertification = true;
               }
             },
-            error: () => {},
+            error: () => { },
           }),
       );
     }
@@ -651,7 +682,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     const video = this.videoPlayer?.nativeElement;
     if (video) {
       video.currentTime = 0;
-      video.play().catch(() => {});
+      video.play().catch(() => { });
     }
     this.cdr.detectChanges();
   }

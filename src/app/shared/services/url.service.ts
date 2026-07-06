@@ -5,19 +5,19 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class UrlService {
-  
+
   getDriverTrainingUrl(terminalId?: number): string {
     const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
     let url = `${baseUrl}safety-training`;
-    
+
     // Add terminalId as query parameter if provided
     if (terminalId) {
       url += `?terminalId=${terminalId}`;
     }
-    
+
     return url;
   }
-  
+
   getBaseUrl(): string {
     return environment.SACNNING_BASE_URL || 'http://localhost:4200';
   }

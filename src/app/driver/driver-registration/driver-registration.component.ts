@@ -192,6 +192,7 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
   private getTerminalIdFromUrl(): void {
     this.activatedRoute.queryParams.subscribe(params => {
       const terminalIdParam = params['terminalId'];
+
       if (terminalIdParam) {
         this.terminalId = parseInt(terminalIdParam, 10);
         console.log('Terminal ID captured:', this.terminalId);

@@ -24,7 +24,7 @@ export class QRViewerModalComponent implements OnInit, AfterViewInit {
   @ViewChild('qrModal') qrModal!: TemplateRef<any>;
   @ViewChild('qrDisplay') qrDisplay!: QRDisplayComponent;
 
-  @Input() terminalId: number = 123;
+  @Input() terminalId: number;
   @Input() qrData: string = '';
   @Input() configData: any = null;
 
