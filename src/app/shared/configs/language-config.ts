@@ -9,7 +9,7 @@ export const LanguageDetailsData: RowData = {
     "data": [],
     "dataKey": 'language_id',
     "buttonname": 'Create Language',
-    "button": true,
+    "button": false,
     "statuses": [
         { label: 'false', value: 'danger' },
         { label: 'true', value: 'success' },

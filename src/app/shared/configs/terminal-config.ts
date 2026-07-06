@@ -14,7 +14,7 @@ export const TerminalDetailsData: RowData = {
   "data": [],
   "dataKey": 'terminal_id',
   "buttonname": 'Create Terminal',
-  "button": true,
+  "button": false,
   "statuses": [
     { label: 'false', value: 'danger' },
     { label: 'true', value: 'success' },

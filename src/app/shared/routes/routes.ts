@@ -66,7 +66,7 @@ const mastersData: Routes = [
         loadChildren: () => import('../../modules/masters/terminal/terminal.module').then(r => r.TerminalModule),
         // canActivate: [PermissionGuard]
     },
-     {
+    {
         path: 'consent',
         data: {
             title: "Consent",
@@ -158,6 +158,16 @@ const mastersData: Routes = [
             pageId: 21
         },
         loadChildren: () => import('../../modules/masters/user-master/user-master.module').then(r => r.UserMasterModule),
+        // canActivate: [PermissionGuard]
+    },
+    {
+        path: 'expiry-config',
+        data: {
+            title: "Config Expiry",
+            breadcrumb: "Config Expiry",
+            pageId: 21
+        },
+        loadChildren: () => import('../../modules/masters/expiry-config/expiry-config.module').then(r => r.ExpiryConfigModule),
         // canActivate: [PermissionGuard]
     }
 

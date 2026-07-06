@@ -163,14 +163,12 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
 
         switch (err.status) {
-
-            case 401:
             case 403:
 
                 this.timeoutSessionLogoutUser();
                 break;
 
-
+            case 401:
             case 404:
 
                 this.toastService.open(
