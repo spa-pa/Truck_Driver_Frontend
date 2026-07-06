@@ -136,41 +136,65 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     // Temporarily add a class to hide buttons and other UI elements
     element.classList.add('pdf-export');
 
+    // Let icon fonts finish loading and the DOM settle (avoids blurry/missing
+    // icons and mid-animation captures that were causing the cropped footer)
+    if ((document as any).fonts?.ready) {
+      await (document as any).fonts.ready;
+    }
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     try {
-      // Capture with optimized settings
+      // Capture at a higher resolution for a crisp, non-blurry export
       const canvas = await html2canvas(element, {
-        scale: 1.5,                  // reduced from 3 to keep file size small
+        scale: 3,
         useCORS: true,
+        allowTaint: true,
         backgroundColor: '#ffffff',
         logging: false,
+        scrollX: 0,
+        scrollY: -window.scrollY,
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
         width: element.scrollWidth,
         height: element.scrollHeight,
         onclone: (clonedDoc) => {
-          // Ensure buttons are hidden in the cloned document as well
-          const clonedElement = clonedDoc.querySelector('.certification-card');
+          // Ensure buttons are hidden and nothing is mid-animation in the clone
+          const clonedElement = clonedDoc.querySelector('.certification-card') as HTMLElement;
           if (clonedElement) {
             clonedElement.classList.add('pdf-export');
+            clonedElement.style.animation = 'none';
+            clonedElement.style.transform = 'none';
+            clonedElement.style.boxShadow = 'none';
           }
         }
       });
 
-      // Convert to JPEG with quality 0.9 to reduce size
-      const imageData = canvas.toDataURL('image/jpeg', 0.9);
+      // PNG keeps text/icons sharp (JPEG compression was the main source of blur)
+      const imageData = canvas.toDataURL('image/png', 1.0);
 
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 8; // small margin so the card fills the page instead of floating in whitespace
 
-      // Calculate image dimensions to fit within A4 with margins
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min((pageWidth - 20) / imgWidth, (pageHeight - 20) / imgHeight);
-      const width = imgWidth * ratio;
-      const height = imgHeight * ratio;
-      const x = (pageWidth - width) / 2;
-      const y = (pageHeight - height) / 2;
+      // Convert the element's real CSS size (96dpi) to mm. Using canvas.width/height
+      // directly here (they're inflated by `scale`) was the bug that produced the
+      // huge top gap and an inconsistent fit - the aspect ratio must come from the
+      // actual element dimensions, not the upscaled capture.
+      const pxToMm = 25.4 / 96;
+      const contentWidthMm = element.scrollWidth * pxToMm;
+      const contentHeightMm = element.scrollHeight * pxToMm;
 
-      pdf.addImage(imageData, 'JPEG', x, y, width, height);
+      const availableWidth = pageWidth - margin * 2;
+      const availableHeight = pageHeight - margin * 2;
+      const ratio = Math.min(availableWidth / contentWidthMm, availableHeight / contentHeightMm);
+
+      const renderWidth = contentWidthMm * ratio;
+      const renderHeight = contentHeightMm * ratio;
+      const x = (pageWidth - renderWidth) / 2;
+      const y = margin; // anchor near the top instead of vertically centering
+
+      pdf.addImage(imageData, 'PNG', x, y, renderWidth, renderHeight);
       pdf.save(`Driver-Certification-${this.certification?.certification_id || 'Unknown'}.pdf`);
 
     } catch (error) {
