@@ -174,12 +174,12 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
     const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
 
     // If custom data is provided, use it
-    if (this.config.data && this.config.data !== ' ') {
-      return this.config.data;
-    }
+    // if (this.config.data && this.config.data !== ' ') {
+    //   return this.config.data;
+    // }
 
     // Generate the full URL for driver-training
-    const url = `${baseUrl}/driver-training`;
+    const url = `${baseUrl}/safety-training`;
 
     console.log('QR Code URL:', url); // For debugging
 
