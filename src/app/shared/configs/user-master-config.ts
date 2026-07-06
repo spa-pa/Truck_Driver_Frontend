@@ -112,7 +112,7 @@ export const UserMasterTypeSearchGroup: IFormStructure[] = [
         name: "is_active",
         label: "Is Active",
         placeholder: "Is Active",
-        type: "switch",
+        type: "select",
         value: "",
         bindValue: 'status_id',
         bindLabel: 'name',
