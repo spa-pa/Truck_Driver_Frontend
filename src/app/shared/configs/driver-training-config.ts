@@ -14,6 +14,16 @@ export const DriverTrainingDetailsData: RowData = {
     "dataKey": 'certification_id',
     "buttonname": 'Create Certification',
     "button": false,
+    "exportExcel": true,
+    "excelKeys": {
+        "SR.NO": "Sr.No",
+        "full_name": "Driver Name",
+        "mobile_number": "Mobile Number",
+        "driving_license_expiry_date": "License Expiry Date",
+        "terminal_name" : "Terminal",
+        "expiry_date": "Certification Expiry Date",
+        "created_at": "Created At",
+    },
     "statuses": [
         { label: 'false', value: 'danger' },
         { label: 'true', value: 'success' },

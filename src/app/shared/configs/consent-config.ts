@@ -51,7 +51,7 @@ export const ConsentTypeSearchGroup: IFormStructure[] = [
   },
   {
     name: "description",
-    label: "description",
+    label: "Description",
     placeholder: "Enter Description",
     type: "textarea",
     value: "",

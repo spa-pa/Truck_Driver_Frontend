@@ -4,6 +4,10 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { DashboardService } from "@shared/_http/dashboard.service";
 import { DriverTrainingService } from "@shared/_http/driver-training.service";
+import { TerminalService } from "@shared/_http/terminal.service";
+import { GlobalConfig } from "@shared/configs/global-config";
+import { currentUser } from "@shared/utils/current-user";
+import { EncryptedStorage } from "@shared/utils/encrypted-storage";
 
 @Component({
   selector: "app-dashboard",
@@ -13,13 +17,18 @@ import { DriverTrainingService } from "@shared/_http/driver-training.service";
   styleUrl: "./dashboard.component.scss",
 })
 export class DashboardComponent implements OnInit {
-  activeTab: string = "gate";
-
-  // ----- Scanned Certifications -----
+  // Data arrays
   scannedCertificationsData: any[] = [];
-
-  // ----- Drivers Training Data -----
   driversTrainingData: any[] = [];
+
+  // User info
+  userRole: string = "";
+  userId: number | null = null;
+  userTerminalId: number | null = null;
+
+  // Terminal dropdown (Super Admin only)
+  terminalList: any[] = [];
+  selectedTerminalId: number | null = null;
 
   counts: any = {
     total_drivers: 0,
@@ -28,155 +37,77 @@ export class DashboardComponent implements OnInit {
     todays_certificates_generated: 0,
   };
 
-  // Gate Entries Data
-  gateEntries = [
-    {
-      driverName: "Rajesh Kumar",
-      truckNumber: "TN-07-AB-1234",
-      terminal: "Terminal A",
-      status: "Entry",
-      statusClass: "success",
-      time: "2 min ago",
-      icon: "truck",
-      iconClass: "primary",
-    },
-    {
-      driverName: "Priya Sharma",
-      truckNumber: "KA-01-CD-5678",
-      terminal: "Terminal B",
-      status: "Entry",
-      statusClass: "success",
-      time: "15 min ago",
-      icon: "truck",
-      iconClass: "success",
-    },
-    {
-      driverName: "Amit Patel",
-      truckNumber: "MH-03-EF-9012",
-      terminal: "Terminal A",
-      status: "Exit",
-      statusClass: "warning",
-      time: "32 min ago",
-      icon: "truck",
-      iconClass: "warning",
-    },
-    {
-      driverName: "Suresh Reddy",
-      truckNumber: "AP-09-GH-3456",
-      terminal: "Terminal C",
-      status: "Entry",
-      statusClass: "success",
-      time: "1 hour ago",
-      icon: "truck",
-      iconClass: "danger",
-    },
-    {
-      driverName: "Ananya Singh",
-      truckNumber: "UP-14-IJ-7890",
-      terminal: "Terminal B",
-      status: "Exit",
-      statusClass: "warning",
-      time: "2 hours ago",
-      icon: "truck",
-      iconClass: "info",
-    },
-  ];
-
-  // Quiz Drivers Data
-  quizDrivers = [
-    {
-      name: "Vikram Singh",
-      language: "Hindi",
-      score: 2,
-      totalQuestions: 2,
-      quizStatus: "Passed",
-      quizStatusClass: "success",
-      attempts: 1,
-      attemptClass: "success",
-      time: "5 min ago",
-      icon: "user-graduate",
-      iconClass: "primary",
-    },
-    {
-      name: "Lakshmi Devi",
-      language: "Tamil",
-      score: 2,
-      totalQuestions: 2,
-      quizStatus: "Passed",
-      quizStatusClass: "success",
-      attempts: 1,
-      attemptClass: "success",
-      time: "18 min ago",
-      icon: "user-graduate",
-      iconClass: "success",
-    },
-    {
-      name: "Ganesh Patil",
-      language: "Marathi",
-      score: 1,
-      totalQuestions: 2,
-      quizStatus: "Failed",
-      quizStatusClass: "danger",
-      attempts: 2,
-      attemptClass: "warning",
-      time: "28 min ago",
-      icon: "user-graduate",
-      iconClass: "warning",
-    },
-    {
-      name: "Meena Reddy",
-      language: "Telugu",
-      score: 2,
-      totalQuestions: 2,
-      quizStatus: "Passed",
-      quizStatusClass: "success",
-      attempts: 1,
-      attemptClass: "success",
-      time: "45 min ago",
-      icon: "user-graduate",
-      iconClass: "danger",
-    },
-    {
-      name: "Arjun Nair",
-      language: "English",
-      score: 0,
-      totalQuestions: 2,
-      quizStatus: "Failed",
-      quizStatusClass: "danger",
-      attempts: 3,
-      attemptClass: "danger",
-      time: "1 hour ago",
-      icon: "user-graduate",
-      iconClass: "info",
-    },
-  ];
-
-  //Show Certifications Scanned Summary
-  get displayedCertifications(): any[] {
-    return this.scannedCertificationsData.slice(0, 10);
+  get displayedTrainingCertifications(): any[] {
+    return this.driversTrainingData.slice(0, 10);
   }
 
-  //Show Gate Entries 
-  get displayedGateEntries(): any[] {
-    return this.scannedCertificationsData.slice(0, 5);
+  //Show Certifications Scanned Summary
+  get displayedScannedCertifications(): any[] {
+    return this.scannedCertificationsData.slice(0, 10);
   }
 
   constructor(
     private dashboardService: DashboardService,
-    private driverTrainingService: DriverTrainingService,
+    private terminalService: TerminalService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.getDashboardCounts();
-    //this.loadDriverCertifications();
-    this.loadScannedCertifications();
-    //this.loadAlldriversTraining();
+    this.loadUserFromStorage();
+  }
+
+  private loadUserFromStorage(): void {
+    const user = currentUser();
+    this.userId = user.role_id;
+    this.userRole = user.role_name;
+    this.userTerminalId = user.terminal_id || null;
+
+    if (this.userRole === "SUPER ADMIN") {
+      // Load terminal list for dropdown, then load data for all terminals
+      this.loadTerminals();
+    } else {
+      // Admin: load data for their terminal only
+      this.loadDashboardData(this.userTerminalId);
+    }
+  }
+
+  private loadTerminals(): void {
+    this.terminalService.getAllTerminals().subscribe({
+      next: (response) => {
+        if (response?.success && Array.isArray(response.data)) {
+          this.terminalList = response.data;
+          // Set default selection to "All Terminals" (null)
+          this.selectedTerminalId = null;
+          // Load data for all terminals
+          this.loadDashboardData(null);
+        }
+      },
+      error: (error) => console.error("Error loading terminals:", error),
+    });
+  }
+
+  // Called when Super Admin changes the dropdown
+  onTerminalChange(): void {
+    this.loadDashboardData(this.selectedTerminalId);
+  }
+
+  private loadDashboardData(terminalId: number | null): void {
+    if (terminalId === null) {
+      // Call APIs without any terminal_id parameter
+      this.getDashboardCounts();
+      this.loadScannedCertifications();
+      this.loadAlldriversTraining();
+    } else {
+      // Call APIs with the selected terminal_id
+      this.getDashboardCounts(terminalId);
+      this.loadScannedCertifications(terminalId);
+      this.loadAlldriversTraining(terminalId);
+    }
   }
 
   // Get dashboard counts from API
-  getDashboardCounts(): void {
-    this.dashboardService.getDashboardCount().subscribe({
+  getDashboardCounts(terminalId?: number): void {
+    this.dashboardService.getDashboardCount(terminalId).subscribe({
       next: (response) => {
         if (response?.success && response.data) {
           this.counts = response.data;
@@ -188,25 +119,26 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  loadScannedCertifications() {
-    this.dashboardService.getAllScannedCertificationsData().subscribe({
-      next: (response) => {
-        if (response?.success && Array.isArray(response.data)) {
-          this.scannedCertificationsData = response.data;
-        } else {
+  loadScannedCertifications(terminalId?: number): void {
+    this.dashboardService
+      .getAllScannedCertificationsData(terminalId)
+      .subscribe({
+        next: (response) => {
+          if (response?.success && Array.isArray(response.data)) {
+            this.scannedCertificationsData = response.data;
+          } else {
+            this.scannedCertificationsData = [];
+          }
+        },
+        error: (error) => {
+          console.error("Error fetching scanned certifications:", error);
           this.scannedCertificationsData = [];
-        }
-      },
-      error: (error) => {
-        console.error("Error fetching dashboard all data:", error);
-        this.scannedCertificationsData = [];
-      },
-    });
+        },
+      });
   }
 
-  loadAlldriversTraining(){
-    debugger
-   this.driverTrainingService.getAlldriverTraining().subscribe({
+  loadAlldriversTraining(terminalId?: number): void {
+    this.dashboardService.getAllDriverCertification(terminalId).subscribe({
       next: (response) => {
         if (response?.success && Array.isArray(response.data)) {
           this.driversTrainingData = response.data;
@@ -215,19 +147,17 @@ export class DashboardComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error("Error fetching dashboard all data:", error);
+        console.error("Error fetching training certifications:", error);
         this.driversTrainingData = [];
       },
-   })
+    });
   }
 
-  // Tab switching method
-  setActiveTab(tab: string): void {
-    this.activeTab = tab;
+  navigateToAllTraining() {
+    this.router.navigate(["/training-result"]);
   }
 
-
-   navigateToAllCertifications(): void {
-    this.router.navigate(['/driver-entry']); // Adjust route as needed
+  navigateToAllCertifications(): void {
+    this.router.navigate(["/driver-entry"]);
   }
 }

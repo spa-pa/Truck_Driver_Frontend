@@ -6,6 +6,7 @@ import { DriverEntriesDetailsData } from '@shared/configs/driver-entries-config'
 import { DriverTrainingDetailsData } from '@shared/configs/driver-training-config';
 import { RowData } from '@shared/models/table';
 import { Subscription } from 'rxjs';
+import { ExcelExportService } from '@shared/services/excel-export.service';
 
 @Component({
   selector: 'app-driver-entry-list',
@@ -22,7 +23,12 @@ export class DriverEntryListComponent {
 
   @ViewChild('certificationModal') certificationModal!: TemplateRef<any>;
   
-  constructor(private router: Router, private certificateScannedService: CertificateScannedService, private modalService: NgbModal) { }
+  constructor(
+    private router: Router, 
+    private certificateScannedService: CertificateScannedService, 
+    private modalService: NgbModal,
+    private excelService: ExcelExportService
+  ) { }
 
 
   ngOnInit(): void {
@@ -65,6 +71,9 @@ export class DriverEntryListComponent {
       centered: true,
       backdrop: 'static'
     });
+  }
+  handleExportAction(): void {
+    this.excelService.exportAsExcelFile(this.DriverEntriesDetailsData.data, "driver_entries_list", this.DriverEntriesDetailsData.excelKeys);
   }
 
   closeModal(): void {

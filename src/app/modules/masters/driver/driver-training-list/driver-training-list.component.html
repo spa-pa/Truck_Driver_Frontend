@@ -1,6 +1,6 @@
 <app-table [jsonData]="DriverTrainingDetailsData" (handleCreateAction)="handleCreateAction()"
     (handleDeleteAction)="handleDeleteAction($event)" (handleEditAction)="handleEditAction($event)"
-    (handleViewAction)="handleViewAction($event)" (handleSelectRowAction)="handleEditAction($event)"></app-table>
+    (handleViewAction)="handleViewAction($event)" (handleSelectRowAction)="handleEditAction($event)" (handleExportAction)="handleExportAction()"></app-table>
 
 <ng-template #certificationModal let-modal>
     <div class="modal-content border-0 shadow-lg rounded-4">

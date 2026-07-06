@@ -1,5 +1,34 @@
 <div class="dashboard-container">
   <div class="container-fluid py-2">
+    <!-- Terminal Selector (Super Admin only) -->
+    <div *ngIf="userRole === 'SUPER ADMIN'" class="row mb-3">
+      <div class="col-12">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <label
+            for="terminalSelect"
+            class="form-label fw-semibold small text-muted mb-0"
+          >
+            <i class="fas fa-map-marker-alt me-1"></i> Select Terminal
+          </label>
+          <select
+            id="terminalSelect"
+            class="form-select form-select-sm"
+            style="width: auto; min-width: 150px"
+            [(ngModel)]="selectedTerminalId"
+            (change)="onTerminalChange()"
+          >
+            <option [ngValue]="null">All Terminals</option>
+            <option
+              *ngFor="let terminal of terminalList"
+              [value]="terminal.terminal_id"
+            >
+              {{ terminal.terminal_name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <!-- Statistics Cards - Row 1 -->
     <div class="row g-3">
       <div class="col-12 col-sm-6 col-xl-3">
@@ -95,138 +124,71 @@
       </div>
     </div>
 
-    <!-- Recent Activity + Certifications Scanned Summary -->
+    <!-- Recent Training + Certifications Scanned Summary -->
     <div class="row mt-2 mb-4 g-4 align-items-stretch">
-      <!-- Recent Activity -->
+      <!-- Recent Training -->
       <div class="col-12 col-lg-6 d-flex">
         <div class="card panel-card border-0 shadow-sm w-100">
           <div class="card-body d-flex flex-column">
             <!-- Header -->
-            <div class="panel-header d-flex justify-content-between align-items-center">
+            <div
+              class="panel-header d-flex justify-content-between align-items-center"
+            >
               <div class="d-flex align-items-center gap-3">
-                <div class="panel-icon-chip bg-primary">
-                  <i class="fas fa-stream"></i>
+                <div class="panel-icon-chip bg-success">
+                  <i class="fas fa-shield-alt"></i>
                 </div>
                 <div>
-                  <h5 class="card-title mb-1 fw-semibold">Recent Activity</h5>
-                  <p class="text-muted small mb-0">Latest 5 records</p>
+                  <h5 class="card-title mb-1 fw-semibold">
+                    Recent Training Certifications
+                  </h5>
+                  <p class="text-muted small mb-0">All Driver Certifications</p>
                 </div>
               </div>
+              <a
+                (click)="navigateToAllTraining()"
+                class="text-primary small fw-semibold text-decoration-none"
+                style="cursor: pointer"
+              >
+                View All <i class="fas fa-arrow-right ms-1"></i>
+              </a>
             </div>
 
-            <!-- Tabs -->
-            <ul class="nav nav-tabs custom-tabs border-0" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button
-                  class="nav-link"
-                  [class.active]="activeTab === 'gate'"
-                  (click)="setActiveTab('gate')"
-                >
-                  <i class="fas fa-truck me-1"></i>
-                  Gate Entries
-                  <span class="tab-indicator"></span>
-                </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button
-                  class="nav-link"
-                  [class.active]="activeTab === 'quiz'"
-                  (click)="setActiveTab('quiz')"
-                >
-                  <i class="fas fa-question-circle me-1"></i>
-                  Quiz Drivers
-                  <span class="tab-indicator"></span>
-                </button>
-              </li>
-            </ul>
+            <!-- Toolbar row (matches tabs bar height on the left card) -->
+            <div class="panel-toolbar d-flex align-items-center">
+              <span class="text-muted small">
+                Showing latest {{ displayedTrainingCertifications.length }} of
+                {{ driversTrainingData.length }} records
+              </span>
+            </div>
 
-            <!-- Tab Content -->
-            <div class="tab-content panel-scroll-area">
-              <!-- Gate Entries Tab -->
-              <div class="tab-pane" [class.active]="activeTab === 'gate'">
-                <div class="certification-list">
-                  <div
-                    *ngFor="let entry of displayedGateEntries"
-                    class="certification-item d-flex align-items-center py-3 border-bottom"
-                  >
-                    <div
-                      class="avatar-sm bg-{{
-                        entry.iconClass
-                      }} bg-opacity-10 rounded-circle p-2 me-3"
-                    >
-                      <i
-                        class="fas fa-{{ entry.icon }} text-{{
-                          entry.iconClass
-                        }}"
-                      ></i>
-                    </div>
-                    <div class="flex-grow-1">
-                      <h6 class="mb-1">{{ entry.full_name }}</h6>
-                      <p class="text-muted small mb-0">
-                        <i class="fas fa-truck me-1"></i>{{ entry.certification_id }}
-                        <span class="mx-1">•</span>
-                        <i class="fas fa-map-marker-alt me-1"></i
-                        >{{ entry.terminal_name }}
-                      </p>
-                    </div>
-                    <div class="text-end">
-                      <span class="badge bg-{{ entry.statusClass }}">{{
-                        entry.status
-                      }}</span>
-                      <small class="text-muted d-block mt-1">{{
-                        entry.time
-                      }}</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Quiz Drivers Tab -->
-              <div class="tab-pane" [class.active]="activeTab === 'quiz'">
-                <div class="certification-list">
-                  <div
-                    *ngFor="let driver of quizDrivers"
-                    class="certification-item d-flex align-items-center py-3 border-bottom"
-                  >
-                    <div
-                      class="avatar-sm bg-{{
-                        driver.iconClass
-                      }} bg-opacity-10 rounded-circle p-2 me-3"
-                    >
-                      <i
-                        class="fas fa-{{ driver.icon }} text-{{
-                          driver.iconClass
-                        }}"
-                      ></i>
-                    </div>
-                    <div class="flex-grow-1">
-                      <div class="d-flex align-items-center gap-2">
-                        <h6 class="mb-1">{{ driver.name }}</h6>
-                        <span class="badge bg-{{ driver.quizStatusClass }}">{{
-                          driver.quizStatus
-                        }}</span>
-                      </div>
-                      <p class="text-muted small mb-0">
-                        <i class="fas fa-language me-1"></i
-                        >{{ driver.language }}
-                        <span class="mx-1">•</span>
-                        <i class="fas fa-check-circle me-1"></i
-                        >{{ driver.score }}/{{ driver.totalQuestions }}
-                      </p>
-                    </div>
-                    <div class="text-end">
-                      <span class="badge bg-{{ driver.attemptClass }}"
-                        >{{ driver.attempts }} attempt{{
-                          driver.attempts > 1 ? "s" : ""
-                        }}</span
-                      >
-                      <small class="text-muted d-block mt-1">{{
-                        driver.time
-                      }}</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <!-- Table -->
+            <div class="panel-scroll-area">
+              <table class="table table-sm table-borderless mb-0 report-table">
+                <thead class="sticky-top bg-white">
+                  <tr>
+                    <th>Certification ID</th>
+                    <th>Driver Name</th>
+                    <th>Mobile Number</th>
+                    <th>Terminal</th>
+                    <th>Training Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of displayedTrainingCertifications">
+                    <td>{{ item.certification_id }}</td>
+                    <td>{{ item.full_name }}</td>
+                    <td>{{ item.mobile_number }}</td>
+                    <td>{{ item.terminal_name }}</td>
+                    <td>{{ item.created_at | date: "mediumDate" }}</td>
+                  </tr>
+                  <tr *ngIf="displayedTrainingCertifications.length === 0">
+                    <td colspan="4" class="text-center text-muted py-4">
+                      No records found
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -237,7 +199,9 @@
         <div class="card panel-card border-0 shadow-sm w-100">
           <div class="card-body d-flex flex-column">
             <!-- Header -->
-            <div class="panel-header d-flex justify-content-between align-items-center">
+            <div
+              class="panel-header d-flex justify-content-between align-items-center"
+            >
               <div class="d-flex align-items-center gap-3">
                 <div class="panel-icon-chip bg-success">
                   <i class="fas fa-shield-alt"></i>
@@ -246,15 +210,13 @@
                   <h5 class="card-title mb-1 fw-semibold">
                     Certifications Scanned Summary
                   </h5>
-                  <p class="text-muted small mb-0">
-                    All Driver Certifications
-                  </p>
+                  <p class="text-muted small mb-0">All Driver Certifications</p>
                 </div>
               </div>
               <a
                 (click)="navigateToAllCertifications()"
                 class="text-primary small fw-semibold text-decoration-none"
-                style="cursor: pointer;"
+                style="cursor: pointer"
               >
                 View All <i class="fas fa-arrow-right ms-1"></i>
               </a>
@@ -263,7 +225,7 @@
             <!-- Toolbar row (matches tabs bar height on the left card) -->
             <div class="panel-toolbar d-flex align-items-center">
               <span class="text-muted small">
-                Showing latest {{ displayedCertifications.length }} of
+                Showing latest {{ displayedScannedCertifications.length }} of
                 {{ scannedCertificationsData.length }} records
               </span>
             </div>
@@ -276,15 +238,19 @@
                     <th>Certification ID</th>
                     <th>Driver Name</th>
                     <th>Mobile Number</th>
+                    <th>Terminal</th>
+                    <th>Training Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let item of displayedCertifications">
+                  <tr *ngFor="let item of displayedScannedCertifications">
                     <td>{{ item.certification_id }}</td>
                     <td>{{ item.full_name }}</td>
                     <td>{{ item.mobile_number }}</td>
+                    <td>{{ item.terminal_name }}</td>
+                    <td>{{ item.created_at | date: "mediumDate" }}</td>
                   </tr>
-                  <tr *ngIf="displayedCertifications.length === 0">
+                  <tr *ngIf="displayedScannedCertifications.length === 0">
                     <td colspan="3" class="text-center text-muted py-4">
                       No records found
                     </td>

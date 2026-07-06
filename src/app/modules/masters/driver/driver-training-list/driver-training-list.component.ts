@@ -7,6 +7,7 @@ import { RowData } from '@shared/models/table';
 import { Subscription } from 'rxjs';
 import { DriverCertificationComponent } from '../driver-certification/driver-certification.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ExcelExportService } from '@shared/services/excel-export.service';
 
 @Component({
   selector: 'app-driver-training-list',
@@ -25,7 +26,12 @@ export class DriverTrainingListComponent implements OnInit {
   certificationId: any;
 
   private modalRef: NgbModalRef | null = null;
-  constructor(private router: Router, private driverCertificationService: DriverCertificationService, private modalService: NgbModal) { }
+  constructor(
+    private router: Router, 
+    private driverCertificationService: DriverCertificationService, 
+    private modalService: NgbModal,
+    private excelService: ExcelExportService
+  ) { }
 
 
   ngOnInit(): void {
@@ -75,6 +81,10 @@ export class DriverTrainingListComponent implements OnInit {
       centered: true,
       backdrop: 'static'
     });
+  }
+
+   handleExportAction(): void {
+    this.excelService.exportAsExcelFile(this.DriverTrainingDetailsData.data, "driver_training_list", this.DriverTrainingDetailsData.excelKeys);
   }
 
   closeModal(): void {
