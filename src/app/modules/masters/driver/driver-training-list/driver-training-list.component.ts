@@ -48,8 +48,8 @@ export class DriverTrainingListComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.subs = new Subscription();
     this.loadUserFromStorage();
-    this.subs = new Subscription()
     //this.getAllDriverCertification();
   }
 

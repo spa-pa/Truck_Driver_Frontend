@@ -43,8 +43,8 @@ export class DriverEntryListComponent {
   ) {}
 
   ngOnInit(): void {
-    this.loadUserFromStorage();
     this.subs = new Subscription();
+    this.loadUserFromStorage();
   }
 
   private loadUserFromStorage(): void {
