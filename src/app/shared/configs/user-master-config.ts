@@ -7,7 +7,7 @@ export const UserMasterDetailsData: RowData = {
     { label: "User Name", key: "user_name", type: '' },
     { label: "Email", key: "email", type: '' },
     { label: "Contact Number", key: "contact_number", type: '' },
-    // { label: "Country", key: "countryName", type: '' },
+    { label: "Is Active", key: "is_active", type: 'statuses' },
     { label: "Action", key: "action", type: 'action', size: '10%', buttonNames: ['edit', 'view', 'delete'] }],
     "data": [],
     "dataKey": 'user_id',

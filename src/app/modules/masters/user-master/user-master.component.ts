@@ -32,7 +32,10 @@ export class UserMasterComponent {
     const terminalId = currentUser().terminal_id;
     this.subs.add(this.userMasterService.getAllUserMasterByTerminal(terminalId).subscribe({
       next: (value) => {
-        this.UserMasterDetailsData.data = value.data;
+        this.UserMasterDetailsData.data = value.data.map((item: any) => ({
+          ...item,
+          is_active: item.is_active ? 'true' : 'false'
+        }));
       }
     }))
   }
