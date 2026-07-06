@@ -6,12 +6,14 @@ import { FormComponent } from '@shared/component/form/form.component';
 import { TableComponent } from '@shared/component/table/table.component';
 import { DriverTrainingListComponent } from './driver-training-list.component';
 import { DriverCertificationComponent } from '../driver-certification/driver-certification.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [DriverTrainingListComponent],
   imports: [
     CommonModule,
+    FormsModule,
     FormComponent,
     TableComponent,
     DriverCertificationComponent,

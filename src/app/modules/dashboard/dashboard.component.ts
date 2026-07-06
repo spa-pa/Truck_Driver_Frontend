@@ -3,11 +3,8 @@ import { Component, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { DashboardService } from "@shared/_http/dashboard.service";
-import { DriverTrainingService } from "@shared/_http/driver-training.service";
 import { TerminalService } from "@shared/_http/terminal.service";
-import { GlobalConfig } from "@shared/configs/global-config";
 import { currentUser } from "@shared/utils/current-user";
-import { EncryptedStorage } from "@shared/utils/encrypted-storage";
 
 @Component({
   selector: "app-dashboard",
@@ -62,7 +59,7 @@ export class DashboardComponent implements OnInit {
     this.userRole = user.role_name;
     this.userTerminalId = user.terminal_id || null;
 
-    if (this.userRole === "SUPER ADMIN") {
+    if (this.userId === 1) {
       // Load terminal list for dropdown, then load data for all terminals
       this.loadTerminals();
     } else {

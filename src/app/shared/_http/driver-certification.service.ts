@@ -13,8 +13,18 @@ export class DriverCertificationService {
     this.baseUrl = environment.API_BASE_URL;
   }
 
-  getAllDriverCertification(): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}driverCertification/`);
+  // getAllDriverCertification(): Observable<any> {
+  //   return this.httpClient.get(`${this.baseUrl}driverCertification/`);
+  // }
+
+  getAllDriverCertification(terminalId?: number | null): Observable<any> {
+    let params = new HttpParams();
+    if (terminalId != null) {
+      params = params.set("terminal_id", terminalId.toString());
+    }
+    return this.httpClient.get(`${this.baseUrl}driverCertification`, {
+      params,
+    });
   }
 
   getDriverCertificationByCertificationId(id: any): Observable<any> {

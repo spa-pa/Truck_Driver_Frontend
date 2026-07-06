@@ -1,27 +1,57 @@
-<app-table [jsonData]="DriverEntriesDetailsData" (handleCreateAction)="handleCreateAction()"
-    (handleDeleteAction)="handleDeleteAction($event)" (handleEditAction)="handleEditAction($event)"
-    (handleViewAction)="handleViewAction($event)" (handleSelectRowAction)="handleEditAction($event)" (handleExportAction)="handleExportAction()"></app-table>
+<div *ngIf="userId === 1" class="row mb-3 ms-1">
+  <div class="col-12">
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <label for="terminalSelect" class="form-label fw-semibold small text-muted mb-0">
+        <i class="fas fa-map-marker-alt me-1"></i> Select Terminal
+      </label>
+      <select
+        id="terminalSelect"
+        class="form-select form-select-sm"
+        style="width: auto; min-width: 150px"
+        [(ngModel)]="selectedTerminalId"
+        (change)="onTerminalChange()"
+      >
+        <option [ngValue]="null">All Terminals</option>
+        <option *ngFor="let terminal of terminalList" [value]="terminal.terminal_id">
+          {{ terminal.terminal_name }}
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
 
+<app-table
+  [jsonData]="DriverEntriesDetailsData"
+  (handleCreateAction)="handleCreateAction()"
+  (handleDeleteAction)="handleDeleteAction($event)"
+  (handleEditAction)="handleEditAction($event)"
+  (handleViewAction)="handleViewAction($event)"
+  (handleSelectRowAction)="handleEditAction($event)"
+  (handleExportAction)="handleExportAction()"
+></app-table>
 
 <ng-template #certificationModal let-modal>
-    <div class="modal-content border-0 shadow-lg rounded-4">
-        <!-- Modal Header -->
-        <div class="modal-header modern-header">
-            <div class="header-content">
-                <div class="header-text">
-                    <h5 class="modal-title">Driver Certification</h5>
-                </div>
-            </div>
-            <button class="close-btn" (click)="closeModal()">
-                <i class="fa fa-times"></i>
-            </button>
+  <div class="modal-content border-0 shadow-lg rounded-4">
+    <!-- Modal Header -->
+    <div class="modal-header modern-header">
+      <div class="header-content">
+        <div class="header-text">
+          <h5 class="modal-title">Driver Certification</h5>
         </div>
-
-        <!-- Modal Body -->
-        <div class="modal-body p-4">
-            <app-driver-certification #certification [certificationId]="certificationId" [autoLoad]="true">
-            </app-driver-certification>
-        </div>
-
+      </div>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fa fa-times"></i>
+      </button>
     </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body p-4">
+      <app-driver-certification
+        #certification
+        [certificationId]="certificationId"
+        [autoLoad]="true"
+      >
+      </app-driver-certification>
+    </div>
+  </div>
 </ng-template>

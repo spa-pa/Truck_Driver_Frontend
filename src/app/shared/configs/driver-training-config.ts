@@ -8,6 +8,7 @@ export const DriverTrainingDetailsData: RowData = {
     { label: "License Number", key: "driving_license_number", type: '' },
     { label: "License Expiry", key: "driving_license_expiry_date", type: 'date' },
     { label: "Certification Expiry", key: "expiry_date", type: 'date' },
+    { label: "Terminal", key: "terminal_name", type: '' },
     { label: "Created At", key: "created_at", type: 'date&time' },
     { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['view'] }],
     "data": [],

@@ -8,6 +8,8 @@ import { Subscription } from 'rxjs';
 import { DriverCertificationComponent } from '../driver-certification/driver-certification.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ExcelExportService } from '@shared/services/excel-export.service';
+import { currentUser } from "@shared/utils/current-user";
+import { TerminalService } from "@shared/_http/terminal.service";
 
 @Component({
   selector: 'app-driver-training-list',
@@ -25,30 +27,97 @@ export class DriverTrainingListComponent implements OnInit {
   subs: any;
   certificationId: any;
 
+    // User info
+  userRole: string = "";
+  userId: number | null = null;
+  userTerminalId: number | null = null;
+
+  // Terminal dropdown (Super Admin only)
+  terminalList: any[] = [];
+  selectedTerminalId: number | null = null;
+
   private modalRef: NgbModalRef | null = null;
+
   constructor(
     private router: Router, 
     private driverCertificationService: DriverCertificationService, 
     private modalService: NgbModal,
-    private excelService: ExcelExportService
+    private excelService: ExcelExportService,
+    private terminalService: TerminalService,
   ) { }
 
 
   ngOnInit(): void {
+    this.loadUserFromStorage();
     this.subs = new Subscription()
-    this.getAllDriverCertification();
+    //this.getAllDriverCertification();
+  }
+
+    private loadUserFromStorage(): void {
+    const user = currentUser();
+    this.userId = user.role_id;
+    this.userRole = user.role_name;
+    this.userTerminalId = user.terminal_id || null;
+
+    if (this.userId === 1) {
+      // Load terminals and then data for all terminals
+      this.loadTerminals();
+    } else {
+      // Admin: load data for their terminal only
+      this.loadData(this.userTerminalId);
+    }
+  }
+
+    private loadTerminals(): void {
+    this.terminalService.getAllTerminals().subscribe({
+      next: (response) => {
+        if (response?.success && Array.isArray(response.data)) {
+          this.terminalList = response.data;
+          // Default to "All Terminals" (null)
+          this.selectedTerminalId = null;
+          this.loadData(null);
+        }
+      },
+      error: (error) => console.error("Error loading terminals:", error),
+    });
+  }
+
+    onTerminalChange(): void {
+    this.loadData(this.selectedTerminalId);
+  }
+
+    private loadData(terminalId: number | null): void {
+    if (terminalId === null) {
+      // No parameter → all terminals
+      this.getAllDriverCertification();
+    } else {
+      // With terminal ID
+      this.getAllDriverCertification(terminalId);
+    }
+  }
+
+    getAllDriverCertification(terminalId?: number): void {
+    this.subs.add(
+      this.driverCertificationService
+        .getAllDriverCertification(terminalId)
+        .subscribe({
+          next: (value) => {
+            if (value?.success && Array.isArray(value.data)) {
+              this.DriverTrainingDetailsData.data = value.data;
+            } else {
+              this.DriverTrainingDetailsData.data = [];
+            }
+          },
+          error: (error) => {
+            console.error("Error fetching driver certification data:", error);
+            this.DriverTrainingDetailsData.data = [];
+          },
+        }),
+    );
   }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe()
-  }
-
-  getAllDriverCertification() {
-    this.subs.add(this.driverCertificationService.getAllDriverCertification().subscribe({
-      next: (value) => {
-        this.DriverTrainingDetailsData.data = value.data;
-      }
-    }))
   }
 
 
