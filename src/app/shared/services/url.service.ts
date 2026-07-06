@@ -8,7 +8,7 @@ export class UrlService {
   
   getDriverTrainingUrl(terminalId?: number): string {
     const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
-    let url = `${baseUrl}driver-training`;
+    let url = `${baseUrl}safety-training`;
     
     // Add terminalId as query parameter if provided
     if (terminalId) {
