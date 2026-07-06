@@ -3,7 +3,7 @@ import { RowData } from "@shared/models/table";
 
 export const ExpiryConfigDetailsData: RowData = {
     "headers": [{ label: "Sr.No", key: "SR.NO", type: 'autoIncrementNumber', size: '4%' },
-    { label: "Expiry Month", key: "expiry_month", type: '' },
+    { label: "Certificate Expiry (In month)", key: "expiry_month", type: '' },
     // { label: "State", key: "stateName", type: '' },
     // { label: "Country", key: "countryName", type: '' },
     { label: "Action", key: "action", type: 'action', size: '10%', buttonNames: ['edit', 'view', 'delete'] }],
@@ -31,8 +31,8 @@ export const ExpiryConfigSearchGroup: IFormStructure[] = [
     },
     {
         name: "expiry_month",
-        label: "Expiry Month",
-        placeholder: "Expiry Month",
+        label: "Certificate Expiry (In month)",
+        placeholder: "Certificate Expiry (In month)",
         type: "number",
         value: "",
         required: true,
