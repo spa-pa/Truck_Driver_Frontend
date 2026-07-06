@@ -62,7 +62,8 @@ export class CuUserMasterComponent implements OnInit, AfterViewInit {
       case 'role':
         this.subs.add(this.roleService.getAllRoles().subscribe({
           next: (value) => {
-            ele.listData = value.data
+            // ele.listData = value.data
+            ele.listData = value.data.filter((role:any) => role.role_id !== 1);
           }
         }))
         break;
