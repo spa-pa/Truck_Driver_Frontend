@@ -28,6 +28,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   @media (max-width: 768px) {
     padding: 10px 10px !important;
   }
+
   @media (max-width: 480px) {
     padding: 10px 10px !important;
   }
@@ -57,6 +58,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
         border-color: $primary;
         box-shadow: 0 2px 8px rgba($primary, 0.08);
       }
+
       &:focus-within {
         border-color: $primary;
         box-shadow: 0 0 0 4px rgba($primary, 0.06);
@@ -421,13 +423,13 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
       input[type="radio"] {
         display: none;
 
-        &:checked + .option-marker {
+        &:checked+.option-marker {
           background: $primary;
           color: $white;
           border-color: $primary;
         }
 
-        &:checked ~ .option-text {
+        &:checked~.option-text {
           color: $primary;
           font-weight: 500;
         }
@@ -524,6 +526,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
       &.success {
         border-top: 4px solid $success;
       }
+
       &.failed {
         border-top: 4px solid $danger;
       }
@@ -570,6 +573,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
       &.success .modal-icon {
         background: rgba($success, 0.1);
+
         i {
           color: $success;
         }
@@ -577,6 +581,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
       &.failed .modal-icon {
         background: rgba($danger, 0.1);
+
         i {
           color: $danger;
         }
@@ -593,6 +598,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
           &.text-success {
             color: $success;
           }
+
           &.text-danger {
             color: $danger;
           }
@@ -641,9 +647,11 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
               &.success {
                 background: $success;
               }
+
               &.warning {
                 background: $warning;
               }
+
               &.danger {
                 background: $danger;
               }
@@ -662,9 +670,11 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
             &.success {
               color: $success;
             }
+
             &.warning {
               color: $warning;
             }
+
             &.danger {
               color: $danger;
             }
@@ -696,6 +706,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
           &.btn-watch-video {
             background: $warning;
+
             &:hover {
               background: darken($warning, 8%);
               box-shadow: 0 4px 12px rgba($warning, 0.4);
@@ -704,6 +715,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
           &.btn-take-quiz {
             background: $primary;
+
             &:hover {
               background: darken($primary, 8%);
               box-shadow: 0 4px 12px rgba($primary, 0.4);
@@ -712,6 +724,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
           &.btn-close-modal {
             background: $primary;
+
             &:hover {
               background: darken($primary, 5%);
               box-shadow: 0 4px 12px rgba($primary, 0.3);
@@ -837,6 +850,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
       &.btn-agree {
         background: $primary;
         color: $white;
+
         &:hover {
           background: darken($primary, 5%);
         }
@@ -846,6 +860,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
         color: $text-secondary !important;
         font-size: 14px !important;
         border: 2px solid $border-color;
+
         &:hover {
           border-color: $danger;
           color: $danger;
@@ -890,6 +905,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -900,6 +916,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -910,6 +927,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     opacity: 0;
     transform: translateY(30px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -932,19 +950,24 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
       .modal-card {
         .modal-body {
           padding: 12px 20px 20px;
+
           h3 {
             font-size: 20px;
           }
+
           .score-section {
             padding: 15px;
+
             .score-value {
               font-size: 36px;
             }
           }
         }
+
         .modal-footer {
           flex-direction: column;
           gap: 10px;
+
           button {
             width: 100%;
             justify-content: center;
@@ -965,9 +988,11 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
         .modal-header {
           padding: 16px 16px 0;
+
           .modal-icon {
             width: 50px;
             height: 50px;
+
             i {
               font-size: 24px;
             }
@@ -976,9 +1001,11 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
         .modal-body {
           padding: 10px 16px 16px;
+
           h3 {
             font-size: 18px;
           }
+
           .score-section {
             .score-value {
               font-size: 30px;
@@ -988,12 +1015,54 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
         .modal-footer {
           padding: 12px 16px 16px;
+
           button {
             padding: 8px 14px;
             font-size: 12px;
           }
         }
       }
+    }
+  }
+}
+
+.input-wrapper {
+  input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 44px; 
+    line-height: 44px; 
+    padding-right: 36px; 
+
+    // Safari-specific pseudo-elements
+    &::-webkit-date-and-time-value {
+      text-align: left;
+      margin: 0;
+    }
+
+    &::-webkit-datetime-edit {
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    &::-webkit-datetime-edit-fields-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-calendar-picker-indicator {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      opacity: 0.6;
+      width: 18px;
+      height: 18px;
+    }
+
+    &::-webkit-inner-spin-button {
+      display: none;
     }
   }
 }
