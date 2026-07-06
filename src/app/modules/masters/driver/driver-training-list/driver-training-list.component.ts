@@ -134,13 +134,13 @@ export class DriverTrainingListComponent implements OnInit {
   }
 
   handleEditAction(event: any) {
-    this.certificationId = event;
-    this.modalRef = this.modalService.open(this.certificationModal, {
-      size: 'xl',
-      centered: true,
-      backdrop: 'static'
-    });
-    // this.router.navigateByUrl(`/country/edit/${event}`)
+    // this.certificationId = event;
+    // this.modalRef = this.modalService.open(this.certificationModal, {
+    //   size: 'xl',
+    //   centered: true,
+    //   backdrop: 'static'
+    // });
+    this.router.navigateByUrl(`/training-result/edit/${event}`)
   }
 
   handleViewAction(event: any) {

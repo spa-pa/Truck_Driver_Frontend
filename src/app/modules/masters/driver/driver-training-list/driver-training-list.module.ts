@@ -7,10 +7,12 @@ import { TableComponent } from '@shared/component/table/table.component';
 import { DriverTrainingListComponent } from './driver-training-list.component';
 import { DriverCertificationComponent } from '../driver-certification/driver-certification.component';
 import { FormsModule } from '@angular/forms';
+import { CuDriverTrainingListComponent } from './cu-driver-training-list/cu-driver-training-list.component';
+import { DriverCertificationService } from '@shared/_http/driver-certification.service';
 
 
 @NgModule({
-  declarations: [DriverTrainingListComponent],
+  declarations: [DriverTrainingListComponent, CuDriverTrainingListComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -18,6 +20,7 @@ import { FormsModule } from '@angular/forms';
     TableComponent,
     DriverCertificationComponent,
     DriverTrainingListRoutingModule
-  ]
+  ],
+  providers:[DriverCertificationService]
 })
 export class DriverTrainingListModule { }

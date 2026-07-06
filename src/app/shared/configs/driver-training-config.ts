@@ -10,7 +10,7 @@ export const DriverTrainingDetailsData: RowData = {
     { label: "Certification Expiry", key: "expiry_date", type: 'date' },
     { label: "Terminal", key: "terminal_name", type: '' },
     { label: "Created At", key: "created_at", type: 'date&time' },
-    { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['view'] }],
+    { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['view', 'edit'] }],
     "data": [],
     "dataKey": 'certification_id',
     "buttonname": 'Create Certification',
@@ -29,13 +29,13 @@ export const DriverTrainingDetailsData: RowData = {
         { label: 'false', value: 'danger' },
         { label: 'true', value: 'success' },
     ],
-    "filterfields": ['countryName'],
+    "filterfields": ['driving_license_number'],
     "isSearch": false
 }
 
 export const DriverTrainingTypeSearchGroup: IFormStructure[] = [
     {
-        name: "country_id",
+        name: "certification_id",
         placeholder: "Country Id",
         label: "Country  Id",
         type: "text",
@@ -44,20 +44,20 @@ export const DriverTrainingTypeSearchGroup: IFormStructure[] = [
         disable: false,
     },
     {
-        name: "country_name",
-        label: "Country Name",
-        placeholder: "Enter name",
+        name: "driver_certification_id",
+        placeholder: "Driver Id",
+        label: "Driver Id",
         type: "text",
         value: "",
-        required: true,
-        isUpperCase: true,
+        hiddenControl: true,
         disable: false,
     },
+
     {
-        name: "country_code",
-        label: "Country Code",
-        placeholder: "Enter country code",
-        type: "text",
+        name: "driving_license_expiry_date",
+        label: "Driving License Expiry",
+        placeholder: "Enter Driving License",
+        type: "date",
         value: "",
         required: true,
         disable: false,
