@@ -18,6 +18,6 @@ export const environment = {
 //     production: false,
 //     ENABLE_ENCRYPTION: false,
 //     API_BASE_URL: 'https://' + domain + version,
-//     SACNNING_BASE_URL: 'http://' + frontenddomain
+//     SACNNING_BASE_URL: frontenddomain
 // };
 
