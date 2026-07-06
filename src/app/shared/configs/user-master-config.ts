@@ -100,6 +100,15 @@ export const UserMasterTypeSearchGroup: IFormStructure[] = [
     //     disable: false,
     // },
     {
+        name: "employee_id",
+        label: "Employee Id",
+        placeholder: "Enter Employee Id",
+        type: "text",
+        value: "",
+        required: false,
+        disable: false,
+    },
+    {
         name: "is_active",
         label: "Is Active",
         placeholder: "Is Active",
