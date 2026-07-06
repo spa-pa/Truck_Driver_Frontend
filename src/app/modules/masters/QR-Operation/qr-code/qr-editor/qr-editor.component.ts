@@ -319,7 +319,7 @@ export class QREditorComponent implements OnInit {
 
   private generateUrl(terminalId: number): string {
     const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
-    return `${baseUrl}/driver-training?terminalId=${terminalId}`;
+    return `${baseUrl}/safety-training?terminalId=${terminalId}`;
   }
 
   // ============================================
