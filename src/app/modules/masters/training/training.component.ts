@@ -387,6 +387,32 @@ export class TrainingComponent implements OnInit, OnDestroy {
         },
       }),
     );
+
+    this.subscriptions.add(
+      this.consentService.getConsentByLanguageId(languageId).subscribe({
+        next: (res) => {
+          if (res?.success && res?.data?.length > 0) {
+            const description = res.data[0]?.description; // ✅ fix here
+            if (description && description.trim().length > 0) {
+              this.termsContent = description;
+              console.log("consent:", this.termsContent);
+            } else {
+              this.termsContent = this.translate.instant("TERMS.CONTENT");
+            }
+          } else {
+            this.termsContent = this.translate.instant("TERMS.CONTENT");
+          }
+          this.isLoadingTerms = false; // set after content is assigned
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Failed to load consent:", err);
+          this.isLoadingTerms = false;
+          this.termsContent = this.translate.instant("TERMS.CONTENT");
+          this.cdr.detectChanges();
+        },
+      }),
+    );
   }
 
   private mapQuestions(questionHeaders: QuestionHeader[]): MappedQuestion[] {
@@ -692,32 +718,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
     event.preventDefault(); // Prevents checkbox from toggling
 
     this.showTermsModal = true;
-    this.isLoadingTerms = true;
-
-    const langId = this.selectedLanguageId;
-
-    this.consentService.getConsentByLanguageId(langId).subscribe({
-      next: (res) => {
-        this.isLoadingTerms = false;
-        if (res?.success && res?.data?.length > 0) {
-          const description = res.data[0].description;
-          if (description && description.trim().length > 0) {
-            this.termsContent = description;
-          } else {
-            this.termsContent = this.translate.instant("TERMS.CONTENT");
-          }
-        } else {
-          this.termsContent = this.translate.instant("TERMS.CONTENT");
-        }
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error("Failed to load consent:", err);
-        this.isLoadingTerms = false;
-        this.termsContent = this.translate.instant("TERMS.CONTENT");
-        this.cdr.detectChanges();
-      },
-    });
+    //this.isLoadingTerms = true;
+    //const langId = this.selectedLanguageId;
   }
 
   closeTermsModal(): void {
