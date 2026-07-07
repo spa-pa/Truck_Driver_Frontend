@@ -31,6 +31,8 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   error: string | null = null;
 
+  isDownloading: boolean = false; // <-- NEW
+
   subs: any;
   qrConfig: any = {
     data: "",
@@ -77,6 +79,8 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
             this.certification = value.data;
             this.isLoading = false;
             this.updateQRCode();
+             // Force QR to render on mobile by re-triggering after DOM paint
+            setTimeout(() => this.updateQRCode(), 100);
           },
           error: (err) => {
             console.error("Error loading certification:", err);
@@ -144,8 +148,13 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
   private readonly PDF_JPEG_QUALITY = 0.85;
 
   async downloadPDF(): Promise<void> {
+    this.isDownloading = true;
+
     const original = this.certificationCard?.nativeElement as HTMLElement;
-    if (!original) return;
+     if (!original) {
+      this.isDownloading = false;
+      return;
+    }
     const wrapper = document.createElement('div');
     wrapper.style.position = 'fixed';
     wrapper.style.top = '0';
@@ -244,6 +253,7 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
       console.error('PDF download error:', error);
     } finally {
       document.body.removeChild(wrapper);
+      this.isDownloading = false;
     }
   }
 

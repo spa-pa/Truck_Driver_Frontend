@@ -1205,3 +1205,10 @@ $shadow: 0 20px 60px rgba($primary, 0.12);
     }
   }
 }
+
+.btn-download:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
