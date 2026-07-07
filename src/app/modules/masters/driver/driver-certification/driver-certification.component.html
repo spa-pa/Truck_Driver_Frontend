@@ -44,14 +44,6 @@
       <div class="pattern-circle circle-3"></div>
     </div>
 
-    <!-- Government Seal -->
-    <!-- <div class="gov-seal">
-            <div class="seal-inner">
-                <i class="fa fa-shield"></i>
-                <span>GOVT</span>
-            </div>
-        </div> -->
-
     <!-- Certification Ribbon -->
     <div class="cert-ribbon" [class.expired]="!isCertificationActive()">
       <span>{{ isCertificationActive() ? "✓ VALID" : "✗ EXPIRED" }}</span>
@@ -60,15 +52,17 @@
     <!-- Header -->
     <div class="cert-header">
       <div class="header-top">
-        <div class="cert-number">
-          <span class="label">Certification No.</span>
-          <span class="value">#{{ certification.certification_id }}</span>
-        </div>
-        <div class="cert-status">
-          <span class="status-badge" [class.active]="isCertificationActive()">
-            <span class="dot"></span>
-            {{ isCertificationActive() ? "ACTIVE" : "EXPIRED" }}
-          </span>
+        <div class="left-group">
+          <div class="cert-number">
+            <span class="label">Certification No.</span>
+            <span class="value">#{{ certification.certification_id }}</span>
+          </div>
+          <!-- <div class="cert-status">
+            <span class="status-badge" [class.active]="isCertificationActive()">
+              <span class="dot"></span>
+              {{ isCertificationActive() ? "ACTIVE" : "EXPIRED" }}
+            </span>
+          </div> -->
         </div>
       </div>
       <div class="header-title">
@@ -94,16 +88,6 @@
         </div>
         <div class="qr-label">Scan to Verify Authenticity</div>
       </div>
-      <!-- <div class="divider-vertical"></div>
-            <div class="photo-container">
-                <div class="photo-frame">
-                    <div class="photo-placeholder">
-                        <i class="fa fa-user-circle"></i>
-                    </div>
-                </div>
-                <div class="photo-label">{{ certification.full_name }}</div>
-                <div class="photo-sub-label">Driver</div>
-            </div> -->
     </div>
 
     <!-- Divider -->
@@ -137,8 +121,8 @@
             <i class="fa fa-id-card"></i>
           </div>
           <div class="detail-content">
-            <span class="detail-label">Driver ID</span>
-            <span class="detail-value">#{{ certification.driver_id }}</span>
+            <span class="detail-label">Terminal</span>
+            <span class="detail-value">{{ certification.terminal_name }}</span>
           </div>
         </div>
         <div class="detail-item">
@@ -147,9 +131,7 @@
           </div>
           <div class="detail-content">
             <span class="detail-label">License Number</span>
-            <span class="detail-value">{{
-              certification.driving_license_number
-            }}</span>
+            <span class="detail-value">{{ certification.driving_license_number }}</span>
           </div>
         </div>
       </div>
@@ -170,9 +152,7 @@
           <div class="expiry-content">
             <span class="expiry-label">License Expiry</span>
             <span class="expiry-value" [class.expired]="isLicenseExpired()">
-              {{
-                certification.driving_license_expiry_date | date: "dd MMM yyyy"
-              }}
+              {{ certification.driving_license_expiry_date | date: "dd MMM yyyy" }}
             </span>
             <span
               class="expiry-days"
@@ -232,22 +212,13 @@
     <!-- Footer -->
     <div class="cert-footer">
       <div class="footer-left">
-        <div class="footer-info">
+        <div class="footer-info mb-2">
           <i class="fa fa-calendar-check-o"></i>
-          <span
-            >Issued:
-            {{ certification.created_at | date: "dd MMM yyyy, hh:mm a" }}</span
-          >
+          <span>Issued: {{ certification.created_at | date: "dd MMM yyyy, hh:mm a" }}</span>
         </div>
-        <div class="footer-info">
+        <div class="footer-info mb-2">
           <i class="fa fa-fingerprint"></i>
-          <span
-            >Verified:
-            {{
-              certification.modified_at || certification.created_at
-                | date: "dd MMM yyyy"
-            }}</span
-          >
+          <span>Verified: {{ certification.modified_at || certification.created_at | date: "dd MMM yyyy" }}</span>
         </div>
       </div>
       <div class="footer-right">

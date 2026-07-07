@@ -9,6 +9,8 @@ export interface DriverCertification {
     mobile_number: string;
     driving_license_number: string;
     driving_license_expiry_date: string;
+    terminal_id: number;
+    terminal_name: string;
     is_active: boolean;
     created_by: string | null;
     created_at: string;

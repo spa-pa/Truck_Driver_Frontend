@@ -1,22 +1,29 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { DriverCertification } from '@shared/models/driver-certification.model';
-import { QRDisplayComponent } from '../../QR-Operation/qr-code/qr-display/qr-display.component';
-import { Subscription } from 'rxjs';
-import { DriverCertificationService } from '@shared/_http/driver-certification.service';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { DriverCertification } from "@shared/models/driver-certification.model";
+import { QRDisplayComponent } from "../../QR-Operation/qr-code/qr-display/qr-display.component";
+import { Subscription } from "rxjs";
+import { DriverCertificationService } from "@shared/_http/driver-certification.service";
 
 @Component({
-  selector: 'app-driver-certification',
+  selector: "app-driver-certification",
   standalone: true,
   imports: [CommonModule, QRDisplayComponent],
-  templateUrl: './driver-certification.component.html',
-  styleUrls: ['./driver-certification.component.scss']
+  templateUrl: "./driver-certification.component.html",
+  styleUrls: ["./driver-certification.component.scss"],
 })
 export class DriverCertificationComponent implements OnInit, OnDestroy {
-  @ViewChild('certificationCard') certificationCard!: ElementRef;
-  @Input() certificationId: string = '';
+  @ViewChild("certificationCard") certificationCard!: ElementRef;
+  @Input() certificationId: string = "";
   @Input() autoLoad: boolean = true;
 
   certificationDetailsId: any;
@@ -26,21 +33,19 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
 
   subs: any;
   qrConfig: any = {
-    data: '',
-    qrColor: '#004761',
-    bgColor: '#ffffff',
+    data: "",
+    qrColor: "#004761",
+    bgColor: "#ffffff",
     qrSize: 150,
-    dotType: 'rounded',
-    bottomText: 'Driver Certification',
+    dotType: "rounded",
+    bottomText: "Driver Certification",
     textSize: 12,
-    textColor: '#004761',
-    fontFamily: 'Inter, sans-serif',
-    fontWeight: 'normal'
+    textColor: "#004761",
+    fontFamily: "Inter, sans-serif",
+    fontWeight: "normal",
   };
 
-  constructor(
-    private driverCertificationService: DriverCertificationService
-  ) { }
+  constructor(private driverCertificationService: DriverCertificationService) {}
 
   ngOnInit(): void {
     this.subs = new Subscription();
@@ -57,7 +62,7 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
 
   loadCertification(): void {
     if (!this.certificationId) {
-      this.error = 'No certification ID provided';
+      this.error = "No certification ID provided";
       return;
     }
 
@@ -65,18 +70,22 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     this.error = null;
 
     this.subs.add(
-      this.driverCertificationService.getDriverCertificationByCertificationId(this.certificationId).subscribe({
-        next: (value) => {
-          this.certification = value.data;
-          this.isLoading = false;
-          this.updateQRCode();
-        },
-        error: (err) => {
-          console.error('Error loading certification:', err);
-          this.isLoading = false;
-          this.error = err.error?.message || 'Failed to load certification details. Please try again.';
-        }
-      })
+      this.driverCertificationService
+        .getDriverCertificationByCertificationId(this.certificationId)
+        .subscribe({
+          next: (value) => {
+            this.certification = value.data;
+            this.isLoading = false;
+            this.updateQRCode();
+          },
+          error: (err) => {
+            console.error("Error loading certification:", err);
+            this.isLoading = false;
+            this.error =
+              err.error?.message ||
+              "Failed to load certification details. Please try again.";
+          },
+        }),
     );
   }
 
@@ -122,86 +131,119 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
   getExpiryProgress(): number {
     if (!this.certification) return 0;
     const totalDays = 365;
-    const daysLeft = this.getDaysUntilExpiry(this.certification.expiry_date) || 0;
+    const daysLeft =
+      this.getDaysUntilExpiry(this.certification.expiry_date) || 0;
     const progress = ((totalDays - daysLeft) / totalDays) * 100;
     return Math.min(Math.max(progress, 0), 100);
   }
 
-  // ============ DOWNLOAD METHODS (IMPROVED) ============
+  // ============ DOWNLOAD PDF (DEVICE-INDEPENDENT) ============
+
+  private readonly PDF_WIDTH = 800;
+  private readonly PDF_SCALE = 2;
+  private readonly PDF_JPEG_QUALITY = 0.85;
 
   async downloadPDF(): Promise<void> {
-    const element = this.certificationCard?.nativeElement;
-    if (!element) return;
+    const original = this.certificationCard?.nativeElement as HTMLElement;
+    if (!original) return;
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'fixed';
+    wrapper.style.top = '0';
+    wrapper.style.left = '-99999px'; // off-screen, but still laid out/rendered
+    wrapper.style.width = `${this.PDF_WIDTH}px`;
+    wrapper.style.background = '#ffffff';
+    wrapper.style.zIndex = '-1';
+    wrapper.style.pointerEvents = 'none';
 
-    // Temporarily add a class to hide buttons and other UI elements
-    element.classList.add('pdf-export');
+    const clone = original.cloneNode(true) as HTMLElement;
+    clone.classList.add('pdf-export');
+    clone.style.width = `${this.PDF_WIDTH}px`;
+    clone.style.maxWidth = `${this.PDF_WIDTH}px`;
+    clone.style.margin = '0';
+    clone.style.animation = 'none';
+    clone.style.transform = 'none';
+    clone.style.setProperty('box-shadow', 'none', 'important');
 
-    // Let icon fonts finish loading and the DOM settle (avoids blurry/missing
-    // icons and mid-animation captures that were causing the cropped footer)
-    if ((document as any).fonts?.ready) {
-      await (document as any).fonts.ready;
-    }
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // Buttons shouldn't appear in the PDF
+    clone.querySelectorAll('.btn-download, .btn-print').forEach((btn) => btn.remove());
+
+    const originalCanvases = original.querySelectorAll('canvas');
+    const clonedCanvases = clone.querySelectorAll('canvas');
+    originalCanvases.forEach((srcCanvas, i) => {
+      const destCanvas = clonedCanvases[i] as HTMLCanvasElement;
+      if (destCanvas) {
+        destCanvas.width = srcCanvas.width;
+        destCanvas.height = srcCanvas.height;
+        destCanvas.getContext('2d')?.drawImage(srcCanvas, 0, 0);
+      }
+    });
+
+    wrapper.appendChild(clone);
+    document.body.appendChild(wrapper);
 
     try {
-      // Capture at a higher resolution for a crisp, non-blurry export
-      const canvas = await html2canvas(element, {
-        scale: 3,
+      const fontsReady = (document as any).fonts?.ready ?? Promise.resolve();
+      const paintSettled = new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      });
+      await Promise.all([fontsReady, paintSettled]);
+
+      const canvas = await html2canvas(clone, {
+        scale: this.PDF_SCALE,
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
         logging: false,
-        scrollX: 0,
-        scrollY: -window.scrollY,
-        windowWidth: element.scrollWidth,
-        windowHeight: element.scrollHeight,
-        width: element.scrollWidth,
-        height: element.scrollHeight,
-        onclone: (clonedDoc) => {
-          // Ensure buttons are hidden and nothing is mid-animation in the clone
-          const clonedElement = clonedDoc.querySelector('.certification-card') as HTMLElement;
-          if (clonedElement) {
-            clonedElement.classList.add('pdf-export');
-            clonedElement.style.animation = 'none';
-            clonedElement.style.transform = 'none';
-            clonedElement.style.boxShadow = 'none';
-          }
-        }
+        imageTimeout: 0,
+        width: this.PDF_WIDTH,
+        windowWidth: this.PDF_WIDTH,
       });
 
-      // PNG keeps text/icons sharp (JPEG compression was the main source of blur)
-      const imageData = canvas.toDataURL('image/png', 1.0);
+      const imageData = canvas.toDataURL('image/jpeg', this.PDF_JPEG_QUALITY);
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+        compress: true,
+      });
 
-      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 8; // small margin so the card fills the page instead of floating in whitespace
+      const margin = 8;
 
-      // Convert the element's real CSS size (96dpi) to mm. Using canvas.width/height
-      // directly here (they're inflated by `scale`) was the bug that produced the
-      // huge top gap and an inconsistent fit - the aspect ratio must come from the
-      // actual element dimensions, not the upscaled capture.
       const pxToMm = 25.4 / 96;
-      const contentWidthMm = element.scrollWidth * pxToMm;
-      const contentHeightMm = element.scrollHeight * pxToMm;
+      const contentWidthMm = this.PDF_WIDTH * pxToMm;
+      const contentHeightMm = (canvas.height / canvas.width) * this.PDF_WIDTH * pxToMm;
 
       const availableWidth = pageWidth - margin * 2;
       const availableHeight = pageHeight - margin * 2;
-      const ratio = Math.min(availableWidth / contentWidthMm, availableHeight / contentHeightMm);
+      const ratio = Math.min(
+        availableWidth / contentWidthMm,
+        availableHeight / contentHeightMm,
+      );
 
       const renderWidth = contentWidthMm * ratio;
       const renderHeight = contentHeightMm * ratio;
       const x = (pageWidth - renderWidth) / 2;
-      const y = margin; // anchor near the top instead of vertically centering
+      const y = margin; // anchor near the top so the card fills the page instead of floating
 
-      pdf.addImage(imageData, 'PNG', x, y, renderWidth, renderHeight);
-      pdf.save(`Driver-Certification-${this.certification?.certification_id || 'Unknown'}.pdf`);
-
+      pdf.addImage(
+        imageData,
+        'JPEG',
+        x,
+        y,
+        renderWidth,
+        renderHeight,
+        undefined,
+        'NONE',
+      );
+      pdf.save(
+        `Driver-Certification-${this.certification?.certification_id || 'Unknown'}.pdf`,
+      );
     } catch (error) {
       console.error('PDF download error:', error);
     } finally {
-      // Remove the class after capture
-      element.classList.remove('pdf-export');
+      document.body.removeChild(wrapper);
     }
   }
 
@@ -209,15 +251,15 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     const element = this.certificationCard?.nativeElement;
     if (!element) return;
 
-    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    const printWindow = window.open("", "_blank", "width=800,height=600");
     if (!printWindow) {
-      alert('Please allow popups for printing');
+      alert("Please allow popups for printing");
       return;
     }
 
-    const styles = Array.from(document.querySelectorAll('style'))
-      .map(style => style.innerHTML)
-      .join('');
+    const styles = Array.from(document.querySelectorAll("style"))
+      .map((style) => style.innerHTML)
+      .join("");
 
     const html = `
       <!DOCTYPE html>
@@ -269,29 +311,20 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     return expiryDate >= today;
   }
 
-  /**
- * Check if the certification is expired
- * @returns boolean - true if expired
- */
   isCertificationExpired(): boolean {
     return !this.isCertificationActive();
   }
 
-  /**
-   * Check if license is expired
-   * @returns boolean - true if expired
-   */
   isLicenseExpired(): boolean {
     const days = this.getLicenseDaysUntilExpiry();
     return days !== null && days <= 0;
   }
 
-  /**
- * Get days until license expiry
- * @returns number of days or null if invalid
- */
   getLicenseDaysUntilExpiry(): number | null {
-    if (!this.certification || !this.certification.driving_license_expiry_date) {
+    if (
+      !this.certification ||
+      !this.certification.driving_license_expiry_date
+    ) {
       return null;
     }
 
@@ -306,19 +339,14 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     return diffDays;
   }
 
-  /**
- * Get days until license expiry with display text
- * @returns string - formatted days remaining or expired message
- */
   getLicenseDaysDisplay(): string {
     const days = this.getLicenseDaysUntilExpiry();
     if (days === null) {
-      return 'N/A';
+      return "N/A";
     }
     if (days > 0) {
       return `${days} days remaining`;
     }
     return `EXPIRED ${Math.abs(days)} days ago`;
   }
-
 }
