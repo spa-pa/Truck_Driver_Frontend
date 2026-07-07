@@ -179,7 +179,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
     }
 
     // Generate the full URL for driver-training
-    const url = `${baseUrl}/driver-training`;
+    const url = `${baseUrl}/safety-training`;
 
     console.log('QR Code URL:', url); // For debugging
 

@@ -10,6 +10,7 @@ import { QrConfigService } from '@shared/_http/qr-config.service';
 import { environment } from '@environments/environment';
 import { currentUser } from '@shared/utils/current-user';
 import { ToastService } from '@shared/services/toast.service';
+import { UrlService } from '@shared/services/url.service';
 
 @Component({
   selector: 'app-qr-editor',
@@ -40,7 +41,8 @@ export class QREditorComponent implements OnInit {
     private qrConfigService: QRConfigService,
     private cdr: ChangeDetectorRef,
     private qrConfigApiService: QrConfigService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private urlService: UrlService
   ) { }
 
   ngOnInit(): void {
@@ -186,7 +188,7 @@ export class QREditorComponent implements OnInit {
           // Update config with API data
           this.config = {
             ...this.config,
-            data: parsedData,
+            data: this.generateUrl(this.terminalId),
             qrColor: jsonConfig.qrColor || this.config.qrColor,
             bgColor: jsonConfig.bgColor || this.config.bgColor,
             qrSize: jsonConfig.qrSize || this.config.qrSize,
@@ -319,7 +321,8 @@ export class QREditorComponent implements OnInit {
 
   private generateUrl(terminalId: number): string {
     const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
-    return `${baseUrl}/safety-training?terminalId=${terminalId}`;
+    // return `${baseUrl}/safety-training?terminalId=${terminalId}`;
+    return this.urlService.getDriverTrainingUrl(this.terminalId);
   }
 
   // ============================================
