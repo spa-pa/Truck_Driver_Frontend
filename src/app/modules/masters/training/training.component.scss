@@ -244,6 +244,119 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     color: $danger;
     margin-top: 2px;
   }
+
+  // Visually hide the raw <input type="file"> elements used for the
+  // camera / upload triggers, while keeping them accessible/clickable via JS.
+  .visually-hidden-file {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .license-photo-actions {
+    display: flex;
+    gap: 12px;
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+    }
+
+    &.error {
+      .license-photo-actions__btn {
+        border-color: $danger;
+        box-shadow: 0 0 0 4px rgba($danger, 0.08);
+      }
+    }
+
+    &__btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 14px;
+      border: 2px dashed $border-color;
+      border-radius: 10px;
+      background: $light-bg;
+      color: $primary;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+
+      i {
+        font-size: 14px;
+        color: $text-secondary;
+      }
+
+      &:hover {
+        border-color: $primary;
+        background: rgba($primary, 0.04);
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+  }
+
+  .license-photo-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border: 2px solid $border-color;
+    border-radius: 10px;
+    background: $white;
+
+    img {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    &__meta {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    &__name {
+      font-size: 13px;
+      color: $primary;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__remove {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      background: none;
+      color: $danger;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
 .btn-primary,

@@ -151,19 +151,59 @@
               >{{ "REGISTRATION.LICENSE_PHOTO" | translate }}
               <span class="required">*</span></label
             >
-            <div class="input-wrapper file-input-wrapper">
-              <i class="fas fa-camera input-icon"></i>
-              <input
-                type="file"
-                class="form-control"
-                accept="image/*"
-                (change)="onFileSelected($event)"
-                [class.error]="
-                  registrationForm.get('driving_license')?.invalid &&
-                  registrationForm.get('driving_license')?.touched
-                "
-              />
+
+            <!-- Hidden inputs: one opens the camera directly, the other opens the normal file/gallery picker -->
+            <input
+              #cameraInput
+              type="file"
+              accept="image/*"
+              capture="environment"
+              class="visually-hidden-file"
+              (change)="onFileSelected($event)"
+            />
+            <input
+              #fileInput
+              type="file"
+              accept="image/*"
+              class="visually-hidden-file"
+              (change)="onFileSelected($event)"
+            />
+
+            <!-- Preview once a photo has been captured/selected -->
+            <div class="license-photo-preview" *ngIf="licensePhotoPreview">
+              <img [src]="licensePhotoPreview" alt="Driving license preview" />
+              <div class="license-photo-preview__meta">
+                <span class="license-photo-preview__name">{{ licensePhotoFileName }}</span>
+                <button
+                  type="button"
+                  class="license-photo-preview__remove"
+                  (click)="removeLicensePhoto($event)"
+                >
+                  <i class="fas fa-times"></i>
+                  {{ "REGISTRATION.LICENSE_PHOTO_REMOVE" | translate }}
+                </button>
+              </div>
             </div>
+
+            <!-- Picker actions: shown until a photo is chosen -->
+            <div
+              class="license-photo-actions"
+              *ngIf="!licensePhotoPreview"
+              [class.error]="
+                registrationForm.get('driving_license')?.invalid &&
+                registrationForm.get('driving_license')?.touched
+              "
+            >
+              <button type="button" class="license-photo-actions__btn" (click)="openCamera()">
+                <i class="fas fa-camera"></i>
+                {{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}
+              </button>
+              <button type="button" class="license-photo-actions__btn" (click)="openFileUpload()">
+                <i class="fas fa-upload"></i>
+                {{ "REGISTRATION.LICENSE_PHOTO_UPLOAD" | translate }}
+              </button>
+            </div>
+
             <div
               class="error-message"
               *ngIf="

@@ -163,8 +163,8 @@ const mastersData: Routes = [
     {
         path: 'expiry-config',
         data: {
-            title: "Config Expiry",
-            breadcrumb: "Config Expiry",
+            title: "Certificate Expiry",
+            breadcrumb: "Certificate Expiry",
             pageId: 21
         },
         loadChildren: () => import('../../modules/masters/expiry-config/expiry-config.module').then(r => r.ExpiryConfigModule),

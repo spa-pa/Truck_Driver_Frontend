@@ -7,29 +7,29 @@ const routes: Routes = [
   {
     path: '', component: ExpiryConfigComponent,
     data: {
-      title: "Expiry Config",
-      breadcrumb: "Expiry Config",
+      title: "Certificate Expiry",
+      breadcrumb: "certificate Expiry",
     }
   },
   {
     path: 'create', component: CuExpiryConfigComponent,
     data: {
-      title: "Create Expiry Config",
-      breadcrumb: "Create Expiry Config",
+      title: "Create Certificate Expiry",
+      breadcrumb: "Create Certificate Expiry",
     }
   },
   {
     path: 'edit/:id', component: CuExpiryConfigComponent,
     data: {
-      title: "Edit Expiry Config",
-      breadcrumb: "Edit Expiry Config",
+      title: "Edit Certificate Expiry",
+      breadcrumb: "Edit Certificate Expiry",
     }
   },
   {
     path: 'view/:id', component: CuExpiryConfigComponent,
     data: {
-      title: "View Expiry Config",
-      breadcrumb: "View Expiry Config",
+      title: "View Certificate Expiry",
+      breadcrumb: "View Certificate Expiry",
     }
   }
 ];

@@ -27,10 +27,12 @@
     "LICENSE_EXPIRY_ERROR": "ड्राइविंग लाइसेंस समाप्ति तिथि आवश्यक है",
     "START": "प्रशिक्षण शुरू करें",
     "REGISTERING": "पंजीकरण हो रहा है...",
-
     "LICENSE_PHOTO": "ड्राइवर लाइसेंस फोटो",
     "LICENSE_PHOTO_PLACEHOLDER": "लाइसेंस फोटो अपलोड करें",
     "LICENSE_PHOTO_ERROR": "ड्राइवर लाइसेंस फोटो आवश्यक है",
+    "LICENSE_PHOTO_TAKE": "फोटो लें",
+    "LICENSE_PHOTO_UPLOAD": "फोटो अपलोड करें",
+    "LICENSE_PHOTO_REMOVE": "फोटो हटाएं",
     "I_AGREE_TO": "मैं सहमत हूँ",
     "TERMS_OF_SERVICE": "सेवा की शर्तें",
     "TERMS_REQUIRED": "आगे बढ़ने के लिए आपको सेवा की शर्तों से सहमत होना होगा।",

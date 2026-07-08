@@ -127,6 +127,8 @@ interface QuizResult {
 export class TrainingComponent implements OnInit, OnDestroy {
   @ViewChild("videoPlayer") videoPlayer!: ElementRef<HTMLVideoElement>;
   @ViewChild("certificationModal") certificationModal!: TemplateRef<any>;
+  @ViewChild("cameraInput") cameraInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>;
 
   driverDetails: any;
   languages: Language[] = [];
@@ -163,6 +165,10 @@ export class TrainingComponent implements OnInit, OnDestroy {
   isLoadingTerms: boolean = false;
 
   terminalId: number | null = null;
+
+  // Driving license photo (camera / upload)
+  licensePhotoPreview: string | null = null;
+  licensePhotoFileName: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -255,6 +261,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.showResultModal = false;
     this.certificationId = null;
     this.initRegistrationForm();
+    this.licensePhotoPreview = null;
+    this.licensePhotoFileName = null;
     this.showRegistration = true;
     this.showVideo = false;
     this.showCertification = false;
@@ -735,11 +743,49 @@ export class TrainingComponent implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      this.registrationForm.patchValue({ driving_license: file });
-      this.registrationForm.get("driving_license")?.updateValueAndValidity();
+      this.setLicensePhoto(file);
     } else {
       this.registrationForm.patchValue({ driving_license: null });
     }
+    // Reset the input value so selecting the same file again still fires "change"
+    input.value = "";
+  }
+
+  private setLicensePhoto(file: File): void {
+    this.registrationForm.patchValue({ driving_license: file });
+    this.registrationForm.get("driving_license")?.updateValueAndValidity();
+    this.registrationForm.get("driving_license")?.markAsTouched();
+
+    this.licensePhotoFileName = file.name;
+
+    // Build a preview so the driver can see the photo they captured/uploaded
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.licensePhotoPreview = reader.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Opens the device camera directly (mobile browsers show the camera UI
+  // because of the `capture` attribute on the hidden input)
+  openCamera(): void {
+    this.cameraInput?.nativeElement.click();
+  }
+
+  // Opens the regular file/photo picker (gallery, files app, etc.)
+  openFileUpload(): void {
+    this.fileInput?.nativeElement.click();
+  }
+
+  removeLicensePhoto(event?: Event): void {
+    event?.stopPropagation();
+    this.licensePhotoPreview = null;
+    this.licensePhotoFileName = null;
+    this.registrationForm.patchValue({ driving_license: null });
+    this.registrationForm.get("driving_license")?.updateValueAndValidity();
+    if (this.cameraInput) this.cameraInput.nativeElement.value = "";
+    if (this.fileInput) this.fileInput.nativeElement.value = "";
   }
 
   // ------------------------------------------------------------
