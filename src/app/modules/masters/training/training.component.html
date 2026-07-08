@@ -152,7 +152,9 @@
               <span class="required">*</span></label
             >
 
-            <!-- Hidden inputs: one opens the camera directly, the other opens the normal file/gallery picker -->
+            <!-- Fallback input: used only if the live camera (getUserMedia) can't be opened,
+                 e.g. permission denied or an older browser. Normal camera capture now happens
+                 in the in-page camera modal below, which works on desktop AND mobile. -->
             <input
               #cameraInput
               type="file"
@@ -194,7 +196,7 @@
                 registrationForm.get('driving_license')?.touched
               "
             >
-              <button type="button" class="license-photo-actions__btn" (click)="openCamera()">
+              <button type="button" class="license-photo-actions__btn" (click)="openLiveCamera()">
                 <i class="fas fa-camera"></i>
                 {{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}
               </button>
@@ -212,6 +214,94 @@
               "
             >
               {{ "REGISTRATION.LICENSE_PHOTO_ERROR" | translate }}
+            </div>
+
+            <!-- Live camera modal: works on desktop webcams AND mobile cameras -->
+            <div
+              class="camera-modal-overlay"
+              *ngIf="showCameraModal"
+              (click)="closeCamera()"
+            >
+              <div class="camera-modal" (click)="$event.stopPropagation()">
+                <div class="camera-modal__header">
+                  <span>{{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}</span>
+                  <button
+                    type="button"
+                    class="camera-modal__close"
+                    (click)="closeCamera()"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+
+                <div class="camera-modal__body">
+                  <!-- Live preview: kept mounted (hidden, not removed) so the
+                       stream's srcObject survives a retake -->
+                  <video
+                    #cameraVideo
+                    [hidden]="capturedFrame"
+                    autoplay
+                    playsinline
+                    muted
+                    class="camera-modal__video"
+                  ></video>
+
+                  <!-- Snapshot preview before confirming -->
+                  <img
+                    *ngIf="capturedFrame"
+                    [src]="capturedFrame"
+                    alt="Captured photo"
+                    class="camera-modal__video"
+                  />
+
+                  <canvas #cameraCanvas class="visually-hidden-file"></canvas>
+
+                  <div class="camera-modal__error" *ngIf="cameraError">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    {{ cameraError }}
+                    <button
+                      type="button"
+                      class="camera-modal__fallback-link"
+                      (click)="openCameraFallback()"
+                    >
+                      {{ "REGISTRATION.LICENSE_PHOTO_UPLOAD" | translate }}
+                    </button>
+                  </div>
+                </div>
+
+                <div class="camera-modal__footer">
+                  <ng-container *ngIf="!capturedFrame">
+                    <button
+                      type="button"
+                      class="camera-modal__btn camera-modal__btn--capture"
+                      [disabled]="!cameraStreamActive"
+                      (click)="capturePhoto()"
+                    >
+                      <i class="fas fa-camera"></i>
+                      {{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}
+                    </button>
+                  </ng-container>
+
+                  <ng-container *ngIf="capturedFrame">
+                    <button
+                      type="button"
+                      class="camera-modal__btn camera-modal__btn--secondary"
+                      (click)="retakePhoto()"
+                    >
+                      <i class="fas fa-redo"></i>
+                      {{ "REGISTRATION.LICENSE_PHOTO_RETAKE" | translate }}
+                    </button>
+                    <button
+                      type="button"
+                      class="camera-modal__btn camera-modal__btn--capture"
+                      (click)="confirmCapturedPhoto()"
+                    >
+                      <i class="fas fa-check"></i>
+                      {{ "REGISTRATION.LICENSE_PHOTO_USE" | translate }}
+                    </button>
+                  </ng-container>
+                </div>
+              </div>
             </div>
           </div>
         </div>

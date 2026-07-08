@@ -129,6 +129,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
   @ViewChild("certificationModal") certificationModal!: TemplateRef<any>;
   @ViewChild("cameraInput") cameraInput!: ElementRef<HTMLInputElement>;
   @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("cameraVideo") cameraVideo?: ElementRef<HTMLVideoElement>;
+  @ViewChild("cameraCanvas") cameraCanvas?: ElementRef<HTMLCanvasElement>;
 
   driverDetails: any;
   languages: Language[] = [];
@@ -170,6 +172,13 @@ export class TrainingComponent implements OnInit, OnDestroy {
   licensePhotoPreview: string | null = null;
   licensePhotoFileName: string | null = null;
 
+  // Live camera modal state (getUserMedia based, works on desktop + mobile)
+  showCameraModal: boolean = false;
+  cameraStreamActive: boolean = false;
+  cameraError: string | null = null;
+  capturedFrame: string | null = null;
+  private mediaStream: MediaStream | null = null;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -199,6 +208,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    this.stopCameraStream();
   }
 
   // ------------------------------------------------------------
@@ -511,7 +521,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const formValue = this.registrationForm.value;
     console.log(this.terminalId);
-    debugger
     const formData = new FormData();
     formData.append("language_id", formValue.language_id);
     formData.append("full_name", formValue.full_name);
@@ -767,9 +776,120 @@ export class TrainingComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
   }
 
-  // Opens the device camera directly (mobile browsers show the camera UI
-  // because of the `capture` attribute on the hidden input)
-  openCamera(): void {
+  // ------------------------------------------------------------
+  // Live camera capture (works on desktop webcams AND mobile cameras)
+  // ------------------------------------------------------------
+  // The `capture="environment"` attribute on a hidden file input only works
+  // on mobile OS file pickers - desktop browsers ignore it and just open the
+  // normal file picker. To get a real camera experience on every device we
+  // open a live getUserMedia() preview in a modal instead, and only fall
+  // back to the hidden file input if getUserMedia isn't available/denied.
+  async openLiveCamera(): Promise<void> {
+    this.cameraError = null;
+    this.capturedFrame = null;
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      // Very old / unsupported browser - fall back to native picker
+      this.openCameraFallback();
+      return;
+    }
+
+    this.showCameraModal = true;
+    this.cdr.detectChanges();
+
+    try {
+      this.mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" },
+        audio: false,
+      });
+    } catch (err) {
+      // Some desktops have no "environment" camera - retry with any camera
+      try {
+        this.mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false,
+        });
+      } catch (fallbackErr) {
+        this.cameraError = this.translate.instant(
+          "REGISTRATION.LICENSE_PHOTO_CAMERA_DENIED"
+        );
+        this.cameraStreamActive = false;
+        this.cdr.detectChanges();
+        return;
+      }
+    }
+
+    if (this.cameraVideo?.nativeElement) {
+      this.cameraVideo.nativeElement.srcObject = this.mediaStream;
+      await this.cameraVideo.nativeElement.play();
+    }
+    this.cameraStreamActive = true;
+    this.cdr.detectChanges();
+  }
+
+  capturePhoto(): void {
+    const video = this.cameraVideo?.nativeElement;
+    const canvas = this.cameraCanvas?.nativeElement;
+    if (!video || !canvas) return;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    this.capturedFrame = canvas.toDataURL("image/jpeg", 0.92);
+    this.cdr.detectChanges();
+  }
+
+  retakePhoto(): void {
+    this.capturedFrame = null;
+    this.cdr.detectChanges();
+    // Safety net: some browsers pause a hidden <video>; make sure it's playing
+    const video = this.cameraVideo?.nativeElement;
+    if (video && video.paused) {
+      video.play().catch(() => {});
+    }
+  }
+
+  confirmCapturedPhoto(): void {
+    const canvas = this.cameraCanvas?.nativeElement;
+    if (!canvas) return;
+
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) return;
+        const file = new File([blob], `license-photo-${Date.now()}.jpg`, {
+          type: "image/jpeg",
+        });
+        this.setLicensePhoto(file);
+        this.closeCamera();
+      },
+      "image/jpeg",
+      0.92
+    );
+  }
+
+  closeCamera(): void {
+    this.stopCameraStream();
+    this.showCameraModal = false;
+    this.capturedFrame = null;
+    this.cameraError = null;
+    this.cdr.detectChanges();
+  }
+
+  private stopCameraStream(): void {
+    this.mediaStream?.getTracks().forEach((track) => track.stop());
+    this.mediaStream = null;
+    this.cameraStreamActive = false;
+    if (this.cameraVideo?.nativeElement) {
+      this.cameraVideo.nativeElement.srcObject = null;
+    }
+  }
+
+  // Fallback: only used if getUserMedia is unavailable or permission is denied.
+  // Opens the hidden file input with the `capture` attribute (mobile only).
+  openCameraFallback(): void {
+    this.showCameraModal = false;
     this.cameraInput?.nativeElement.click();
   }
 
