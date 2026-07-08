@@ -44,16 +44,26 @@ export class HeaderComponent {
     this.navmenu.item.subscribe((menuItems: Menu[]) =>
       this.item = menuItems
     );
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.navmenu.closeSidebar = true;
-        this.removeFix();
-      });
+    // this.router.events
+    //   .pipe(filter(event => event instanceof NavigationEnd))
+    //   .subscribe(() => {
+    //     this.navmenu.closeSidebar = true;
+    //     this.removeFix();
+    //   });
   }
 
   ngOnInit(): void {
     this.profileDetails = currentUser();
+
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        // Only for mobile devices
+        if (window.innerWidth <= 991) { // Bootstrap lg breakpoint
+          this.navmenu.closeSidebar = true;
+          this.removeFix();
+        }
+      });
   }
 
   openMenu() {
