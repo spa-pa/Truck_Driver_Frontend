@@ -105,18 +105,18 @@ export const RoleFormGroup: IFormStructure[] = [
         required: true,
         colsize: "col-6"
     },
-    {
-        name: "menu_id",
-        label: "Based On",
-        placeholder: "Based On",
-        type: "select",
-        value: "",
-        bindValue: 'menu_id',
-        bindLabel: 'menu_id',
-        listName: 'menu-set',
-        required: true,
-        disable: false,
-    },
+    // {
+    //     name: "menu_id",
+    //     label: "Based On",
+    //     placeholder: "Based On",
+    //     type: "select",
+    //     value: "",
+    //     bindValue: 'menu_id',
+    //     bindLabel: 'menu_id',
+    //     listName: 'menu-set',
+    //     required: true,
+    //     disable: false,
+    // },
 ]
 
 export const PermissionFormGroup: IFormStructure[] = [

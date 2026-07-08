@@ -21,7 +21,7 @@ const mastersData: Routes = [
         data: {
             title: "City",
             breadcrumb: "City",
-            pageId: 2
+            pageId: 7
         },
         loadChildren: () => import('../../modules/masters/city/city.module').then(r => r.CityModule),
         // canActivate: [PermissionGuard]
@@ -31,7 +31,7 @@ const mastersData: Routes = [
         data: {
             title: "Country",
             breadcrumb: "Country",
-            pageId: 4
+            pageId: 5
         },
         loadChildren: () => import('../../modules/masters/country/country.module').then(r => r.CountryModule),
         // canActivate: [PermissionGuard]
@@ -41,7 +41,7 @@ const mastersData: Routes = [
         data: {
             title: "State",
             breadcrumb: "State",
-            pageId: 3
+            pageId: 6
         },
         loadChildren: () => import('../../modules/masters/state/state.module').then(r => r.StateModule),
         // canActivate: [PermissionGuard]
@@ -51,7 +51,7 @@ const mastersData: Routes = [
         data: {
             title: "Language",
             breadcrumb: "Language",
-            pageId: 2
+            pageId: 8
         },
         loadChildren: () => import('../../modules/masters/language/language.module').then(r => r.LanguageModule),
         // canActivate: [PermissionGuard]
@@ -81,7 +81,7 @@ const mastersData: Routes = [
         data: {
             title: "Video Configuration",
             breadcrumb: "Video Configuration",
-            pageId: 2
+            pageId: 13
         },
         loadComponent: () => import('../../modules/video-config/video-config.component').then(r => r.VideoConfigComponent),
         //loadChildren: () => import('../../modules/video-config/video-config.module').then(r => r.VideoConfigModule),
@@ -93,7 +93,7 @@ const mastersData: Routes = [
         data: {
             title: "Quiz Configuration",
             breadcrumb: "Quiz Configuration",
-            pageId: 2
+            pageId: 14
         },
         loadComponent: () => import('../../modules/quiz-config/quiz-config.component').then(r => r.QuizConfigComponent)
         //loadChildren: () => import('../../modules/quiz-config/quiz-config.module').then(r => r.QuizConfigModule),
@@ -104,7 +104,7 @@ const mastersData: Routes = [
         data: {
             title: "QR Scanner",
             breadcrumb: "QR Scanner",
-            pageId: 2
+            pageId: 11
         },
         loadComponent: () => import('../../modules/masters/QR-Operation/qr-scan-driver-details/qr-scan-driver-details.component').then(r => r.QRScanDriverDetailsComponent),
         // canActivate: [PermissionGuard]
@@ -114,7 +114,7 @@ const mastersData: Routes = [
         data: {
             title: "QR Code Config",
             breadcrumb: "QR Code Config",
-            pageId: 2
+            pageId: 15
         },
         //loadComponent: () => import('../../modules/masters/qr-code/qr-editor/qr-editor.component').then(r => r.QREditorComponent),
         loadComponent: () => import('../../modules/masters/QR-Operation/qr-code/qr-editor/qr-editor.component').then(r => r.QREditorComponent),
@@ -125,7 +125,7 @@ const mastersData: Routes = [
         data: {
             title: "Training Results",
             breadcrumb: "Training Results",
-            pageId: 2
+            pageId: 12
         },
         loadChildren: () => import('../../modules/masters/driver/driver-training-list/driver-training-list.module').then(r => r.DriverTrainingListModule),
         // canActivate: [PermissionGuard]
@@ -145,7 +145,7 @@ const mastersData: Routes = [
         data: {
             title: "Driver Entry List",
             breadcrumb: "Driver Entry List",
-            pageId: 2
+            pageId: 10
         },
         loadChildren: () => import('../../modules/gateSecurity/driver-entry-list/driver-entry-list.module').then(r => r.DriverEntryListModule),
         // canActivate: [PermissionGuard]
@@ -212,7 +212,7 @@ const pagePermissionRoutes: Routes = [
         data: {
             title: "Role",
             breadcrumb: "role",
-            pageId: 10,
+            pageId: 2,
         },
         loadChildren: () => import('@modules/masters/access-control/role/role.module').then(r => r.RoleModule),
         // canActivate: [PermissionGuard]
@@ -222,7 +222,7 @@ const pagePermissionRoutes: Routes = [
         data: {
             title: "Role page permission",
             breadcrumb: "role-permission",
-            pageId: 11,
+            pageId: 3,
         },
         loadChildren: () => import('@modules/masters/access-control/role-page-permission/role-page-permission.module').then(r => r.RolePagePermissionModule),
         // canActivate: [PermissionGuard]
