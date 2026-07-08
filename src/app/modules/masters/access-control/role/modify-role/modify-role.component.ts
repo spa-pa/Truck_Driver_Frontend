@@ -31,9 +31,9 @@ export class ModifyRoleComponent implements OnInit, AfterViewInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private roleControllerService: RoleService,
     private toastService: ToastService,
-    private loader:LoaderService,
-    private menuService:MenuService
-  ) {}
+    private loader: LoaderService,
+    private menuService: MenuService
+  ) { }
 
   ngOnInit(): void {
     this.roleSearchGroupStructure = JSON.parse(JSON.stringify(RoleFormGroup));
@@ -93,12 +93,13 @@ export class ModifyRoleComponent implements OnInit, AfterViewInit, OnDestroy {
       next: value => {
         this.loader.hideLoader();
         this.roleDetailsData.data = value.data;
-      },error:()=>{this.loader.hideLoader();}
+      }, error: () => { this.loader.hideLoader(); }
     }));
   }
 
   handleSubmit(event: any): void {
     const formData = JSON.parse(JSON.stringify(event.formValue));
+    formData.menu_id = 1;
     this.loader.showLoader();
     switch (this.routeName) {
       case 'create':

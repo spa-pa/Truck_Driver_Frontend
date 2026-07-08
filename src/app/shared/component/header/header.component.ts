@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { LayoutService } from '../../services/layout.service';
 import { NavmenuService, Menu } from '../../services/navmenu.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { SearchComponent } from './search/search.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -11,6 +11,7 @@ import { currentUser } from '@shared/utils/current-user';
 import { QrComponent } from './qr/qr.component';
 import { QrScannerComponent } from './qr/qr-scanner/qr-scanner.component';
 import { QRScannerModalComponent } from './qr/qr-scanner-modal/qr-scanner-modal.component';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -39,10 +40,16 @@ export class HeaderComponent {
   public show = false;
   public profileDetails: any;
 
-  constructor(public layout: LayoutService, public navmenu: NavmenuService) {
+  constructor(public layout: LayoutService, public navmenu: NavmenuService, private router: Router) {
     this.navmenu.item.subscribe((menuItems: Menu[]) =>
       this.item = menuItems
     );
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.navmenu.closeSidebar = true;
+        this.removeFix();
+      });
   }
 
   ngOnInit(): void {
@@ -113,6 +120,31 @@ export class HeaderComponent {
     this.searchResult = false;
     this.searchResultEmpty = false;
     this.navmenu.language = false;
+    this.navmenu.closeSidebar = true;
+    this.removeFix();
   }
+
+  // @HostListener('document:click', ['$event'])
+  // onDocumentClick(event: MouseEvent) {
+  //   const target = event.target as HTMLElement;
+
+  //   if (!target.closest('.page-header') && !target.closest('.sidebar-wrapper')) {
+  //     this.navmenu.closeSidebar = true;
+  //     this.removeFix();
+  //   }
+  // }
+
+  // @HostListener('document:click', ['$event'])
+  // onDocumentClick(event: MouseEvent) {
+  //   const target = event.target as HTMLElement;
+
+  //   if (
+  //     !target.closest('.page-header') &&
+  //     !target.closest('.sidebar-wrapper')
+  //   ) {
+  //     this.navmenu.closeSidebar = true;
+  //     this.removeFix();
+  //   }
+  // }
 
 }
