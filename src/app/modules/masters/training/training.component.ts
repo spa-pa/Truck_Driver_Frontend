@@ -511,7 +511,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const formValue = this.registrationForm.value;
     console.log(this.terminalId);
-    debugger
     const formData = new FormData();
     formData.append("language_id", formValue.language_id);
     formData.append("full_name", formValue.full_name);

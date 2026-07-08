@@ -70,7 +70,6 @@ export class CuLanguageComponent implements OnInit, AfterViewInit {
   }
 
   handleSubmit(event: any) {
-    debugger;
     let formData = JSON.parse(JSON.stringify(event["formValue"]));
     switch (this.routeName) {
       case "create":
