@@ -1020,7 +1020,9 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   margin-bottom: 8px;
 
   .terms-label {
-    display: flex;
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
     align-items: center;
     gap: 10px;
     cursor: pointer;
