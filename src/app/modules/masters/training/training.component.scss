@@ -262,20 +262,22 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   .license-photo-actions {
     display: flex;
     gap: 12px;
+    border: 2px solid transparent;       // ← border moved here
+    border-radius: 10px;                   // ← rounded corners for the group
+    padding: 8px;
 
     @media (max-width: 480px) {
       flex-direction: column;
     }
 
     &.error {
-      .license-photo-actions__btn {
         border-color: $danger;
-        box-shadow: 0 0 0 4px rgba($danger, 0.08);
-      }
+        box-shadow: 0 0 0 4px rgba($danger, 0.08);   
     }
 
     &__btn {
-      flex: 1;
+      border: none;
+      //flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -296,7 +298,6 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
       }
 
       &:hover {
-        border-color: $primary;
         background: rgba($primary, 0.04);
       }
 

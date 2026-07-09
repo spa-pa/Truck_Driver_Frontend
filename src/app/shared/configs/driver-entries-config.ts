@@ -23,8 +23,8 @@ export const DriverEntriesDetailsData: RowData = {
         "mobile_number": "Mobile Number",
         "driving_license_expiry_date": "License Expiry Date",
         "terminal_name" : "Terminal",
-        "expiry_date": "Certification Expiry Date",
-        "created_at": "Created At",
+        "certification_expiry_date": "Certification Expiry Date",
+        "created_at": "Gate In",
     },
     "statuses": [
         { label: 'false', value: 'danger' },

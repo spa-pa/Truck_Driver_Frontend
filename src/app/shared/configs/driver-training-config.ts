@@ -23,7 +23,7 @@ export const DriverTrainingDetailsData: RowData = {
         "driving_license_expiry_date": "License Expiry Date",
         "terminal_name" : "Terminal",
         "expiry_date": "Certification Expiry Date",
-        "created_at": "Created At",
+        "created_at": "Training Date",
     },
     "statuses": [
         { label: 'false', value: 'danger' },
