@@ -1,0 +1,319 @@
+<div class="chat-page">
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="chat-header">
+
+        <div class="header-left">
+
+            <div class="ai-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+
+            <div>
+
+                <h2>Truck Driver AI Assistant</h2>
+
+                <p>
+
+                    <span class="status-dot"></span>
+
+                    Online
+
+                </p>
+
+            </div>
+            <span class="dev-badge">Development Phase</span>
+
+        </div>
+
+        <div class="header-right">
+
+            <button class="icon-btn" (click)="clearChat()">
+
+                <i class="fas fa-trash"></i>
+
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- ================= CHAT BODY ================= -->
+
+    <div class="chat-body" #scrollContainer>
+
+        <div class="day-divider" *ngIf="messages.length>0">
+
+            <span>
+
+                Today
+
+            </span>
+
+        </div>
+
+        <!-- Welcome -->
+
+        <div class="welcome-card" *ngIf="messages.length==0">
+
+            <div class="logo">
+
+                <i class="fas fa-robot"></i>
+
+            </div>
+
+            <h2>
+
+                Truck Driver AI Assistant
+
+            </h2>
+
+            <p>
+
+                Ask anything ...
+
+                Examples:
+
+            </p>
+
+            <div class="quick-actions mt-3">
+
+                <button (click)="question='Show all terminal list'">
+
+                    Show Terminal List
+
+                </button>
+
+                <button (click)="question='How many drivers are register?'">
+
+                    Count Drivers
+
+                </button>
+
+                <button (click)="question='How many certificates are register?'">
+
+                    Count Certificates
+
+                </button>
+
+                <button (click)="question='Show certificates generate today'">
+
+                    Todays Certificates
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Messages -->
+
+        <ng-container *ngFor="let message of messages">
+
+            <!-- USER -->
+
+            <div class="message user" *ngIf="message.role=='user'">
+
+                <div class="message-content">
+
+                    <div class="bubble user-bubble">
+
+                        {{message.question}}
+
+                    </div>
+
+                    <div class="time">
+
+                        {{message.time}}
+
+                    </div>
+
+                </div>
+
+                <div class="message-avatar">
+
+                    <i class="fas fa-user"></i>
+
+                </div>
+
+            </div>
+
+            <!-- AI -->
+
+            <div class="message ai" *ngIf="message.role=='assistant'">
+
+                <div class="message-avatar ai">
+
+                    <i class="fas fa-robot"></i>
+
+                </div>
+
+                <div class="message-content">
+
+                    <div class="bubble ai-bubble">
+
+                        <div class="answer" *ngIf="message.is_one_line">
+
+                            {{message.answer}}
+
+                        </div>
+
+                        <!-- TABLE -->
+
+                        <div class="table-card" *ngIf="!message.is_one_line">
+
+                            <div class="table-header">
+
+                                <div>
+
+                                    <h4>
+
+                                        Bot Result
+
+                                    </h4>
+
+                                    <small>
+
+                                        {{message.total_records}}
+
+                                        Records Found
+
+                                    </small>
+
+                                </div>
+
+                                <button class="excel-btn" (click)="exportExcel(message)">
+
+                                    <i class="fas fa-file-excel"></i>
+
+                                    Export Excel
+
+                                </button>
+
+                            </div>
+
+                            <div class="table-responsive">
+
+                                <table>
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th *ngFor="let col of message.columns">
+
+                                                {{col}}
+
+                                            </th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr *ngFor="let row of message.data">
+
+                                            <td *ngFor="let col of message.columns">
+
+                                                {{row[col]}}
+
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ACTIONS -->
+
+                    <div class="message-actions">
+
+                        <button (click)="copy(message.answer || '')">
+
+                            <i class="far fa-copy"></i>
+
+                            Copy
+
+                        </button>
+
+                        <button>
+
+                            <i class="far fa-thumbs-up"></i>
+
+                        </button>
+
+                        <button>
+
+                            <i class="far fa-thumbs-down"></i>
+
+                        </button>
+
+                    </div>
+
+                    <div class="time">
+
+                        {{message.time}}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </ng-container>
+
+        <!-- Typing -->
+
+        <div class="message ai" *ngIf="loading">
+
+            <div class="message-avatar ai">
+
+                <i class="fas fa-robot"></i>
+
+            </div>
+
+            <div class="typing">
+
+                <span></span>
+
+                <span></span>
+
+                <span></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="chat-footer">
+
+        <div class="input-wrapper">
+
+            <textarea [(ngModel)]="question" rows="1" placeholder="Ask anything ..."
+                (keydown.enter)="sendMessage(); $event.preventDefault()">
+
+            </textarea>
+
+            <button class="send-btn" (click)="sendMessage()">
+
+                <i class="fas fa-paper-plane"></i>
+
+            </button>
+
+        </div>
+
+    </footer>
+
+</div>
