@@ -33,7 +33,7 @@
     "LICENSE_PHOTO_TAKE": "फोटो लें",
     "LICENSE_PHOTO_UPLOAD": "फोटो अपलोड करें",
     "LICENSE_PHOTO_REMOVE": "फोटो हटाएं",
-     "LICENSE_PHOTO_RETAKE": "दोबारा फोटो लें",
+    "LICENSE_PHOTO_RETAKE": "दोबारा फोटो लें",
     "LICENSE_PHOTO_USE": "इस फोटो का उपयोग करें",
     "LICENSE_PHOTO_CAMERA_DENIED": "कैमरा एक्सेस अस्वीकृत है या उपलब्ध नहीं है। कृपया इसके बजाय फोटो अपलोड करें।",
     "I_AGREE_TO": "मैं सहमत हूँ",
@@ -61,7 +61,12 @@
     "SUBMIT": "जमा करें और प्रमाणपत्र प्राप्त करें",
     "SUBMITTING": "जमा हो रहा है...",
     "NO_QUESTIONS": "कोई प्रश्नोत्तरी प्रश्न उपलब्ध नहीं है। कृपया व्यवस्थापक से संपर्क करें।",
-    "AUDIO_NOT_SUPPORTED": "आपका ब्राउज़र ऑडियो तत्व का समर्थन नहीं करता है।"
+    "AUDIO_NOT_SUPPORTED": "आपका ब्राउज़र ऑडियो तत्व का समर्थन नहीं करता है।",
+    "QUESTION": "प्रश्न",
+    "OF": "में से",
+    "PREVIOUS": "पिछला प्रश्न",
+    "NEXT": "अगला प्रश्न",
+    "GO_TO_VIDEO": "वीडियो देखें"
   },
   "MODAL": {
     "CONGRATULATIONS": "बधाई हो!",
