@@ -1,7 +1,7 @@
 <div class="training-container">
   <!-- Registration Form -->
   <div *ngIf="showRegistration" class="step-container">
-    <div class="step-card">
+    <div class="step-card card border-0">
       <div class="step-header">
         <div class="language-select-wrapper">
           <div class="language-select-container">
@@ -381,17 +381,17 @@
 
   <!-- Video Training Section -->
   <div *ngIf="showVideo" class="step-container">
-    <div class="step-card">
+    <div class="step-card card border-0">
       <div class="step-header">
         <div class="step-icon">
           <i class="fas fa-video"></i>
         </div>
         <h2>{{ "VIDEO.TITLE" | translate }}</h2>
         <p>{{ "VIDEO.SUBTITLE" | translate }}</p>
-        <button class="btn-back" (click)="goBack()">
+        <!-- <button class="btn-back" (click)="goBack()">
           <i class="fas fa-arrow-left"></i>
           {{ "REGISTRATION.BACK" | translate }}
-        </button>
+        </button> -->
       </div>
 
       <div class="video-container">
@@ -431,91 +431,133 @@
 
   <!-- Quiz Section -->
   <div *ngIf="showQuiz" class="step-container">
-    <div class="step-card">
-      <div class="step-header">
-        <button class="btn-back custom-right" (click)="retakeQuiz()">
-          <i class="fas fa-redo"></i> {{ "QUIZ.RETAKE" | translate }}
-        </button>
-        <button class="btn-back custom-left" (click)="goBackVedio()">
+    <div class="step-card card border-0 quiz-card">
+      <!-- Back link -->
+      <div class="quiz-topbar" *ngIf="questions.length > 0">
+        <button type="button" class="btn-link-back" (click)="goBackVedio()">
           <i class="fas fa-arrow-left"></i>
-          {{ "REGISTRATION.BACK" | translate }}
+          {{ "QUIZ.GO_TO_VIDEO" | translate }}
         </button>
       </div>
 
-      <form [formGroup]="quizForm" (ngSubmit)="submitQuiz()">
+      <!-- Progress header -->
+      <div class="quiz-progress-header" *ngIf="questions.length > 0">
+        <div class="quiz-progress-header__top">
+          <span class="quiz-progress-header__label">Progress</span>
+          <span class="quiz-progress-header__count"
+            >Question {{ currentQuestionIndex + 1 }} of
+            {{ questions.length }}</span
+          >
+        </div>
         <div
-          *ngFor="let question of questions; let i = index"
-          class="question-card"
+          class="progress quiz-progress-bar"
+          role="progressbar"
+          [attr.aria-valuenow]="quizProgressPercent"
+          aria-valuemin="0"
+          aria-valuemax="100"
         >
-          <div class="question-header">
-            <span class="question-number">{{ i + 1 }}</span>
-            <span class="question-text">{{ question.question_text }}</span>
-          </div>
+          <div class="progress-bar" [style.width.%]="quizProgressPercent"></div>
+        </div>
+      </div>
 
-          <div *ngIf="question.image_path" class="question-image">
-            <img [src]="question.image_path" alt="Question image" />
-          </div>
+      <div class="alert-info" *ngIf="questions.length === 0">
+        <i class="fas fa-info-circle"></i>
+        {{ "QUIZ.NO_QUESTIONS" | translate }}
+      </div>
 
-          <div *ngIf="question.audio_path" class="question-audio">
-            <audio controls>
-              <source [src]="question.audio_path" type="audio/mpeg" />
-              {{ "QUIZ.AUDIO_NOT_SUPPORTED" | translate }}
-            </audio>
-          </div>
-
-          <div class="options-grid">
-            <label
-              *ngFor="let opt of ['A', 'B', 'C', 'D']"
-              class="option-label"
-            >
-              <input
-                type="radio"
-                [formControlName]="'question_' + question.id"
-                [value]="opt"
-              />
-              <span class="option-marker">{{ opt }}</span>
-
-              <div
-                *ngIf="getOptionImage(question, opt)"
-                class="option-image-wrapper"
-              >
-                <img
-                  [src]="getOptionImage(question, opt)"
-                  alt="Option {{ opt }}"
-                  class="option-image"
-                />
-                <span class="option-text">{{
-                  getOptionText(question, opt)
-                }}</span>
+      <form
+        [formGroup]="quizForm"
+        *ngIf="currentQuestion as question"
+      >
+        <div class="row g-3 g-lg-4 question-card">
+          <!-- Left: media (image + audio) -->
+          <div class="col-12 col-lg-5" *ngIf="question.image_path || question.audio_path">
+            <div class="question-media-box">
+              <div class="question-media-box__image" *ngIf="question.image_path">
+                <img [src]="question.image_path" alt="Question image" />
               </div>
+              <div class="question-media-box__audio" *ngIf="question.audio_path">
+                <audio controls>
+                  <source [src]="question.audio_path" type="audio/mpeg" />
+                  {{ "QUIZ.AUDIO_NOT_SUPPORTED" | translate }}
+                </audio>
+              </div>
+            </div>
+          </div>
 
-              <span *ngIf="!getOptionImage(question, opt)" class="option-text">
-                {{ getOptionText(question, opt) }}
-              </span>
-            </label>
+          <!-- Right: question text + options -->
+          <div
+            class="col-12"
+            [ngClass]="(question.image_path || question.audio_path) ? 'col-lg-7' : 'col-lg-12'"
+          >
+            <div class="question-content">
+              <span class="question-content__accent"></span>
+              <div class="question-content__body">
+                <p class="question-content__text">{{ question.question_text }}</p>
+
+                <div class="options-grid">
+                  <label
+                    *ngFor="let opt of ['A', 'B', 'C', 'D']"
+                    class="option-label"
+                    (click)="selectOption(question, opt)"
+                  >
+                    <input
+                      type="radio"
+                      [value]="opt"
+                      [checked]="isOptionSelected(question, opt)"
+                      tabindex="-1"
+                    />
+                    <span class="option-body">
+                      <span
+                        class="option-thumb"
+                        *ngIf="getOptionImage(question, opt)"
+                      >
+                        <img
+                          [src]="getOptionImage(question, opt)"
+                          alt="Option {{ opt }}"
+                        />
+                      </span>
+                      <span class="option-text">{{
+                        getOptionText(question, opt)
+                      }}</span>
+                    </span>
+                    <span class="option-marker"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="alert-info" *ngIf="questions.length === 0">
-          <i class="fas fa-info-circle"></i>
-          {{ "QUIZ.NO_QUESTIONS" | translate }}
-        </div>
+        <div class="quiz-actions">
+          <button
+            type="button"
+            class="btn-outline quiz-prev-btn"
+            *ngIf="!isFirstQuestion"
+            [disabled]="isSubmitting"
+            (click)="previousQuestion()"
+          >
+            <i class="fas fa-arrow-left"></i>
+             {{ "QUIZ.PREVIOUS" | translate }}
+          </button>
 
-        <button
-          type="submit"
-          class="btn-primary btn-full"
-          [disabled]="
-            quizForm.invalid || isSubmitting || questions.length === 0
-          "
-        >
-          <span *ngIf="isSubmitting" class="spinner"></span>
-          <i class="fas fa-certificate" *ngIf="!isSubmitting"></i>
-          {{
-            isSubmitting
-              ? ("QUIZ.SUBMITTING" | translate)
-              : ("QUIZ.SUBMIT" | translate)
-          }}
-        </button>
+          <button
+            type="button"
+            class="btn-primary quiz-next-btn"
+            [disabled]="!isCurrentQuestionAnswered() || isSubmitting"
+            (click)="nextQuestion()"
+          >
+            <span *ngIf="isSubmitting" class="spinner"></span>
+            <ng-container *ngIf="!isSubmitting">
+              {{ isLastQuestion ? ("QUIZ.SUBMIT" | translate) : ("QUIZ.NEXT" | translate) }}
+              <i
+                class="fas"
+                [class.fa-certificate]="isLastQuestion"
+                [class.fa-arrow-right]="!isLastQuestion"
+              ></i>
+            </ng-container>
+          </button>
+        </div>
       </form>
     </div>
   </div>

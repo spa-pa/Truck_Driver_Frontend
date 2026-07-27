@@ -151,6 +151,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   selectedLanguageCode: string = "en";
   videoUrl: string = "";
   questions: MappedQuestion[] = [];
+  currentQuestionIndex: number = 0;
   quizResult: QuizResult | null = null;
   certificationId: any;
 
@@ -262,6 +263,70 @@ export class TrainingComponent implements OnInit, OnDestroy {
       controls[`question_${q.id}`] = ["", Validators.required];
     });
     this.quizForm = this.fb.group(controls);
+    this.currentQuestionIndex = 0;
+  }
+
+  // ------------------------------------------------------------
+  // Quiz - one-question-at-a-time navigation
+  // ------------------------------------------------------------
+  get currentQuestion(): MappedQuestion | null {
+    return this.questions[this.currentQuestionIndex] || null;
+  }
+
+  get isLastQuestion(): boolean {
+    return this.currentQuestionIndex === this.questions.length - 1;
+  }
+
+  get isFirstQuestion(): boolean {
+    return this.currentQuestionIndex === 0;
+  }
+
+  get quizProgressPercent(): number {
+    if (!this.questions.length) return 0;
+    return ((this.currentQuestionIndex + 1) / this.questions.length) * 100;
+  }
+
+  isCurrentQuestionAnswered(): boolean {
+    const q = this.currentQuestion;
+    if (!q) return false;
+    const control = this.quizForm.get(`question_${q.id}`);
+    return !!control && control.valid;
+  }
+
+  // Explicit read/write for each option's radio state, keyed by the
+  // question actually passed in from the template (rather than relying on
+  // the formControlName directive, which does not rebind when its bound
+  // expression changes on a reused DOM element across questions).
+  isOptionSelected(question: MappedQuestion, opt: string): boolean {
+    if (!question) return false;
+    return this.quizForm.get(`question_${question.id}`)?.value === opt;
+  }
+
+  selectOption(question: MappedQuestion, opt: string): void {
+    if (!question) return;
+    this.quizForm.get(`question_${question.id}`)?.setValue(opt);
+  }
+
+  nextQuestion(): void {
+    const q = this.currentQuestion;
+    if (!q) return;
+
+    const control = this.quizForm.get(`question_${q.id}`);
+    control?.markAsTouched();
+    if (control?.invalid) return;
+
+    if (this.isLastQuestion) {
+      this.submitQuiz();
+    } else {
+      this.currentQuestionIndex++;
+      this.cdr.detectChanges();
+    }
+  }
+
+  previousQuestion(): void {
+    if (this.isFirstQuestion) return;
+    this.currentQuestionIndex--;
+    this.cdr.detectChanges();
   }
 
   // ------------------------------------------------------------
@@ -553,6 +618,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
                 backdrop: "static",
               });
               this.initRegistrationForm();
+              this.licensePhotoPreview = null;
+              this.licensePhotoFileName = null;
               this.showRegistration = true;
               this.showVideo = false;
             } else if (err.data.driver) {
@@ -670,6 +737,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
                 this.showResultModal = false;
                 this.certificationId = response.data.certification_id;
                 this.initRegistrationForm();
+                this.licensePhotoPreview = null;
+                this.licensePhotoFileName = null;
                 this.showRegistration = false;
                 this.showVideo = false;
                 this.showCertification = true;

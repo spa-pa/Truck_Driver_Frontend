@@ -1,6 +1,6 @@
-// const version = 'api/v1/';
-// const domain = 'localhost:3000/';
-// const frontenddomain = 'localhost:4200/';
+const version = 'api/v1/';
+const domain = 'localhost:3000/';
+const frontenddomain = 'localhost:4200/';
 
 // export const environment = {
 //     production: false,
@@ -21,9 +21,9 @@
 //     SACNNING_BASE_URL: frontenddomain
 // };
 
-const version = 'api/v1/';
-const domain = '10.1.190.237/';
-const frontenddomain = '10.1.190.237/';
+// const version = 'api/v1/';
+// const domain = '10.1.190.237/';
+// const frontenddomain = '10.1.190.237/';
 
 export const environment = {
     production: false,
