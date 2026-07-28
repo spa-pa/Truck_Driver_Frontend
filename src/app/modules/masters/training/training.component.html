@@ -429,8 +429,7 @@
                 <img [src]="question.image_path" alt="Question image" />
               </div>
               <div class="question-media-box__audio" *ngIf="question.audio_path">
-                <audio controls>
-                  <source [src]="question.audio_path" type="audio/mpeg" />
+                <audio #audioPlayer controls [src]="question.audio_path">
                   {{ "QUIZ.AUDIO_NOT_SUPPORTED" | translate }}
                 </audio>
               </div>

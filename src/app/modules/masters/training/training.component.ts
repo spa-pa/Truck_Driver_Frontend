@@ -131,6 +131,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild("cameraVideo") cameraVideo?: ElementRef<HTMLVideoElement>;
   @ViewChild("cameraCanvas") cameraCanvas?: ElementRef<HTMLCanvasElement>;
+  @ViewChild("audioPlayer") audioPlayerRef?: ElementRef<HTMLAudioElement>;
 
   driverDetails: any;
   languages: Language[] = [];
@@ -318,6 +319,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     } else {
       this.currentQuestionIndex++;
       this.cdr.detectChanges();
+      this.resetAudioPlayer();
     }
   }
 
@@ -325,6 +327,36 @@ export class TrainingComponent implements OnInit, OnDestroy {
     if (this.isFirstQuestion) return;
     this.currentQuestionIndex--;
     this.cdr.detectChanges();
+    this.resetAudioPlayer();
+  }
+
+  // Jump directly to a specific question index (e.g. from a progress
+  // dot/stepper UI). Kept here so any future "jump to question" feature
+  // reuses the same audio-reset logic instead of reintroducing the bug.
+  goToQuestion(index: number): void {
+    if (index < 0 || index >= this.questions.length) return;
+    this.currentQuestionIndex = index;
+    this.cdr.detectChanges();
+    this.resetAudioPlayer();
+  }
+
+  // ------------------------------------------------------------
+  // Question audio player
+  // ------------------------------------------------------------
+  // The <audio> element persists across questions (it's never destroyed
+  // by *ngIf since currentQuestion stays truthy for the whole quiz), so
+  // simply updating [src] isn't always enough on every browser. This
+  // pauses playback, resets position, and forces the browser to reload
+  // the new question's audio_path.
+  private resetAudioPlayer(): void {
+    setTimeout(() => {
+      const audioEl = this.audioPlayerRef?.nativeElement;
+      if (audioEl) {
+        audioEl.pause();
+        audioEl.currentTime = 0;
+        audioEl.load();
+      }
+    });
   }
 
   // ------------------------------------------------------------
