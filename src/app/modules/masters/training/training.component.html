@@ -1,28 +1,168 @@
 <div class="training-container">
+  <!-- Language Selection -->
+  <div *ngIf="showLanguageSelection" class="step-container">
+    <div class="step-card card border-0 language-select-card">
+      <div class="mb-3">
+        <img class="img-fluid for-light" src="assets/images/logo/logo.png" alt="Logo" />
+      </div>
+      <div class="language-select-heading">
+        <h2>Driver Safety Training</h2>
+        <p>Choose your preferred language to continue</p>
+      </div>
+
+      <div class="language-grid">
+        <div *ngFor="let lang of languages" class="language-grid__card" (click)="selectLanguage(lang.language_id)">
+          <span class="language-grid__letter">{{ lang.language_name.charAt(0).toUpperCase() }}</span>
+          <span class="language-grid__name">{{ lang.language_name }}</span>
+        </div>
+      </div>
+
+      <div class="alert-info" *ngIf="languages.length === 0">
+        <i class="fas fa-info-circle"></i>
+        {{ "LANGUAGE_SELECT.LOADING" | translate }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Privacy Consent -->
+  <!-- <div *ngIf="showConsent" class="step-container">
+    <div class="step-card card border-0 consent-card">
+      <div class="consent-banner">
+        <div class="consent-banner__icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="consent-banner__text">
+          <h4>{{ "CONSENT.HEADER_TITLE" | translate }}</h4>
+          <span>{{ "CONSENT.HEADER_SUBTITLE" | translate }}</span>
+        </div>
+      </div>
+
+      <h2 class="consent-title">{{ "CONSENT.TITLE" | translate }}</h2>
+      <p class="consent-intro">{{ "CONSENT.INTRO" | translate }}</p>
+
+      <div class="consent-section">
+        <div class="consent-section__icon"><i class="fas fa-user"></i></div>
+        <div class="consent-section__body">
+          <h4>{{ "CONSENT.INFO_TITLE" | translate }}</h4>
+          <p>{{ "CONSENT.INFO_TEXT" | translate }}</p>
+        </div>
+      </div>
+
+      <div class="consent-section">
+        <div class="consent-section__icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="consent-section__body">
+          <h4>{{ "CONSENT.PURPOSE_TITLE" | translate }}</h4>
+          <p>{{ "CONSENT.PURPOSE_TEXT" | translate }}</p>
+        </div>
+      </div>
+
+      <div class="consent-section">
+        <div class="consent-section__icon"><i class="fas fa-lock"></i></div>
+        <div class="consent-section__body">
+          <h4>{{ "CONSENT.USAGE_TITLE" | translate }}</h4>
+          <p>{{ "CONSENT.USAGE_TEXT" | translate }}</p>
+        </div>
+      </div>
+
+      <div class="consent-section">
+        <div class="consent-section__icon"><i class="fas fa-eye"></i></div>
+        <div class="consent-section__body">
+          <h4>{{ "CONSENT.RIGHTS_TITLE" | translate }}</h4>
+          <p>{{ "CONSENT.RIGHTS_TEXT" | translate }}</p>
+        </div>
+      </div>
+
+      <div class="consent-section">
+        <div class="consent-section__icon"><i class="fas fa-file-alt"></i></div>
+        <div class="consent-section__body">
+          <h4>{{ "CONSENT.CONSENT_TITLE" | translate }}</h4>
+          <p>{{ "CONSENT.CONSENT_TEXT" | translate }}</p>
+        </div>
+      </div>
+
+      <div class="consent-warning">
+        <i class="fas fa-info-circle"></i>
+        <span>{{ "CONSENT.MANDATORY_NOTE" | translate }}</span>
+      </div>
+
+      <div class="consent-actions">
+        <button type="button" class="btn-outline" (click)="backToLanguageSelection()">
+          <i class="fas fa-arrow-left"></i>
+          {{ "CONSENT.BACK" | translate }}
+        </button>
+        <button type="button" class="btn-primary" (click)="proceedFromConsent()">
+          {{ "CONSENT.PROCEED" | translate }}
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div> -->
+  <!-- Data Privacy Consent -->
+  <div *ngIf="showConsent" class="step-container">
+    <div class="step-card card border-0 consent-card">
+      <!-- Header -->
+      <div class="consent-banner">
+        <div class="consent-banner__icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="consent-banner__text">
+          <h4>{{ "CONSENT.HEADER_TITLE" | translate }}</h4>
+          <span>{{ "CONSENT.HEADER_SUBTITLE" | translate }}</span>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <h2 class="consent-title">
+        {{ "CONSENT.CONSENT_TITLE" | translate }}
+      </h2>
+
+      <!-- Dynamic Consent Content -->
+      <div class="consent-content" *ngIf="termsContent">
+        <!-- Multiple points -->
+        <ul class="consent-list" *ngIf="getConsentPoints().length > 1; else singleConsent">
+          <li *ngFor="let point of getConsentPoints()">
+            {{ point }}
+          </li>
+        </ul>
+
+        <!-- Single paragraph -->
+        <ng-template #singleConsent>
+          <p class="consent-text">
+            {{ getConsentPoints()[0] }}
+          </p>
+        </ng-template>
+      </div>
+
+      <!-- Mandatory Note -->
+      <div class="consent-warning">
+        <i class="fas fa-info-circle"></i>
+        <span>{{ "CONSENT.MANDATORY_NOTE" | translate }}</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="consent-actions">
+        <button type="button" class="btn-outline" (click)="backToLanguageSelection()">
+          <i class="fas fa-arrow-left"></i>
+          {{ "CONSENT.BACK" | translate }}
+        </button>
+
+        <button type="button" class="btn-primary" (click)="proceedFromConsent()">
+          {{ "CONSENT.PROCEED" | translate }}
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
   <!-- Registration Form -->
   <div *ngIf="showRegistration" class="step-container">
     <div class="step-card card border-0">
       <div class="step-header">
-        <div class="language-select-wrapper">
-          <div class="language-select-container">
-            <i class="fas fa-globe language-icon"></i>
-            <select
-              class="language-select"
-              [(ngModel)]="selectedLanguageId"
-              (ngModelChange)="onLanguageChange($event)"
-            >
-              <option *ngFor="let lang of languages" [value]="lang.language_id">
-                {{ lang.language_name }}
-              </option>
-            </select>
-          </div>
-        </div>
+        <button type="button" class="btn-back" (click)="backToLanguageSelection()">
+          <i class="fas fa-arrow-left"></i>
+          {{ "REGISTRATION.BACK" | translate }}
+        </button>
         <div class="mb-3">
-          <img
-            class="img-fluid for-light"
-            src="assets/images/logo/logo.png"
-            alt="Logo"
-          />
+          <img class="img-fluid for-light" src="assets/images/logo/logo.png" alt="Logo" />
         </div>
         <h2>{{ "REGISTRATION.TITLE" | translate }}</h2>
         <p>{{ "REGISTRATION.SUBTITLE" | translate }}</p>
@@ -31,156 +171,100 @@
       <form [formGroup]="registrationForm" (ngSubmit)="registerDriver()">
         <div class="form-grid">
           <div class="form-group">
-            <label
-              >{{ "REGISTRATION.FULL_NAME" | translate }}
-              <span class="required">*</span></label
-            >
+            <label>{{ "REGISTRATION.FULL_NAME" | translate }}
+              <span class="required">*</span></label>
             <div class="input-wrapper">
               <i class="fas fa-user input-icon"></i>
-              <input
-                type="text"
-                formControlName="full_name"
-                [placeholder]="'REGISTRATION.FULL_NAME_PLACEHOLDER' | translate"
-                [class.error]="
+              <input type="text" formControlName="full_name"
+                [placeholder]="'REGISTRATION.FULL_NAME_PLACEHOLDER' | translate" [class.error]="
                   registrationForm.get('full_name')?.invalid &&
                   registrationForm.get('full_name')?.touched
-                "
-              />
+                " />
             </div>
-            <div
-              class="error-message"
-              *ngIf="
+            <div class="error-message" *ngIf="
                 registrationForm.get('full_name')?.invalid &&
                 registrationForm.get('full_name')?.touched
-              "
-            >
+              ">
               {{ "REGISTRATION.FULL_NAME_ERROR" | translate }}
             </div>
           </div>
 
           <div class="form-group">
-            <label
-              >{{ "REGISTRATION.MOBILE" | translate }}
-              <span class="required">*</span></label
-            >
+            <label>{{ "REGISTRATION.MOBILE" | translate }}
+              <span class="required">*</span></label>
             <div class="input-wrapper">
               <i class="fas fa-mobile-alt input-icon"></i>
-              <input
-                type="tel"
-                formControlName="mobile_number"
-                maxlength="10"
-                [placeholder]="'REGISTRATION.MOBILE_PLACEHOLDER' | translate"
-                [class.error]="
+              <input type="tel" formControlName="mobile_number" maxlength="10"
+                [placeholder]="'REGISTRATION.MOBILE_PLACEHOLDER' | translate" [class.error]="
                   registrationForm.get('mobile_number')?.invalid &&
                   registrationForm.get('mobile_number')?.touched
-                "
-              />
+                " />
             </div>
-            <div
-              class="error-message"
-              *ngIf="
+            <div class="error-message" *ngIf="
                 registrationForm.get('mobile_number')?.invalid &&
                 registrationForm.get('mobile_number')?.touched
-              "
-            >
+              ">
               {{ "REGISTRATION.MOBILE_ERROR" | translate }}
             </div>
           </div>
 
           <div class="form-group">
-            <label
-              >{{ "REGISTRATION.LICENSE" | translate }}
-              <span class="required">*</span></label
-            >
+            <label>{{ "REGISTRATION.LICENSE" | translate }}
+              <span class="required">*</span></label>
             <div class="input-wrapper">
               <i class="fas fa-id-card input-icon"></i>
-              <input
-                type="text"
-                formControlName="driving_license_number"
-                [placeholder]="'REGISTRATION.LICENSE_PLACEHOLDER' | translate"
-                [class.error]="
+              <input type="text" formControlName="driving_license_number"
+                [placeholder]="'REGISTRATION.LICENSE_PLACEHOLDER' | translate" [class.error]="
                   registrationForm.get('driving_license_number')?.invalid &&
                   registrationForm.get('driving_license_number')?.touched
-                "
-              />
+                " />
             </div>
-            <div
-              class="error-message"
-              *ngIf="
+            <div class="error-message" *ngIf="
                 registrationForm.get('driving_license_number')?.invalid &&
                 registrationForm.get('driving_license_number')?.touched
-              "
-            >
+              ">
               {{ "REGISTRATION.LICENSE_ERROR" | translate }}
             </div>
           </div>
 
           <div class="form-group">
-            <label
-              >{{ "REGISTRATION.LICENSE_EXPIRY" | translate }}
-              <span class="required">*</span></label
-            >
+            <label>{{ "REGISTRATION.LICENSE_EXPIRY" | translate }}
+              <span class="required">*</span></label>
             <div class="input-wrapper">
               <i class="fas fa-truck input-icon"></i>
-              <input
-                type="date"
-                formControlName="driving_license_expiry_date"
-                [placeholder]="
+              <input type="date" formControlName="driving_license_expiry_date" [placeholder]="
                   'REGISTRATION.LICENSE_EXPIRY_PLACEHOLDER' | translate
-                "
-                [class.error]="
+                " [class.error]="
                   registrationForm.get('driving_license_expiry_date')
                     ?.invalid &&
                   registrationForm.get('driving_license_expiry_date')?.touched
-                "
-              />
+                " />
             </div>
-            <div
-              class="error-message"
-              *ngIf="
+            <div class="error-message" *ngIf="
                 registrationForm.get('driving_license_expiry_date')?.invalid &&
                 registrationForm.get('driving_license_expiry_date')?.touched
-              "
-            >
+              ">
               {{ "REGISTRATION.LICENSE_EXPIRY_ERROR" | translate }}
             </div>
           </div>
 
           <div class="form-group">
-            <label
-              >{{ "REGISTRATION.LICENSE_PHOTO" | translate }}
-              <span class="required">*</span></label
-            >
+            <label>{{ "REGISTRATION.LICENSE_PHOTO" | translate }}</label>
 
             <!-- Fallback input: used only if the live camera (getUserMedia) can't be opened,
                  e.g. permission denied or an older browser. Normal camera capture now happens
                  in the in-page camera modal below, which works on desktop AND mobile. -->
-            <input
-              #cameraInput
-              type="file"
-              accept="image/*"
-              capture="environment"
-              class="visually-hidden-file"
-              (change)="onFileSelected($event)"
-            />
-            <input
-              #fileInput
-              type="file"
-              accept="image/*"
-              class="visually-hidden-file"
-              (change)="onFileSelected($event)"
-            />
+            <input #cameraInput type="file" accept="image/*" capture="environment" class="visually-hidden-file"
+              (change)="onFileSelected($event)" />
+            <input #fileInput type="file" accept="image/*" class="visually-hidden-file"
+              (change)="onFileSelected($event)" />
 
             <!-- Preview once a photo has been captured/selected -->
             <div class="license-photo-preview" *ngIf="licensePhotoPreview">
               <img [src]="licensePhotoPreview" alt="Driving license preview" />
               <div class="license-photo-preview__meta">
                 <span class="license-photo-preview__name">{{ licensePhotoFileName }}</span>
-                <button
-                  type="button"
-                  class="license-photo-preview__remove"
-                  (click)="removeLicensePhoto($event)"
-                >
+                <button type="button" class="license-photo-preview__remove" (click)="removeLicensePhoto($event)">
                   <i class="fas fa-times"></i>
                   {{ "REGISTRATION.LICENSE_PHOTO_REMOVE" | translate }}
                 </button>
@@ -188,14 +272,7 @@
             </div>
 
             <!-- Picker actions: shown until a photo is chosen -->
-            <div
-              class="license-photo-actions"
-              *ngIf="!licensePhotoPreview"
-              [class.error]="
-                registrationForm.get('driving_license')?.invalid &&
-                registrationForm.get('driving_license')?.touched
-              "
-            >
+            <div class="license-photo-actions" *ngIf="!licensePhotoPreview">
               <button type="button" class="license-photo-actions__btn" (click)="openLiveCamera()">
                 <i class="fas fa-camera"></i>
                 {{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}
@@ -206,30 +283,12 @@
               </button>
             </div>
 
-            <div
-              class="error-message"
-              *ngIf="
-                registrationForm.get('driving_license')?.invalid &&
-                registrationForm.get('driving_license')?.touched
-              "
-            >
-              {{ "REGISTRATION.LICENSE_PHOTO_ERROR" | translate }}
-            </div>
-
             <!-- Live camera modal: works on desktop webcams AND mobile cameras -->
-            <div
-              class="camera-modal-overlay"
-              *ngIf="showCameraModal"
-              (click)="closeCamera()"
-            >
+            <div class="camera-modal-overlay" *ngIf="showCameraModal" (click)="closeCamera()">
               <div class="camera-modal" (click)="$event.stopPropagation()">
                 <div class="camera-modal__header">
                   <span>{{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}</span>
-                  <button
-                    type="button"
-                    class="camera-modal__close"
-                    (click)="closeCamera()"
-                  >
+                  <button type="button" class="camera-modal__close" (click)="closeCamera()">
                     <i class="fas fa-times"></i>
                   </button>
                 </div>
@@ -237,33 +296,18 @@
                 <div class="camera-modal__body">
                   <!-- Live preview: kept mounted (hidden, not removed) so the
                        stream's srcObject survives a retake -->
-                  <video
-                    #cameraVideo
-                    [hidden]="capturedFrame"
-                    autoplay
-                    playsinline
-                    muted
-                    class="camera-modal__video"
-                  ></video>
+                  <video #cameraVideo [hidden]="capturedFrame" autoplay playsinline muted
+                    class="camera-modal__video"></video>
 
                   <!-- Snapshot preview before confirming -->
-                  <img
-                    *ngIf="capturedFrame"
-                    [src]="capturedFrame"
-                    alt="Captured photo"
-                    class="camera-modal__video"
-                  />
+                  <img *ngIf="capturedFrame" [src]="capturedFrame" alt="Captured photo" class="camera-modal__video" />
 
                   <canvas #cameraCanvas class="visually-hidden-file"></canvas>
 
                   <div class="camera-modal__error" *ngIf="cameraError">
                     <i class="fas fa-exclamation-triangle"></i>
                     {{ cameraError }}
-                    <button
-                      type="button"
-                      class="camera-modal__fallback-link"
-                      (click)="openCameraFallback()"
-                    >
+                    <button type="button" class="camera-modal__fallback-link" (click)="openCameraFallback()">
                       {{ "REGISTRATION.LICENSE_PHOTO_UPLOAD" | translate }}
                     </button>
                   </div>
@@ -271,31 +315,21 @@
 
                 <div class="camera-modal__footer">
                   <ng-container *ngIf="!capturedFrame">
-                    <button
-                      type="button"
-                      class="camera-modal__btn camera-modal__btn--capture"
-                      [disabled]="!cameraStreamActive"
-                      (click)="capturePhoto()"
-                    >
+                    <button type="button" class="camera-modal__btn camera-modal__btn--capture"
+                      [disabled]="!cameraStreamActive" (click)="capturePhoto()">
                       <i class="fas fa-camera"></i>
                       {{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}
                     </button>
                   </ng-container>
 
                   <ng-container *ngIf="capturedFrame">
-                    <button
-                      type="button"
-                      class="camera-modal__btn camera-modal__btn--secondary"
-                      (click)="retakePhoto()"
-                    >
+                    <button type="button" class="camera-modal__btn camera-modal__btn--secondary"
+                      (click)="retakePhoto()">
                       <i class="fas fa-redo"></i>
                       {{ "REGISTRATION.LICENSE_PHOTO_RETAKE" | translate }}
                     </button>
-                    <button
-                      type="button"
-                      class="camera-modal__btn camera-modal__btn--capture"
-                      (click)="confirmCapturedPhoto()"
-                    >
+                    <button type="button" class="camera-modal__btn camera-modal__btn--capture"
+                      (click)="confirmCapturedPhoto()">
                       <i class="fas fa-check"></i>
                       {{ "REGISTRATION.LICENSE_PHOTO_USE" | translate }}
                     </button>
@@ -305,76 +339,16 @@
             </div>
           </div>
         </div>
-        
-        <!-- Terms Consent -->
-        <div class="form-group terms-group">
-          <label class="terms-label">
-            <input
-              type="checkbox"
-              formControlName="terms_agreed"
-              (click)="openTermsModal($event)"
-            />
-            <span class="terms-text">
-              {{ "REGISTRATION.I_AGREE_TO" | translate }}
-              <strong>{{ "REGISTRATION.TERMS_OF_SERVICE" | translate }}</strong>
-              <span class="required">*</span>
-            </span>
-          </label>
-          <div
-            class="error-message"
-            *ngIf="
-              registrationForm.get('terms_agreed')?.invalid &&
-              registrationForm.get('terms_agreed')?.touched &&
-              !showTermsModal
-            "
-          >
-            {{ "REGISTRATION.TERMS_REQUIRED" | translate }}
-          </div>
-        </div>
 
-        <button
-          type="submit"
-          class="btn-primary btn-full"
-          [disabled]="registrationForm.invalid || isLoading"
-        >
+        <button type="submit" class="btn-primary btn-full" [disabled]="registrationForm.invalid || isLoading">
           <span *ngIf="isLoading" class="spinner"></span>
           <i class="fas fa-play" *ngIf="!isLoading"></i>
           {{
-            isLoading
-              ? ("REGISTRATION.REGISTERING" | translate)
-              : ("REGISTRATION.START" | translate)
+          isLoading
+          ? ("REGISTRATION.REGISTERING" | translate)
+          : ("REGISTRATION.START" | translate)
           }}
         </button>
-
-        <!-- Terms Modal -->
-        <div
-          *ngIf="showTermsModal"
-          class="modal-overlay"
-          (click)="closeTermsModalOnOverlay($event)"
-        >
-          <div class="modal-container">
-            <div class="modal-card terms-modal">
-              <div class="modal-header">
-                <h3>{{ "REGISTRATION.TERMS_TITLE" | translate }}</h3>
-                <button class="modal-close" (click)="closeTermsModal()">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-              <div class="modal-body terms-body">
-                <div *ngIf="isLoadingTerms" class="spinner"></div>
-                <p *ngIf="!isLoadingTerms">{{ termsContent }}</p>
-              </div>
-              <div class="modal-footer terms-footer">
-                <!-- <button class="btn-decline" (click)="declineTerms()">
-                  {{ "REGISTRATION.DECLINE" | translate }}
-                </button> -->
-                <button class="btn-agree" (click)="acceptTerms()">
-                  {{ "REGISTRATION.AGREE" | translate }}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
       </form>
     </div>
   </div>
@@ -395,14 +369,8 @@
       </div>
 
       <div class="video-container">
-        <video
-          #videoPlayer
-          controls
-          autoplay
-          class="video-player"
-          (timeupdate)="onVideoProgress()"
-          (ended)="onVideoComplete()"
-        >
+        <video #videoPlayer controls autoplay class="video-player" (timeupdate)="onVideoProgress()"
+          (ended)="onVideoComplete()">
           <source [src]="videoUrl" type="video/mp4" />
           {{ "VIDEO.NOT_SUPPORTED" | translate }}
         </video>
@@ -412,17 +380,11 @@
         <div class="progress-track">
           <div class="progress-fill" [style.width.%]="videoProgress"></div>
         </div>
-        <span class="progress-text"
-          >{{ videoProgress | number: "1.0-0" }}%
-          {{ "VIDEO.COMPLETED" | translate }}</span
-        >
+        <span class="progress-text">{{ videoProgress | number: "1.0-0" }}%
+          {{ "VIDEO.COMPLETED" | translate }}</span>
       </div>
 
-      <button
-        class="btn-primary btn-full"
-        [disabled]="videoProgress < 90"
-        (click)="proceedToQuiz()"
-      >
+      <button class="btn-primary btn-full" [disabled]="videoProgress < 90" (click)="proceedToQuiz()">
         <i class="fas fa-question-circle"></i>
         {{ "VIDEO.TAKE_QUIZ" | translate }}
       </button>
@@ -444,18 +406,11 @@
       <div class="quiz-progress-header" *ngIf="questions.length > 0">
         <div class="quiz-progress-header__top">
           <span class="quiz-progress-header__label">Progress</span>
-          <span class="quiz-progress-header__count"
-            >Question {{ currentQuestionIndex + 1 }} of
-            {{ questions.length }}</span
-          >
+          <span class="quiz-progress-header__count">Question {{ currentQuestionIndex + 1 }} of
+            {{ questions.length }}</span>
         </div>
-        <div
-          class="progress quiz-progress-bar"
-          role="progressbar"
-          [attr.aria-valuenow]="quizProgressPercent"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        >
+        <div class="progress quiz-progress-bar" role="progressbar" [attr.aria-valuenow]="quizProgressPercent"
+          aria-valuemin="0" aria-valuemax="100">
           <div class="progress-bar" [style.width.%]="quizProgressPercent"></div>
         </div>
       </div>
@@ -465,10 +420,7 @@
         {{ "QUIZ.NO_QUESTIONS" | translate }}
       </div>
 
-      <form
-        [formGroup]="quizForm"
-        *ngIf="currentQuestion as question"
-      >
+      <form [formGroup]="quizForm" *ngIf="currentQuestion as question">
         <div class="row g-3 g-lg-4 question-card">
           <!-- Left: media (image + audio) -->
           <div class="col-12 col-lg-5" *ngIf="question.image_path || question.audio_path">
@@ -486,40 +438,24 @@
           </div>
 
           <!-- Right: question text + options -->
-          <div
-            class="col-12"
-            [ngClass]="(question.image_path || question.audio_path) ? 'col-lg-7' : 'col-lg-12'"
-          >
+          <div class="col-12" [ngClass]="(question.image_path || question.audio_path) ? 'col-lg-7' : 'col-lg-12'">
             <div class="question-content">
               <span class="question-content__accent"></span>
               <div class="question-content__body">
                 <p class="question-content__text">{{ question.question_text }}</p>
 
                 <div class="options-grid">
-                  <label
-                    *ngFor="let opt of ['A', 'B', 'C', 'D']"
-                    class="option-label"
-                    (click)="selectOption(question, opt)"
-                  >
-                    <input
-                      type="radio"
-                      [value]="opt"
-                      [checked]="isOptionSelected(question, opt)"
-                      tabindex="-1"
-                    />
+                  <label *ngFor="let opt of ['A', 'B', 'C', 'D']" class="option-label"
+                    (click)="selectOption(question, opt)">
+                    <input type="radio" [value]="opt" [checked]="isOptionSelected(question, opt)" tabindex="-1" />
                     <span class="option-body">
-                      <span
-                        class="option-thumb"
-                        *ngIf="getOptionImage(question, opt)"
-                      >
-                        <img
-                          [src]="getOptionImage(question, opt)"
-                          alt="Option {{ opt }}"
-                        />
+                      <span class="option-letter">{{ opt }}</span>
+                      <span class="option-thumb" *ngIf="getOptionImage(question, opt)">
+                        <img [src]="getOptionImage(question, opt)" alt="Option {{ opt }}" />
                       </span>
                       <span class="option-text">{{
                         getOptionText(question, opt)
-                      }}</span>
+                        }}</span>
                     </span>
                     <span class="option-marker"></span>
                   </label>
@@ -530,31 +466,18 @@
         </div>
 
         <div class="quiz-actions">
-          <button
-            type="button"
-            class="btn-outline quiz-prev-btn"
-            *ngIf="!isFirstQuestion"
-            [disabled]="isSubmitting"
-            (click)="previousQuestion()"
-          >
+          <button type="button" class="btn-outline quiz-prev-btn" *ngIf="!isFirstQuestion" [disabled]="isSubmitting"
+            (click)="previousQuestion()">
             <i class="fas fa-arrow-left"></i>
-             {{ "QUIZ.PREVIOUS" | translate }}
+            {{ "QUIZ.PREVIOUS" | translate }}
           </button>
 
-          <button
-            type="button"
-            class="btn-primary quiz-next-btn"
-            [disabled]="!isCurrentQuestionAnswered() || isSubmitting"
-            (click)="nextQuestion()"
-          >
+          <button type="button" class="btn-primary quiz-next-btn"
+            [disabled]="!isCurrentQuestionAnswered() || isSubmitting" (click)="nextQuestion()">
             <span *ngIf="isSubmitting" class="spinner"></span>
             <ng-container *ngIf="!isSubmitting">
               {{ isLastQuestion ? ("QUIZ.SUBMIT" | translate) : ("QUIZ.NEXT" | translate) }}
-              <i
-                class="fas"
-                [class.fa-certificate]="isLastQuestion"
-                [class.fa-arrow-right]="!isLastQuestion"
-              ></i>
+              <i class="fas" [class.fa-certificate]="isLastQuestion" [class.fa-arrow-right]="!isLastQuestion"></i>
             </ng-container>
           </button>
         </div>
@@ -564,91 +487,54 @@
 
   <!-- Certification -->
   <div *ngIf="showCertification" class="step-container">
-    <app-driver-certification
-      #certification
-      [certificationId]="certificationId"
-      [autoLoad]="true"
-    >
+    <app-driver-certification #certification [certificationId]="certificationId" [autoLoad]="true">
     </app-driver-certification>
   </div>
 </div>
 
 <!-- Result Modal -->
-<div
-  *ngIf="showResultModal"
-  class="modal-overlay"
-  (click)="closeModalOnOverlay($event)"
->
+<div *ngIf="showResultModal" class="modal-overlay" (click)="closeModalOnOverlay($event)">
   <div class="modal-container">
-    <div
-      class="modal-card"
-      [class.success]="quizResult?.passed"
-      [class.failed]="!quizResult?.passed"
-    >
+    <div class="modal-card" [class.success]="quizResult?.passed" [class.failed]="!quizResult?.passed">
       <div class="modal-header">
         <div class="modal-icon">
-          <i
-            class="fas"
-            [class.fa-check-circle]="quizResult?.passed"
-            [class.fa-times-circle]="!quizResult?.passed"
-          ></i>
+          <i class="fas" [class.fa-check-circle]="quizResult?.passed" [class.fa-times-circle]="!quizResult?.passed"></i>
         </div>
         <button class="modal-close" (click)="closeModal()">
           <i class="fas fa-times"></i>
         </button>
       </div>
       <div class="modal-body">
-        <h3
-          [class.text-success]="quizResult?.passed"
-          [class.text-danger]="!quizResult?.passed"
-        >
+        <h3 [class.text-success]="quizResult?.passed" [class.text-danger]="!quizResult?.passed">
           {{
-            quizResult?.passed
-              ? ("MODAL.CONGRATULATIONS" | translate)
-              : ("MODAL.FAILED" | translate)
+          quizResult?.passed
+          ? ("MODAL.CONGRATULATIONS" | translate)
+          : ("MODAL.FAILED" | translate)
           }}
         </h3>
         <p>{{ quizResult?.message }}</p>
 
-        <div
-          *ngIf="quizResult?.score !== undefined && quizResult?.score !== null"
-          class="score-section"
-        >
+        <div *ngIf="quizResult?.score !== undefined && quizResult?.score !== null" class="score-section">
           <div class="score-label">{{ "MODAL.YOUR_SCORE" | translate }}</div>
           <div class="score-value">{{ quizResult?.score }}%</div>
           <div class="progress-track">
-            <div
-              class="progress-fill"
-              [style.width.%]="quizResult?.score || 0"
-              [class.success]="(quizResult?.score || 0) >= 70"
-              [class.warning]="
+            <div class="progress-fill" [style.width.%]="quizResult?.score || 0"
+              [class.success]="(quizResult?.score || 0) >= 70" [class.warning]="
                 (quizResult?.score || 0) >= 50 && (quizResult?.score || 0) < 70
-              "
-              [class.danger]="(quizResult?.score || 0) < 50"
-            ></div>
+              " [class.danger]="(quizResult?.score || 0) < 50"></div>
           </div>
-          <div
-            class="score-status"
-            [class.success]="(quizResult?.score || 0) >= 70"
-            [class.warning]="
+          <div class="score-status" [class.success]="(quizResult?.score || 0) >= 70" [class.warning]="
               (quizResult?.score || 0) >= 50 && (quizResult?.score || 0) < 70
-            "
-            [class.danger]="(quizResult?.score || 0) < 50"
-          >
-            <i
-              class="fas"
-              [class.fa-check-circle]="(quizResult?.score || 0) >= 70"
-              [class.fa-exclamation-triangle]="
+            " [class.danger]="(quizResult?.score || 0) < 50">
+            <i class="fas" [class.fa-check-circle]="(quizResult?.score || 0) >= 70" [class.fa-exclamation-triangle]="
                 (quizResult?.score || 0) >= 50 && (quizResult?.score || 0) < 70
-              "
-              [class.fa-times-circle]="(quizResult?.score || 0) < 50"
-            ></i>
+              " [class.fa-times-circle]="(quizResult?.score || 0) < 50"></i>
             {{
-              (quizResult?.score || 0) >= 70
-                ? ("MODAL.PASSED" | translate)
-                : (quizResult?.score || 0) >= 50
-                  ? ("MODAL.BORDERLINE" | translate)
-                  : ("MODAL.FAILED_STATUS" | translate)
+            (quizResult?.score || 0) >= 70
+            ? ("MODAL.PASSED" | translate)
+            : (quizResult?.score || 0) >= 50
+            ? ("MODAL.BORDERLINE" | translate)
+            : ("MODAL.FAILED_STATUS" | translate)
             }}
           </div>
         </div>
@@ -662,11 +548,7 @@
             <i class="fas fa-redo"></i> {{ "MODAL.TAKE_QUIZ" | translate }}
           </button>
         </ng-container>
-        <button
-          *ngIf="quizResult?.passed"
-          class="btn-close-modal"
-          (click)="closeModal()"
-        >
+        <button *ngIf="quizResult?.passed" class="btn-close-modal" (click)="closeModal()">
           <i class="fas fa-times"></i> {{ "MODAL.CLOSE" | translate }}
         </button>
       </div>
@@ -687,11 +569,7 @@
       </button>
     </div>
     <div class="modal-body p-4">
-      <app-driver-certification
-        #certification
-        [certificationId]="certificationId"
-        [autoLoad]="true"
-      >
+      <app-driver-certification #certification [certificationId]="certificationId" [autoLoad]="true">
       </app-driver-certification>
     </div>
   </div>

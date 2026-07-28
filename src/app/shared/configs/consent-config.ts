@@ -17,7 +17,7 @@ export const ConsentDetailsData: RowData = {
   data: [],
   dataKey: "consent_id",
   buttonname: "Create Consent",
-  button: true,
+  button: false,
   statuses: [
     { label: "false", value: "danger" },
     { label: "true", value: "success" },
@@ -57,5 +57,6 @@ export const ConsentTypeSearchGroup: IFormStructure[] = [
     value: "",
     required: true,
     disable: false,
+    colsize: "col-12"
   },
 ];
