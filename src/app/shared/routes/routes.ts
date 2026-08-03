@@ -169,7 +169,17 @@ const mastersData: Routes = [
         },
         loadChildren: () => import('../../modules/masters/expiry-config/expiry-config.module').then(r => r.ExpiryConfigModule),
         // canActivate: [PermissionGuard]
-    }
+    },
+    {
+        path: 'poster',
+        data: {
+            title: "Poster",
+            breadcrumb: "Poster",
+            pageId: 21
+        },
+        loadChildren: () => import('../../modules/masters/poster/poster.module').then(r => r.PosterModule),
+        // canActivate: [PermissionGuard]
+    },
 
 ]
 

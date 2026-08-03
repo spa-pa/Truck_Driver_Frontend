@@ -10,7 +10,7 @@ import { ModalComponent } from '@shared/component/modal/modal.component';
 
 @Component({
     selector: 'app-root',
-    imports: [CommonModule, RouterOutlet, TapToTopComponent, LoaderComponent,SpinnerComponent, ModalComponent],
+    imports: [CommonModule, RouterOutlet, TapToTopComponent, SpinnerComponent, ModalComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
     providers: [LayoutService]

@@ -41,7 +41,13 @@
     "TERMS_REQUIRED": "આગળ વધવા માટે તમારે સેવાની શરતો સ્વીકારવી જ પડશે.",
     "TERMS_TITLE": "નિયમો અને શરતો",
     "AGREE": "સહમત",
-    "DECLINE": "નકારો"
+    "DECLINE": "નકારો",
+    "DRIVER_PHOTO": "ડ્રાઇવરનો ફોટો",
+    "DRIVER_PHOTO_TAKE": "ફોટો લો",
+    "DRIVER_PHOTO_UPLOAD": "ફોટો અપલોડ કરો",
+    "DRIVER_PHOTO_REMOVE": "દૂર કરો",
+    "DRIVER_PHOTO_RETAKE": "ફરી ફોટો લો",
+    "DRIVER_PHOTO_USE": "આ ફોટો વાપરો"
   },
   "TERMS": {
     "CONTENT": "અમારા તાલીમ પ્લેટફોર્મનો ઉપયોગ કરવા માટેના નિયમો અને શરતો આ છે. કૃપા કરીને સહમત થતા પહેલા ધ્યાનથી વાંચો."

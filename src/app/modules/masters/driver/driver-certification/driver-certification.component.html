@@ -78,6 +78,25 @@
 
     <!-- QR & Photo Section -->
     <div class="qr-photo-section">
+      <div class="photo-container">
+        <div class="photo-frame">
+          <img
+            *ngIf="getDriverPhotoUrl(); else photoPlaceholder"
+            [src]="getDriverPhotoUrl()"
+            alt="Driver Photo"
+          />
+          <ng-template #photoPlaceholder>
+            <div class="photo-placeholder">
+              <i class="fa fa-user"></i>
+            </div>
+          </ng-template>
+        </div>
+        <div class="photo-label">{{ certification.full_name }}</div>
+        <div class="photo-sub-label">Driver Photo</div>
+      </div>
+
+      <div class="divider-vertical"></div>
+
       <div class="qr-container">
         <div class="qr-frame">
           <app-qr-display

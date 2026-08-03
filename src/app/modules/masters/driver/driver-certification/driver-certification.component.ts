@@ -109,6 +109,14 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     };
   }
 
+  // ============ DRIVER PHOTO ============
+
+  // Returns the driver's photo URL, or null if none was uploaded during
+  // registration - the template falls back to a placeholder icon in that case.
+  getDriverPhotoUrl(): string | null {
+    return (this.certification as any)?.driving_img || null;
+  }
+
   // ============ EXPIRY HELPERS ============
 
   isExpired(): boolean {

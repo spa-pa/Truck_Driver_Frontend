@@ -129,6 +129,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
   @ViewChild("certificationModal") certificationModal!: TemplateRef<any>;
   @ViewChild("cameraInput") cameraInput!: ElementRef<HTMLInputElement>;
   @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("driverPhotoCameraInput") driverPhotoCameraInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("driverPhotoFileInput") driverPhotoFileInput!: ElementRef<HTMLInputElement>;
   @ViewChild("cameraVideo") cameraVideo?: ElementRef<HTMLVideoElement>;
   @ViewChild("cameraCanvas") cameraCanvas?: ElementRef<HTMLCanvasElement>;
   @ViewChild("audioPlayer") audioPlayerRef?: ElementRef<HTMLAudioElement>;
@@ -173,7 +175,15 @@ export class TrainingComponent implements OnInit, OnDestroy {
   licensePhotoPreview: string | null = null;
   licensePhotoFileName: string | null = null;
 
+  // Driver photo (camera / upload) - same UX as license photo, but a selfie
+  driverPhotoPreview: string | null = null;
+  driverPhotoFileName: string | null = null;
+
   // Live camera modal state (getUserMedia based, works on desktop + mobile)
+  // A single modal/video/canvas is shared between the license photo and
+  // driver photo fields (only one camera can be open at a time anyway).
+  // `activeCameraTarget` tracks which field the modal is currently capturing for.
+  activeCameraTarget: "license" | "driving_img" = "license";
   showCameraModal: boolean = false;
   cameraStreamActive: boolean = false;
   cameraError: string | null = null;
@@ -252,6 +262,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)],
       ],
       driving_license: [null], // Photo is optional - not required
+      driving_img: [null], // Photo is optional - not required
       terminal_id: [this.terminalId] // Add this field to capture terminalId
     });
   }
@@ -368,6 +379,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.initRegistrationForm();
     this.licensePhotoPreview = null;
     this.licensePhotoFileName = null;
+    this.driverPhotoPreview = null;
+    this.driverPhotoFileName = null;
     this.showLanguageSelection = true;
     this.showConsent = false;
     this.showRegistration = false;
@@ -629,6 +642,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
     if (formValue.driving_license) {
       formData.append("driving_license", formValue.driving_license);
     }
+    if (formValue.driving_img) {
+      formData.append("driving_img", formValue.driving_img);
+    }
     formData.append("terminal_id", formValue.terminal_id);
 
     this.subscriptions.add(
@@ -653,6 +669,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
               this.initRegistrationForm();
               this.licensePhotoPreview = null;
               this.licensePhotoFileName = null;
+              this.driverPhotoPreview = null;
+              this.driverPhotoFileName = null;
               this.showRegistration = true;
               this.showVideo = false;
             } else if (err.data.driver) {
@@ -772,6 +790,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
                 this.initRegistrationForm();
                 this.licensePhotoPreview = null;
                 this.licensePhotoFileName = null;
+                this.driverPhotoPreview = null;
+                this.driverPhotoFileName = null;
                 this.showRegistration = false;
                 this.showVideo = false;
                 this.showCertification = true;
@@ -850,29 +870,43 @@ export class TrainingComponent implements OnInit, OnDestroy {
     return `${day}/${month}/${year}`;
   }
 
-  onFileSelected(event: Event): void {
+  onFileSelected(
+    event: Event,
+    target: "license" | "driving_img" = "license"
+  ): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      this.setLicensePhoto(file);
+      this.setCapturedPhoto(file, target);
     } else {
-      this.registrationForm.patchValue({ driving_license: null });
+      const controlName = target === "driving_img" ? "driving_img" : "driving_license";
+      this.registrationForm.patchValue({ [controlName]: null });
     }
     // Reset the input value so selecting the same file again still fires "change"
     input.value = "";
   }
 
-  private setLicensePhoto(file: File): void {
-    this.registrationForm.patchValue({ driving_license: file });
-    this.registrationForm.get("driving_license")?.updateValueAndValidity();
-    this.registrationForm.get("driving_license")?.markAsTouched();
-
-    this.licensePhotoFileName = file.name;
+  // Shared by both the license photo and driver photo fields: patches the
+  // right form control and builds a preview for whichever field is the target.
+  private setCapturedPhoto(
+    file: File,
+    target: "license" | "driving_img" = "license"
+  ): void {
+    const controlName = target === "driving_img" ? "driving_img" : "driving_license";
+    this.registrationForm.patchValue({ [controlName]: file });
+    this.registrationForm.get(controlName)?.updateValueAndValidity();
+    this.registrationForm.get(controlName)?.markAsTouched();
 
     // Build a preview so the driver can see the photo they captured/uploaded
     const reader = new FileReader();
     reader.onload = () => {
-      this.licensePhotoPreview = reader.result as string;
+      if (target === "driving_img") {
+        this.driverPhotoFileName = file.name;
+        this.driverPhotoPreview = reader.result as string;
+      } else {
+        this.licensePhotoFileName = file.name;
+        this.licensePhotoPreview = reader.result as string;
+      }
       this.cdr.detectChanges();
     };
     reader.readAsDataURL(file);
@@ -886,7 +920,10 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // normal file picker. To get a real camera experience on every device we
   // open a live getUserMedia() preview in a modal instead, and only fall
   // back to the hidden file input if getUserMedia isn't available/denied.
-  async openLiveCamera(): Promise<void> {
+  async openLiveCamera(
+    target: "license" | "driving_img" = "license"
+  ): Promise<void> {
+    this.activeCameraTarget = target;
     this.cameraError = null;
     this.capturedFrame = null;
 
@@ -899,13 +936,17 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.showCameraModal = true;
     this.cdr.detectChanges();
 
+    // License photo uses the rear camera (documents); driver photo is a
+    // selfie so it defaults to the front camera.
+    const preferredFacingMode = target === "driving_img" ? "user" : "environment";
+
     try {
       this.mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
+        video: { facingMode: preferredFacingMode },
         audio: false,
       });
     } catch (err) {
-      // Some desktops have no "environment" camera - retry with any camera
+      // Some desktops/devices don't have the preferred camera - retry with any camera
       try {
         this.mediaStream = await navigator.mediaDevices.getUserMedia({
           video: true,
@@ -960,10 +1001,12 @@ export class TrainingComponent implements OnInit, OnDestroy {
     canvas.toBlob(
       (blob) => {
         if (!blob) return;
-        const file = new File([blob], `license-photo-${Date.now()}.jpg`, {
+        const filePrefix =
+          this.activeCameraTarget === "driving_img" ? "driver-photo" : "license-photo";
+        const file = new File([blob], `${filePrefix}-${Date.now()}.jpg`, {
           type: "image/jpeg",
         });
-        this.setLicensePhoto(file);
+        this.setCapturedPhoto(file, this.activeCameraTarget);
         this.closeCamera();
       },
       "image/jpeg",
@@ -992,12 +1035,21 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // Opens the hidden file input with the `capture` attribute (mobile only).
   openCameraFallback(): void {
     this.showCameraModal = false;
-    this.cameraInput?.nativeElement.click();
+    if (this.activeCameraTarget === "driving_img") {
+      this.driverPhotoCameraInput?.nativeElement.click();
+    } else {
+      this.cameraInput?.nativeElement.click();
+    }
   }
 
   // Opens the regular file/photo picker (gallery, files app, etc.)
-  openFileUpload(): void {
-    this.fileInput?.nativeElement.click();
+  openFileUpload(target: "license" | "driving_img" = "license"): void {
+    this.activeCameraTarget = target;
+    if (target === "driving_img") {
+      this.driverPhotoFileInput?.nativeElement.click();
+    } else {
+      this.fileInput?.nativeElement.click();
+    }
   }
 
   removeLicensePhoto(event?: Event): void {
@@ -1008,6 +1060,44 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.registrationForm.get("driving_license")?.updateValueAndValidity();
     if (this.cameraInput) this.cameraInput.nativeElement.value = "";
     if (this.fileInput) this.fileInput.nativeElement.value = "";
+  }
+
+  removeDriverPhoto(event?: Event): void {
+    event?.stopPropagation();
+    this.driverPhotoPreview = null;
+    this.driverPhotoFileName = null;
+    this.registrationForm.patchValue({ driving_img: null });
+    this.registrationForm.get("driving_img")?.updateValueAndValidity();
+    if (this.driverPhotoCameraInput) this.driverPhotoCameraInput.nativeElement.value = "";
+    if (this.driverPhotoFileInput) this.driverPhotoFileInput.nativeElement.value = "";
+  }
+
+  // ------------------------------------------------------------
+  // Shared camera modal labels - reflect whichever field (license or
+  // driver photo) triggered the modal, so the header/buttons read correctly.
+  // ------------------------------------------------------------
+  get cameraCaptureLabelKey(): string {
+    return this.activeCameraTarget === "driving_img"
+      ? "REGISTRATION.DRIVER_PHOTO_TAKE"
+      : "REGISTRATION.LICENSE_PHOTO_TAKE";
+  }
+
+  get cameraRetakeLabelKey(): string {
+    return this.activeCameraTarget === "driving_img"
+      ? "REGISTRATION.DRIVER_PHOTO_RETAKE"
+      : "REGISTRATION.LICENSE_PHOTO_RETAKE";
+  }
+
+  get cameraUseLabelKey(): string {
+    return this.activeCameraTarget === "driving_img"
+      ? "REGISTRATION.DRIVER_PHOTO_USE"
+      : "REGISTRATION.LICENSE_PHOTO_USE";
+  }
+
+  get cameraUploadLabelKey(): string {
+    return this.activeCameraTarget === "driving_img"
+      ? "REGISTRATION.DRIVER_PHOTO_UPLOAD"
+      : "REGISTRATION.LICENSE_PHOTO_UPLOAD";
   }
 
 }

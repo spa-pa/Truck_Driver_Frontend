@@ -41,7 +41,13 @@
     "TERMS_REQUIRED": "You must agree to the Terms of Service to proceed.",
     "TERMS_TITLE": "Terms and Conditions",
     "AGREE": "Agree",
-    "DECLINE": "Decline"
+    "DECLINE": "Decline",
+    "DRIVER_PHOTO": "Driver Photo",
+    "DRIVER_PHOTO_TAKE": "Take Photo",
+    "DRIVER_PHOTO_UPLOAD": "Upload Photo",
+    "DRIVER_PHOTO_REMOVE": "Remove",
+    "DRIVER_PHOTO_RETAKE": "Retake",
+    "DRIVER_PHOTO_USE": "Use Photo"
   },
 
   "TERMS": {

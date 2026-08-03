@@ -25,79 +25,6 @@
   </div>
 
   <!-- Data Privacy Consent -->
-  <!-- <div *ngIf="showConsent" class="step-container">
-    <div class="step-card card border-0 consent-card">
-      <div class="consent-banner">
-        <div class="consent-banner__icon">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <div class="consent-banner__text">
-          <h4>{{ "CONSENT.HEADER_TITLE" | translate }}</h4>
-          <span>{{ "CONSENT.HEADER_SUBTITLE" | translate }}</span>
-        </div>
-      </div>
-
-      <h2 class="consent-title">{{ "CONSENT.TITLE" | translate }}</h2>
-      <p class="consent-intro">{{ "CONSENT.INTRO" | translate }}</p>
-
-      <div class="consent-section">
-        <div class="consent-section__icon"><i class="fas fa-user"></i></div>
-        <div class="consent-section__body">
-          <h4>{{ "CONSENT.INFO_TITLE" | translate }}</h4>
-          <p>{{ "CONSENT.INFO_TEXT" | translate }}</p>
-        </div>
-      </div>
-
-      <div class="consent-section">
-        <div class="consent-section__icon"><i class="fas fa-shield-alt"></i></div>
-        <div class="consent-section__body">
-          <h4>{{ "CONSENT.PURPOSE_TITLE" | translate }}</h4>
-          <p>{{ "CONSENT.PURPOSE_TEXT" | translate }}</p>
-        </div>
-      </div>
-
-      <div class="consent-section">
-        <div class="consent-section__icon"><i class="fas fa-lock"></i></div>
-        <div class="consent-section__body">
-          <h4>{{ "CONSENT.USAGE_TITLE" | translate }}</h4>
-          <p>{{ "CONSENT.USAGE_TEXT" | translate }}</p>
-        </div>
-      </div>
-
-      <div class="consent-section">
-        <div class="consent-section__icon"><i class="fas fa-eye"></i></div>
-        <div class="consent-section__body">
-          <h4>{{ "CONSENT.RIGHTS_TITLE" | translate }}</h4>
-          <p>{{ "CONSENT.RIGHTS_TEXT" | translate }}</p>
-        </div>
-      </div>
-
-      <div class="consent-section">
-        <div class="consent-section__icon"><i class="fas fa-file-alt"></i></div>
-        <div class="consent-section__body">
-          <h4>{{ "CONSENT.CONSENT_TITLE" | translate }}</h4>
-          <p>{{ "CONSENT.CONSENT_TEXT" | translate }}</p>
-        </div>
-      </div>
-
-      <div class="consent-warning">
-        <i class="fas fa-info-circle"></i>
-        <span>{{ "CONSENT.MANDATORY_NOTE" | translate }}</span>
-      </div>
-
-      <div class="consent-actions">
-        <button type="button" class="btn-outline" (click)="backToLanguageSelection()">
-          <i class="fas fa-arrow-left"></i>
-          {{ "CONSENT.BACK" | translate }}
-        </button>
-        <button type="button" class="btn-primary" (click)="proceedFromConsent()">
-          {{ "CONSENT.PROCEED" | translate }}
-          <i class="fas fa-arrow-right"></i>
-        </button>
-      </div>
-    </div>
-  </div> -->
-  <!-- Data Privacy Consent -->
   <div *ngIf="showConsent" class="step-container">
     <div class="step-card card border-0 consent-card">
       <!-- Header -->
@@ -255,9 +182,9 @@
                  e.g. permission denied or an older browser. Normal camera capture now happens
                  in the in-page camera modal below, which works on desktop AND mobile. -->
             <input #cameraInput type="file" accept="image/*" capture="environment" class="visually-hidden-file"
-              (change)="onFileSelected($event)" />
+              (change)="onFileSelected($event, 'license')" />
             <input #fileInput type="file" accept="image/*" class="visually-hidden-file"
-              (change)="onFileSelected($event)" />
+              (change)="onFileSelected($event, 'license')" />
 
             <!-- Preview once a photo has been captured/selected -->
             <div class="license-photo-preview" *ngIf="licensePhotoPreview">
@@ -273,11 +200,11 @@
 
             <!-- Picker actions: shown until a photo is chosen -->
             <div class="license-photo-actions" *ngIf="!licensePhotoPreview">
-              <button type="button" class="license-photo-actions__btn" (click)="openLiveCamera()">
+              <button type="button" class="license-photo-actions__btn" (click)="openLiveCamera('license')">
                 <i class="fas fa-camera"></i>
                 {{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}
               </button>
-              <button type="button" class="license-photo-actions__btn" (click)="openFileUpload()">
+              <button type="button" class="license-photo-actions__btn" (click)="openFileUpload('license')">
                 <i class="fas fa-upload"></i>
                 {{ "REGISTRATION.LICENSE_PHOTO_UPLOAD" | translate }}
               </button>
@@ -287,7 +214,7 @@
             <div class="camera-modal-overlay" *ngIf="showCameraModal" (click)="closeCamera()">
               <div class="camera-modal" (click)="$event.stopPropagation()">
                 <div class="camera-modal__header">
-                  <span>{{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}</span>
+                  <span>{{ cameraCaptureLabelKey | translate }}</span>
                   <button type="button" class="camera-modal__close" (click)="closeCamera()">
                     <i class="fas fa-times"></i>
                   </button>
@@ -308,7 +235,7 @@
                     <i class="fas fa-exclamation-triangle"></i>
                     {{ cameraError }}
                     <button type="button" class="camera-modal__fallback-link" (click)="openCameraFallback()">
-                      {{ "REGISTRATION.LICENSE_PHOTO_UPLOAD" | translate }}
+                      {{ cameraUploadLabelKey | translate }}
                     </button>
                   </div>
                 </div>
@@ -318,7 +245,7 @@
                     <button type="button" class="camera-modal__btn camera-modal__btn--capture"
                       [disabled]="!cameraStreamActive" (click)="capturePhoto()">
                       <i class="fas fa-camera"></i>
-                      {{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}
+                      {{ cameraCaptureLabelKey | translate }}
                     </button>
                   </ng-container>
 
@@ -326,16 +253,52 @@
                     <button type="button" class="camera-modal__btn camera-modal__btn--secondary"
                       (click)="retakePhoto()">
                       <i class="fas fa-redo"></i>
-                      {{ "REGISTRATION.LICENSE_PHOTO_RETAKE" | translate }}
+                      {{ cameraRetakeLabelKey | translate }}
                     </button>
                     <button type="button" class="camera-modal__btn camera-modal__btn--capture"
                       (click)="confirmCapturedPhoto()">
                       <i class="fas fa-check"></i>
-                      {{ "REGISTRATION.LICENSE_PHOTO_USE" | translate }}
+                      {{ cameraUseLabelKey | translate }}
                     </button>
                   </ng-container>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>{{ "REGISTRATION.DRIVER_PHOTO" | translate }}</label>
+
+            <!-- Fallback input: used only if the live camera (getUserMedia) can't be opened,
+                 e.g. permission denied or an older browser. Normal camera capture now happens
+                 in the in-page camera modal below, which works on desktop AND mobile. -->
+            <input #driverPhotoCameraInput type="file" accept="image/*" capture="user" class="visually-hidden-file"
+              (change)="onFileSelected($event, 'driving_img')" />
+            <input #driverPhotoFileInput type="file" accept="image/*" class="visually-hidden-file"
+              (change)="onFileSelected($event, 'driving_img')" />
+
+            <!-- Preview once a photo has been captured/selected -->
+            <div class="license-photo-preview" *ngIf="driverPhotoPreview">
+              <img [src]="driverPhotoPreview" alt="Driver photo preview" />
+              <div class="license-photo-preview__meta">
+                <span class="license-photo-preview__name">{{ driverPhotoFileName }}</span>
+                <button type="button" class="license-photo-preview__remove" (click)="removeDriverPhoto($event)">
+                  <i class="fas fa-times"></i>
+                  {{ "REGISTRATION.DRIVER_PHOTO_REMOVE" | translate }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Picker actions: shown until a photo is chosen -->
+            <div class="license-photo-actions" *ngIf="!driverPhotoPreview">
+              <button type="button" class="license-photo-actions__btn" (click)="openLiveCamera('driving_img')">
+                <i class="fas fa-camera"></i>
+                {{ "REGISTRATION.DRIVER_PHOTO_TAKE" | translate }}
+              </button>
+              <button type="button" class="license-photo-actions__btn" (click)="openFileUpload('driving_img')">
+                <i class="fas fa-upload"></i>
+                {{ "REGISTRATION.DRIVER_PHOTO_UPLOAD" | translate }}
+              </button>
             </div>
           </div>
         </div>
