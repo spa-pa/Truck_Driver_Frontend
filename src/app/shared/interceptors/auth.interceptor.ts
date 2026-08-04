@@ -169,6 +169,8 @@ export class AuthTokenInterceptor implements HttpInterceptor {
                 break;
 
             case 401:
+                this.timeoutSessionLogoutUser();
+                break;
             case 404:
 
                 this.toastService.open(

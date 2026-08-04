@@ -82,7 +82,7 @@
   </div>
   <!-- Registration Form -->
   <div *ngIf="showRegistration" class="step-container">
-    <div class="step-card card border-0">
+    <div class="step-card card border-0 step-card--fill">
       <div class="step-header">
         <button type="button" class="btn-back" (click)="backToLanguageSelection()">
           <i class="fas fa-arrow-left"></i>
@@ -318,7 +318,7 @@
 
   <!-- Video Training Section -->
   <div *ngIf="showVideo" class="step-container">
-    <div class="step-card card border-0">
+    <div class="step-card card border-0 step-card--fill">
       <div class="step-header">
         <div class="step-icon">
           <i class="fas fa-video"></i>
@@ -351,6 +351,68 @@
         <i class="fas fa-question-circle"></i>
         {{ "VIDEO.TAKE_QUIZ" | translate }}
       </button>
+    </div>
+  </div>
+
+  <!-- Poster Carousel Section (shown between Video and Quiz, only if posters exist) -->
+  <div *ngIf="showPoster" class="step-container">
+    <div class="step-card card border-0 step-card--fill">
+      <div class="step-header">
+        <div class="step-icon">
+          <i class="fas fa-images"></i>
+        </div>
+        <h2>{{ "POSTER.TITLE" | translate }}</h2>
+        <p>{{ "POSTER.SUBTITLE" | translate }}</p>
+      </div>
+
+      <div class="poster-carousel" *ngIf="currentPoster as poster">
+        <button
+          type="button"
+          class="poster-nav poster-nav--prev"
+          (click)="prevPoster()"
+          *ngIf="posters.length > 1"
+          [attr.aria-label]="'POSTER.PREV' | translate"
+        >
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <div class="poster-frame">
+          <img [src]="poster.poster_path" alt="Poster" class="poster-image" />
+        </div>
+
+        <button
+          type="button"
+          class="poster-nav poster-nav--next"
+          (click)="nextPoster()"
+          *ngIf="posters.length > 1"
+          [attr.aria-label]="'POSTER.NEXT' | translate"
+        >
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="poster-dots" *ngIf="posters.length > 1">
+        <button
+          type="button"
+          class="poster-dot"
+          *ngFor="let p of posters; let i = index"
+          [class.active]="i === currentPosterIndex"
+          (click)="goToPoster(i)"
+          [attr.aria-label]="'Go to poster ' + (i + 1)"
+        ></button>
+      </div>
+
+      <div class="poster-actions">
+        <button class="btn-link-back" (click)="backToVideoFromPoster()">
+          <i class="fas fa-arrow-left"></i>
+          {{ "POSTER.BACK_TO_VIDEO" | translate }}
+        </button>
+
+        <button class="btn-primary btn-full" (click)="proceedToQuizFromPoster()">
+          <i class="fas fa-question-circle"></i>
+          {{ "POSTER.TAKE_QUIZ" | translate }}
+        </button>
+      </div>
     </div>
   </div>
 

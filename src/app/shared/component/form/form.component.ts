@@ -1,34 +1,68 @@
-import { CommonModule, Location } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IFormStructure, IUploadStructure } from '@shared/models/form';
-import { InputComponent } from '../input/input.component';
-import { SelectComponent } from '../select/select.component';
-import { SwitchComponent } from '../switch/switch.component';
+import { CommonModule, Location } from "@angular/common";
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from "@angular/core";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { IFormStructure, IUploadStructure } from "@shared/models/form";
+import { InputComponent } from "../input/input.component";
+import { SelectComponent } from "../select/select.component";
+import { SwitchComponent } from "../switch/switch.component";
 // import { CheckboxTickComponent } from '../checkbox-tick/checkbox-tick.component';
-import { DateTimeComponent } from '../date-time/date-time.component';
-import { ToastService } from '@shared/services/toast.service';
-import { responseMessages } from '@shared/constants/response-msgs.constant';
-import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { DateTimeComponent } from "../date-time/date-time.component";
+import { ToastService } from "@shared/services/toast.service";
+import { responseMessages } from "@shared/constants/response-msgs.constant";
+import { CheckboxComponent } from "../checkbox/checkbox.component";
 // import { UploadFileComponent } from '../upload-file/upload-file.component';
-import { contactNumberValidator, pancardValidator, adharcardValidator, passportValidator, emailValidator } from '@shared/utils/custom-validators';
-import { UploadFileComponent } from '../upload-file/upload-file.component';
-import { FeathericonComponent } from '../feathericon/feathericon.component';
-import { TimePickerComponent } from '../time/time.component';
+import {
+  contactNumberValidator,
+  pancardValidator,
+  adharcardValidator,
+  passportValidator,
+  emailValidator,
+} from "@shared/utils/custom-validators";
+import { UploadFileComponent } from "../upload-file/upload-file.component";
+import { FeathericonComponent } from "../feathericon/feathericon.component";
+import { TimePickerComponent } from "../time/time.component";
 // import { CustomFileUploadModule } from '../sc-custom-file-upload/package.module';
 @Component({
-  selector: 'app-form',
+  selector: "app-form",
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, InputComponent, SelectComponent, SwitchComponent, CheckboxComponent, DateTimeComponent, UploadFileComponent, FeathericonComponent, TimePickerComponent],
-  templateUrl: './form.component.html',
-  styleUrl: './form.component.scss'
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    InputComponent,
+    SelectComponent,
+    SwitchComponent,
+    CheckboxComponent,
+    DateTimeComponent,
+    UploadFileComponent,
+    FeathericonComponent,
+    TimePickerComponent,
+  ],
+  templateUrl: "./form.component.html",
+  styleUrl: "./form.component.scss",
 })
 export class FormComponent implements OnInit, OnChanges, AfterViewInit {
-
   @Input() formConfig: IFormStructure[] = [];
   @Input() formConfigUpload: IUploadStructure[] = [];
   @Input() formData: any;
-  @Input() actiontype: any = 'create';
+  @Input() actiontype: any = "create";
   @Input() isBack: boolean = false;
   @Input() isNext: boolean = false;
   @Input() isSubmit: boolean = false;
@@ -38,7 +72,7 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() isSet: boolean = false;
   @Input() isComplete: boolean = false;
   @Input() isGenerate: boolean = false;
-  @Input() formTitle: string = '';
+  @Input() formTitle: string = "";
   @Input() updateFormvalue: any = [];
   @Input() isDownloadAvailable: boolean = false;
   @Output() isCheckboxChange = new EventEmitter<any>();
@@ -58,7 +92,12 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
 
   dynamicForm: FormGroup;
 
-  constructor(private formbuilder: FormBuilder, private location: Location, private toastService: ToastService, private cdr: ChangeDetectorRef) {
+  constructor(
+    private formbuilder: FormBuilder,
+    private location: Location,
+    private toastService: ToastService,
+    private cdr: ChangeDetectorRef,
+  ) {
     this.dynamicForm = this.formbuilder.group({});
   }
 
@@ -67,28 +106,27 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.dynamicForm.patchValue(this.formData)
+    this.dynamicForm.patchValue(this.formData);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['formConfig']) {
+    if (changes["formConfig"]) {
       // Reset the form when formConfig changes
       this.resetForm();
       this.createForm(); // Re-create the form based on the new formConfig
     }
 
-    if (changes['formData']) {
-      this.dynamicForm.patchValue(this.formData)
+    if (changes["formData"]) {
+      this.dynamicForm.patchValue(this.formData);
     }
 
-    if (changes['updateFormvalue']) {
+    if (changes["updateFormvalue"]) {
       this.updateFormValues();
     }
-
   }
 
   createForm() {
-    this.formConfig.forEach(control => {
+    this.formConfig.forEach((control) => {
       const validators = [];
 
       if (control.required) {
@@ -100,25 +138,25 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
       if (control.maxLength) {
         validators.push(Validators.maxLength(control.maxLength));
       }
-      if (control.type === 'email') {
+      if (control.type === "email") {
         validators.push(Validators.email);
       }
 
       // Type-specific validations
       switch (control.validationFor) {
-        case 'email':
+        case "email":
           validators.push(emailValidator());
           break;
-        case 'contact':
+        case "contact":
           validators.push(contactNumberValidator());
           break;
-        case 'pancard':
+        case "pancard":
           validators.push(pancardValidator());
           break;
-        case 'adharcard':
+        case "adharcard":
           validators.push(adharcardValidator());
           break;
-        case 'passport':
+        case "passport":
           validators.push(passportValidator());
           break;
         default:
@@ -128,9 +166,9 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
       this.dynamicForm.addControl(
         control.name,
         this.formbuilder.control(
-          { value: control.value || '', disabled: control.disable || false },
-          validators
-        )
+          { value: control.value || "", disabled: control.disable || false },
+          validators,
+        ),
       );
     });
   }
@@ -139,7 +177,7 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
     if (colsize && colsize.length > 0) {
       return colsize;
     } else {
-      return 'col-lg-3 col-md-6 col-sm-12';
+      return "col-lg-3 col-md-6 col-sm-12";
     }
   }
 
@@ -148,30 +186,47 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   onSubmit(type: string) {
-    if (type === 'uploadCustomImage' || type === 'downloadCustomImage') {
-      this.emitData.emit({ formValue: this.dynamicForm.getRawValue(), type: type })
-    } else if (type == 'back') {
-      this.emitData.emit({ formValue: [], type: type })
-    } else if (type == 'additem' || type == 'removeitem') {
+    if (type === "uploadCustomImage" || type === "downloadCustomImage") {
+      this.emitData.emit({
+        formValue: this.dynamicForm.getRawValue(),
+        type: type,
+      });
+    } else if (type == "back") {
+      this.emitData.emit({ formValue: [], type: type });
+    } else if (type == "additem" || type == "removeitem") {
       const formData = this.dynamicForm.getRawValue();
-      this.removeEmit.emit({ type: type, formValue: this.convertEmptyStringsToNull(formData) })
-    } else if (type == 'download') {
-      this.emitDownloadData.emit({ formValue: this.dynamicForm.getRawValue(), type: type });
-    }
-    else {
+      this.removeEmit.emit({
+        type: type,
+        formValue: this.convertEmptyStringsToNull(formData),
+      });
+    } else if (type == "download") {
+      this.emitDownloadData.emit({
+        formValue: this.dynamicForm.getRawValue(),
+        type: type,
+      });
+    } else {
       if (!this.dynamicForm.valid) {
-        const message = responseMessages.codes.find(item => item.code == '1.0101')?.message ?? 'Something went to wrong!';
-        this.toastService.open(message, 'error');
+        const message =
+          responseMessages.codes.find((item) => item.code == "1.0101")
+            ?.message ?? "Something went to wrong!";
+        this.toastService.open(message, "error");
         this.dynamicForm.markAllAsTouched();
         return;
       } else {
         const formData = this.dynamicForm.getRawValue();
-        if (type == 'complete') {
-          this.emitCompleteData.emit({ formValue: this.convertEmptyStringsToNull(formData) });
-        } if (type == 'upload') {
-          this.emitUploadData.emit({ formValue: this.convertEmptyStringsToNull(formData) });
+        if (type == "complete") {
+          this.emitCompleteData.emit({
+            formValue: this.convertEmptyStringsToNull(formData),
+          });
+        }
+        if (type == "upload") {
+          this.emitUploadData.emit({
+            formValue: this.convertEmptyStringsToNull(formData),
+          });
         } else {
-          this.emitData.emit({ formValue: this.convertEmptyStringsToNull(formData) });
+          this.emitData.emit({
+            formValue: this.convertEmptyStringsToNull(formData),
+          });
         }
       }
     }
@@ -182,7 +237,7 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   handleCheckboxChange(event: any) {
-    this.isCheckboxChange.emit(event)
+    this.isCheckboxChange.emit(event);
   }
 
   optionSelectedChange(event: any, controlName: any) {
@@ -209,8 +264,8 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
 
     let data = {
       value: value,
-      controlName: controlName
-    }
+      controlName: controlName,
+    };
     this.onInputChangeEmit.emit(data);
   }
 
@@ -221,22 +276,40 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
     this.onEditIconSelectClickEmit.emit(event);
   }
 
+  // handleFileUpload(event: any, type?: any) {
+  //   if (type === 'base64') {
+  //     this.photoBase64Uploaded.emit(event)
+  //   } else {
+  //     this.fileUploaded.emit(event);
+  //   }
+  // }
+
+  // form.component.ts – inside handleFileUpload
   handleFileUpload(event: any, type?: any) {
-    if (type === 'base64') {
-      this.photoBase64Uploaded.emit(event)
+    if (type === "base64") {
+      // Update the corresponding form control to satisfy required validation
+      const controlName = event?.fieldName;
+      if (controlName) {
+        const control = this.dynamicForm.get(controlName);
+        if (control) {
+          // Set to the file name (non‑empty) when a file is selected
+          control.setValue(event?.imgName || null);
+          control.markAsTouched();
+        }
+      }
+      this.photoBase64Uploaded.emit(event);
     } else {
       this.fileUploaded.emit(event);
     }
   }
 
   onDateChange(event: any) {
-    this.onDateChangeEmit.emit(event)
+    this.onDateChangeEmit.emit(event);
   }
 
   onTimeChange(event: any) {
-    this.onTimeChangeEmit.emit(event)
+    this.onTimeChangeEmit.emit(event);
   }
-
 
   getFormData(): any {
     const formData = this.dynamicForm.getRawValue();
@@ -252,8 +325,10 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
 
   isFormValid(): boolean {
     if (!this.dynamicForm.valid) {
-      const message = responseMessages.codes.find(item => item.code == '1.0101')?.message ?? 'Something went to wrong!';
-      this.toastService.open(message, 'error');
+      const message =
+        responseMessages.codes.find((item) => item.code == "1.0101")?.message ??
+        "Something went to wrong!";
+      this.toastService.open(message, "error");
       this.dynamicForm.markAllAsTouched();
     }
     return this.dynamicForm.valid;
@@ -261,8 +336,8 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
 
   convertEmptyStringsToNull(obj: any): any {
     if (Array.isArray(obj)) {
-      return obj.map(item => this.convertEmptyStringsToNull(item));
-    } else if (obj !== null && typeof obj === 'object') {
+      return obj.map((item) => this.convertEmptyStringsToNull(item));
+    } else if (obj !== null && typeof obj === "object") {
       return Object.keys(obj).reduce((acc, key) => {
         acc[key] = this.convertEmptyStringsToNull(obj[key]);
         return acc;
@@ -284,21 +359,23 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
         if (control) {
           control.setValue(update.value);
         }
-        const index = this.formConfig.findIndex(control => control.name === update.key);
+        const index = this.formConfig.findIndex(
+          (control) => control.name === update.key,
+        );
         if (index !== -1) {
           if (update && update.value)
             this.formConfig[index].value = update.value;
         }
       }
     }
-    // this.cdr.detectChanges(); 
+    // this.cdr.detectChanges();
   }
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input && input.files?.length) {
       const file = input.files[0];
-      this.convertToBase64(file, input.name);  // Pass the name of the control
+      this.convertToBase64(file, input.name); // Pass the name of the control
     }
   }
 
@@ -312,14 +389,13 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   updateFile(data: any) {
-
     // console.log("this.dynamicform",this.dynamicForm.patchValue({cd_image_file_name:data?.['EDI Excel File']}))
-    if (data?.['EDI Excel File']) {
-      this.dynamicForm.patchValue({ edi_excel_file_name: data?.['EDI Excel File'] })
-    }
-    else if (data?.['CD Image']) {
-      this.dynamicForm.patchValue({ cd_image_file_name: data?.['CD Image'] })
+    if (data?.["EDI Excel File"]) {
+      this.dynamicForm.patchValue({
+        edi_excel_file_name: data?.["EDI Excel File"],
+      });
+    } else if (data?.["CD Image"]) {
+      this.dynamicForm.patchValue({ cd_image_file_name: data?.["CD Image"] });
     }
   }
-
 }

@@ -26,7 +26,7 @@
     "LICENSE_EXPIRY_PLACEHOLDER": "Enter driving license Expiry Date",
     "LICENSE_EXPIRY_ERROR": "Driving license Expiry Date is required",
     "START": "Start Training",
-    "REGISTERING": "Registering...",  
+    "REGISTERING": "Registering...",
     "LICENSE_PHOTO": "Driver License Photo",
     "LICENSE_PHOTO_PLACEHOLDER": "Upload license photo",
     "LICENSE_PHOTO_ERROR": "Driver license photo is required",
@@ -34,8 +34,8 @@
     "LICENSE_PHOTO_UPLOAD": "Upload Photo",
     "LICENSE_PHOTO_REMOVE": "Remove Photo",
     "LICENSE_PHOTO_RETAKE": "Retake",
-    "LICENSE_PHOTO_USE" : "Use Photo",
-    "LICENSE_PHOTO_CAMERA_DENIED" : "Camera access denied or unavailable. Please upload a photo instead.",
+    "LICENSE_PHOTO_USE": "Use Photo",
+    "LICENSE_PHOTO_CAMERA_DENIED": "Camera access denied or unavailable. Please upload a photo instead.",
     "I_AGREE_TO": "I agree to",
     "TERMS_OF_SERVICE": "Terms of Service",
     "TERMS_REQUIRED": "You must agree to the Terms of Service to proceed.",
@@ -89,7 +89,7 @@
     "WATCH_VIDEO": "Watch Video",
     "TAKE_QUIZ": "Take Quiz"
   },
-    "CONSENT": {
+  "CONSENT": {
     "HEADER_TITLE": "DATA PRIVACY CONSENT",
     "HEADER_SUBTITLE": "DPDPA, 2023 Compliance",
     "TITLE": "License Details Capture for Terminal Entry",
@@ -107,6 +107,14 @@
     "MANDATORY_NOTE": "Providing your data is mandatory for terminal entry. Without consent, we will not be able to grant you access.",
     "BACK": "BACK",
     "PROCEED": "OK, PROCEED"
+  },
+  "POSTER": {
+    "TITLE": "Safety Training Poster",
+    "SUBTITLE": "Please complete the training and take the quiz",
+    "BACK_TO_VIDEO": "Back to Video",
+    "TAKE_QUIZ": "Take Quiz",
+    "PREV": "Previous",
+    "NEXT": "Next"
   },
   "Dashboards": "Dashboard ",
   "Ecommerce": "Ecommerce",

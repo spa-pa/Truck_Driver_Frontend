@@ -179,7 +179,7 @@ const mastersData: Routes = [
         },
         loadChildren: () => import('../../modules/masters/poster/poster.module').then(r => r.PosterModule),
         // canActivate: [PermissionGuard]
-    },
+    }
 
 ]
 

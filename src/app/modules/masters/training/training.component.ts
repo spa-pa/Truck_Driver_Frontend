@@ -29,6 +29,7 @@ import { DriverCertificationService } from "@shared/_http/driver-certification.s
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { DriverCertificationComponent } from "../driver/driver-certification/driver-certification.component";
 import { ConsentService } from "@shared/_http/consent.service";
+import { PosterService } from "@shared/_http/poster.service";
 
 interface Language {
   language_code: string;
@@ -111,6 +112,14 @@ interface QuizResult {
   message: string;
 }
 
+interface Poster {
+  poster_id: number;
+  language_id: number;
+  poster_path: string;
+  sequence: number;
+  is_active: boolean;
+}
+
 @Component({
   selector: "app-training",
   standalone: true,
@@ -145,6 +154,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   showRegistration: boolean = false;
   showCertification: boolean = false;
   showVideo: boolean = false;
+  showPoster: boolean = false;
   showQuiz: boolean = false;
   showResultModal: boolean = false;
   isLoading: boolean = false;
@@ -158,6 +168,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
   questions: MappedQuestion[] = [];
   currentQuestionIndex: number = 0;
   quizResult: QuizResult | null = null;
+
+  // Poster carousel (shown between Video and Quiz, per language)
+  posters: Poster[] = [];
+  currentPosterIndex: number = 0;
+  // True when the driver re-opened the video from the Quiz step ("Watch
+  // Video" link) — used so finishing/continuing sends them straight back
+  // to the quiz (at the same question) instead of through the poster step again.
+  private returningToQuizFromVideo: boolean = false;
   certificationId: any;
 
   // Forms
@@ -206,6 +224,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private activatedRoute: ActivatedRoute,
     private consentService: ConsentService,
+    private posterService : PosterService
   ) {
     this.translate.setDefaultLang("en");
     this.translate.use("en");
@@ -289,6 +308,45 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   get isFirstQuestion(): boolean {
     return this.currentQuestionIndex === 0;
+  }
+
+  // ------------------------------------------------------------
+  // Poster carousel
+  // ------------------------------------------------------------
+  get currentPoster(): Poster | null {
+    return this.posters[this.currentPosterIndex] || null;
+  }
+
+  nextPoster(): void {
+    if (this.posters.length === 0) return;
+    this.currentPosterIndex =
+      (this.currentPosterIndex + 1) % this.posters.length;
+  }
+
+  prevPoster(): void {
+    if (this.posters.length === 0) return;
+    this.currentPosterIndex =
+      (this.currentPosterIndex - 1 + this.posters.length) %
+      this.posters.length;
+  }
+
+  goToPoster(index: number): void {
+    if (index < 0 || index >= this.posters.length) return;
+    this.currentPosterIndex = index;
+  }
+
+  // Poster -> Quiz (manual "Continue" from the poster step)
+  proceedToQuizFromPoster(): void {
+    this.showPoster = false;
+    this.showQuiz = true;
+    this.cdr.detectChanges();
+  }
+
+  // Poster -> Video ("back" link on the poster step)
+  backToVideoFromPoster(): void {
+    this.showPoster = false;
+    this.showVideo = true;
+    this.cdr.detectChanges();
   }
 
   get quizProgressPercent(): number {
@@ -385,6 +443,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.showConsent = false;
     this.showRegistration = false;
     this.showVideo = false;
+    this.showPoster = false;
     this.showCertification = false;
   }
 
@@ -399,8 +458,13 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   goBackVedio() {
-    this.showVideo = true;
+    // Always go straight to the video itself (never the poster step) — the
+    // driver expects "Watch Video" to show the video, then drop them back
+    // into the quiz at the same question they left.
+    this.returningToQuizFromVideo = true;
     this.showQuiz = false;
+    this.showPoster = false;
+    this.showVideo = true;
   }
 
   // ------------------------------------------------------------
@@ -531,6 +595,27 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   private loadTrainingContent(languageId: number): void {
     this.isLoading = true;
+
+      // Poster
+    this.posters = [];
+    this.currentPosterIndex = 0;
+    this.subscriptions.add(
+      this.posterService.getPosterByLanguageId(languageId).subscribe({
+        next: (response: any) => {
+          const posterRes: Poster[] = response?.data || [];
+          this.posters = posterRes
+            .filter((p) => p.is_active)
+            .sort((a, b) => a.sequence - b.sequence);
+          this.currentPosterIndex = 0;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Error loading poster:", err);
+          this.posters = [];
+          this.cdr.detectChanges();
+        },
+      }),
+    );
 
     // Video
     this.subscriptions.add(
@@ -711,7 +796,24 @@ export class TrainingComponent implements OnInit, OnDestroy {
       return;
     }
     this.showVideo = false;
-    this.showQuiz = true;
+
+    // Re-watching the video from an in-progress quiz: skip the poster step
+    // and drop straight back into the quiz (same question, nothing reset).
+    if (this.returningToQuizFromVideo) {
+      this.returningToQuizFromVideo = false;
+      this.showQuiz = true;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // Normal forward flow: show poster images first if this language has
+    // any, otherwise skip straight to the quiz automatically.
+    if (this.posters.length > 0) {
+      this.currentPosterIndex = 0;
+      this.showPoster = true;
+    } else {
+      this.showQuiz = true;
+    }
     this.cdr.detectChanges();
   }
 
@@ -815,6 +917,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.showResultModal = false;
     this.showQuiz = false;
     this.showVideo = true;
+    this.returningToQuizFromVideo = false;
     this.videoProgress = 0;
     this.quizResult = null;
     this.initQuizForm();

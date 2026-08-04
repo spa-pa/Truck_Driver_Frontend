@@ -28,13 +28,26 @@ export class PosterComponent implements OnInit{
     this.subs.unsubscribe()
   }
 
+  // getAllPosters() {
+  //   this.subs.add(this.posterService.getAllPosters().subscribe({
+  //     next: (value) => {
+  //       this.PosterDetailsData.data = value.data;
+  //     }
+  //   }))
+  // }
+
   getAllPosters() {
-    this.subs.add(this.posterService.getAllPosters().subscribe({
+  this.subs.add(
+    this.posterService.getAllPosters().subscribe({
       next: (value) => {
-        this.PosterDetailsData.data = value.data;
+        this.PosterDetailsData.data = value.data.map((item: any) => ({
+          ...item,
+          language_name: item.language?.language_name || '-'
+        }));
       }
-    }))
-  }
+    })
+  );
+}
 
 
   handleCreateAction() {

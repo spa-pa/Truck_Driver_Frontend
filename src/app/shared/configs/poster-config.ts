@@ -4,7 +4,7 @@ import { RowData } from "@shared/models/table";
 export const PosterDetailsData: RowData = {
   headers: [
     { label: "Sr.No", key: "SR.NO", type: "autoIncrementNumber", size: "4%" },
-    { label: "Language", key: "language_name", type: "" },
+    { label: "Terminal", key: "terminal_name", type: "" },
     { label: "Poster Image", key: "poster_path", type: "" },
     { label: "Poster Sequence", key: "sequence", type: "" },
     {
@@ -23,7 +23,7 @@ export const PosterDetailsData: RowData = {
     { label: "false", value: "danger" },
     { label: "true", value: "success" },
   ],
-  filterfields: ["language_name"],
+  filterfields: ["terminal_name"],
   isSearch: false,
 };
 
@@ -38,16 +38,16 @@ export const PosterTypeSearchGroup: IFormStructure[] = [
     disable: false,
   },
   {
-    name: "language_id",
-    label: "Language",
-    placeholder: "Enter Language",
+    name: "terminal_id",
+    label: "Terminal",
+    placeholder: "Enter Terminal",
     type: "select",
     value: "",
     required: true,
     disable: false,
-    bindValue: "language_id",
-    bindLabel: "language_name",
-    listName: "language",
+    bindValue: "terminal_id",
+    bindLabel: "terminal_name",
+    listName: "terminal",
     listData: [],
   },
   {
@@ -77,7 +77,7 @@ export const PosterTypeSearchGroup: IFormStructure[] = [
         text: ' <div class="dz-message needsclick"><i class="icon-cloud-up"></i><h6>Upload Poster Image</h6></div>',
         dropzoneConfig: {
           clickable: true,
-          url: "https://httpbin.org/post",
+          url: "http://65.2.121.80/api/v1/FileUpload/Upload",
           addRemoveLinks: true,
           parallelUploads: 1,
           acceptedFiles: ".jpg,.jpeg,.png",
@@ -85,6 +85,6 @@ export const PosterTypeSearchGroup: IFormStructure[] = [
         },
       },
     ],
-    colsize: "col-3",
+    colsize: "col-12",
   },
 ];

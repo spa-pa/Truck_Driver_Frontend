@@ -21,6 +21,10 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   @media (max-width: 480px) {
     padding: 12px 8px;
   }
+
+  @media (max-height: 620px) {
+    padding: 10px 16px;
+  }
 }
 
 .step-container {
@@ -37,14 +41,104 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   border: 1px solid $border-color;
   transition: all 0.3s ease;
 
+  // Cap the card to the viewport height so short content (language
+  // selection, consent) sits fully on screen with no scroll, while
+  // taller content (video / poster / quiz) scrolls inside the card
+  // itself instead of the whole page.
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
   @media (max-width: 768px) {
     padding: 22px 18px !important;
     border-radius: 16px;
+    max-height: calc(100vh - 32px);
   }
 
   @media (max-width: 480px) {
     padding: 16px 12px !important;
     border-radius: 14px;
+    max-height: calc(100vh - 24px);
+  }
+
+  @media (max-height: 760px) {
+    padding: 22px 24px;
+  }
+
+  @media (max-height: 620px) {
+    padding: 16px 18px;
+  }
+}
+
+// Modifier used on the Video, Poster, and Registration cards: makes the
+// card actually occupy the available viewport height (instead of only
+// capping it), so the media/form area can grow to fill the space rather
+// than leaving a gap below the card. The header and button stay their
+// natural size; the media area (.video-container / .poster-carousel) or
+// the form takes the rest.
+.step-card--fill {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 56px);
+
+  @media (max-width: 768px) {
+    height: calc(100vh - 32px);
+  }
+
+  @media (max-width: 480px) {
+    height: calc(100vh - 24px);
+  }
+
+  > .step-header {
+    flex-shrink: 0;
+  }
+
+  > .video-container {
+    // Match the container's own box to a 16:9 shape (typical training-video
+    // aspect ratio) instead of stretching it to fill the leftover height
+    // exactly — that mismatch is what was causing the big black pillarbox
+    // bars either side of the video. Height still comes from the flexible
+    // leftover space; width is derived from it via aspect-ratio, so the
+    // video fills the box edge-to-edge with (at most) a tiny sliver of
+    // letterboxing if the source video isn't exactly 16:9.
+    flex: 1 1 auto;
+    min-height: 0;
+    width: auto;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    align-self: center;
+  }
+
+  > .poster-carousel {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  // Registration form: fields stay their natural size, the submit
+  // button anchors to the bottom of the available space, and the form
+  // scrolls internally on its own if the fields don't fit.
+  > form {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    .form-grid {
+      flex-shrink: 0;
+    }
+
+    .btn-primary.btn-full {
+      margin-top: auto;
+      flex-shrink: 0;
+    }
+  }
+
+  > .video-progress,
+  > .poster-dots,
+  > .poster-actions,
+  > .btn-primary {
+    flex-shrink: 0;
   }
 }
 
@@ -52,6 +146,10 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   text-align: center;
   margin-bottom: 20px;
   position: relative;
+
+  @media (max-height: 760px) {
+    margin-bottom: 12px;
+  }
 
   .language-select-wrapper {
     margin-top: 16px;
@@ -117,6 +215,16 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
       font-size: 22px;
       color: $primary;
     }
+
+    @media (max-height: 760px) {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 8px;
+
+      i {
+        font-size: 18px;
+      }
+    }
   }
 
   h2 {
@@ -125,6 +233,10 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     color: $primary;
     margin: 0 0 6px 0;
     letter-spacing: -0.3px;
+
+    @media (max-height: 760px) {
+      font-size: 18px;
+    }
   }
 
   p {
@@ -536,6 +648,11 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   cursor: pointer;
   transition: all 0.25s ease;
 
+  @media (max-height: 760px) {
+    margin-top: 18px;
+    padding: 12px 20px;
+  }
+
   &:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba($primary, 0.25);
@@ -587,13 +704,20 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 }
 
 .video-container {
-  background: #000;
+  background: #FFFFFF;
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   .video-player {
     width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
     display: block;
   }
 }
@@ -622,6 +746,135 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     font-size: 13px;
     color: $text-secondary;
     margin-top: 4px;
+  }
+}
+
+// ------------------------------------------------------------
+// Poster carousel (between Video and Quiz)
+// ------------------------------------------------------------
+.poster-carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.poster-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  background: $light-bg;
+  border: 2px solid $border-color;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .poster-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+}
+
+.poster-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba($primary, 0.55);
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba($primary, 0.25);
+
+  &:hover {
+    background: rgba($primary, 0.85);
+  }
+
+  &--prev {
+    left: 12px;
+  }
+
+  &--next {
+    right: 12px;
+  }
+
+  @media (max-width: 480px) {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+}
+
+.poster-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 0 16px;
+
+  @media (max-height: 760px) {
+    margin: 8px 0 12px;
+  }
+
+  .poster-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    padding: 0;
+    background: $border-color;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.active {
+      background: $primary;
+      width: 22px;
+      border-radius: 4px;
+    }
+
+    &:hover:not(.active) {
+      background: rgba($primary, 0.35);
+    }
+  }
+}
+
+.poster-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .btn-link-back {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: $text-secondary;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $primary;
+    }
   }
 }
 
@@ -656,6 +909,10 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
 .quiz-progress-header {
   margin-bottom: 28px;
+
+  @media (max-height: 760px) {
+    margin-bottom: 16px;
+  }
 
   &__top {
     display: flex;
@@ -694,6 +951,10 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 
 .question-card {
   margin-bottom: 8px;
+
+  @media (max-height: 760px) {
+    margin-bottom: 4px;
+  }
 }
 
 .question-media-box {
@@ -708,6 +969,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     overflow: hidden;
     background: $light-bg;
     aspect-ratio: 4 / 3;
+    max-height: 34vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -754,6 +1016,12 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     margin: 0 0 20px 0;
   }
 
+  @media (max-height: 760px) {
+    &__text {
+      margin-bottom: 12px;
+    }
+  }
+
   @media (max-width: 480px) {
     &__text {
       font-size: 15px;
@@ -766,6 +1034,10 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   flex-direction: column;
   gap: 10px;
 
+  @media (max-height: 760px) {
+    gap: 8px;
+  }
+
   .option-label {
     display: flex;
     align-items: center;
@@ -777,6 +1049,10 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     border: 2px solid $border-color;
     cursor: pointer;
     transition: all 0.2s ease;
+
+    @media (max-height: 760px) {
+      padding: 10px 14px;
+    }
 
     &:hover {
       background: rgba($primary, 0.02);
