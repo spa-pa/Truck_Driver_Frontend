@@ -111,7 +111,6 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
   }
 
   handleSubmit(event: any) {
-    debugger;
     // Validate that we have the file
     if (!this.base64FileData || !this.base64FileName) {
       this.toastService.open("Poster image is required", "error");
@@ -132,7 +131,6 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
     // Convert Base64 to File and append
     const file = this.dataURLtoFile(this.base64FileData, this.base64FileName);
     formData.append("poster_image", file, this.base64FileName);
-    debugger;
     switch (this.routeName) {
       case "create":
         this.subs.add(

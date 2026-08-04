@@ -29,6 +29,10 @@ export class PosterService {
         return this.httpClient.get(`${this.baseUrl}posterMaster/language/${id}`);
     }
 
+    getPosterByTerminalId(id: any): Observable<any> {
+        return this.httpClient.get(`${this.baseUrl}posterMaster/terminal/${id}`);
+    }
+
     updatePoster(payload: any, id: any): Observable<any> {
         return this.httpClient.put(`${this.baseUrl}posterMaster/${id}`, payload);
     }

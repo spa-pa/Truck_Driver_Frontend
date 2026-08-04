@@ -114,7 +114,7 @@ interface QuizResult {
 
 interface Poster {
   poster_id: number;
-  language_id: number;
+  terminal_id: number;
   poster_path: string;
   sequence: number;
   is_active: boolean;
@@ -333,6 +333,36 @@ export class TrainingComponent implements OnInit, OnDestroy {
   goToPoster(index: number): void {
     if (index < 0 || index >= this.posters.length) return;
     this.currentPosterIndex = index;
+  }
+
+  // Loads poster images by terminal id (instead of language id) and maps
+  // them to poster cards in order using their `sequence` number (1, 2, ...).
+  private loadPostersByTerminalId(): void {
+    this.posters = [];
+    this.currentPosterIndex = 0;
+
+    if (!this.terminalId) {
+      console.warn("No terminalId available to load posters");
+      return;
+    }
+
+    this.subscriptions.add(
+      this.posterService.getPosterByTerminalId(this.terminalId).subscribe({
+        next: (response: any) => {
+          const posterRes: Poster[] = response?.data || [];
+          this.posters = posterRes
+            .filter((p) => p.is_active)
+            .sort((a, b) => a.sequence - b.sequence);
+          this.currentPosterIndex = 0;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Error loading poster:", err);
+          this.posters = [];
+          this.cdr.detectChanges();
+        },
+      }),
+    );
   }
 
   // Poster -> Quiz (manual "Continue" from the poster step)
@@ -596,26 +626,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
   private loadTrainingContent(languageId: number): void {
     this.isLoading = true;
 
-      // Poster
-    this.posters = [];
-    this.currentPosterIndex = 0;
-    this.subscriptions.add(
-      this.posterService.getPosterByLanguageId(languageId).subscribe({
-        next: (response: any) => {
-          const posterRes: Poster[] = response?.data || [];
-          this.posters = posterRes
-            .filter((p) => p.is_active)
-            .sort((a, b) => a.sequence - b.sequence);
-          this.currentPosterIndex = 0;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error("Error loading poster:", err);
-          this.posters = [];
-          this.cdr.detectChanges();
-        },
-      }),
-    );
+      // Poster (now fetched by terminal id instead of language id)
+    this.loadPostersByTerminalId();
 
     // Video
     this.subscriptions.add(
