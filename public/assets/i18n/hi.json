@@ -72,7 +72,8 @@
     "OF": "में से",
     "PREVIOUS": "पिछला प्रश्न",
     "NEXT": "अगला प्रश्न",
-    "GO_TO_VIDEO": "वीडियो देखें"
+    "GO_TO_VIDEO": "वीडियो देखें",
+    "BACK_TO_POSTER": "पोस्टर पर वापस जाएँ"
   },
   "MODAL": {
     "CONGRATULATIONS": "बधाई हो!",

@@ -347,7 +347,12 @@
           {{ "VIDEO.COMPLETED" | translate }}</span>
       </div>
 
-      <button class="btn-primary btn-full" [disabled]="videoProgress < 90" (click)="proceedToQuiz()">
+      <button
+        class="btn-primary btn-full"
+        *ngIf="canTakeQuizFromVideo"
+        [disabled]="videoProgress < 90"
+        (click)="proceedToQuiz()"
+      >
         <i class="fas fa-question-circle"></i>
         {{ "VIDEO.TAKE_QUIZ" | translate }}
       </button>
@@ -408,7 +413,11 @@
           {{ "POSTER.BACK_TO_VIDEO" | translate }}
         </button>
 
-        <button class="btn-primary btn-full" (click)="proceedToQuizFromPoster()">
+        <button
+          class="btn-primary btn-full"
+          *ngIf="isLastPoster"
+          (click)="proceedToQuizFromPoster()"
+        >
           <i class="fas fa-question-circle"></i>
           {{ "POSTER.TAKE_QUIZ" | translate }}
         </button>
@@ -424,6 +433,16 @@
         <button type="button" class="btn-link-back" (click)="goBackVedio()">
           <i class="fas fa-arrow-left"></i>
           {{ "QUIZ.GO_TO_VIDEO" | translate }}
+        </button>
+
+        <button
+          type="button"
+          class="btn-link-back"
+          *ngIf="posters.length > 0"
+          (click)="backToPosterFromQuiz()"
+        >
+          <i class="fas fa-arrow-left"></i>
+          {{ "QUIZ.BACK_TO_POSTER" | translate }}
         </button>
       </div>
 

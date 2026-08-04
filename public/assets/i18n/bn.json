@@ -72,7 +72,8 @@
     "OF": "এর মধ্যে",
     "PREVIOUS": "আগের প্রশ্ন",
     "NEXT": "পরবর্তী প্রশ্ন",
-    "GO_TO_VIDEO": "ভিডিও দেখুন"
+    "GO_TO_VIDEO": "ভিডিও দেখুন",
+    "BACK_TO_POSTER": "পোস্টারে ফিরে যান"
   },
   "MODAL": {
     "CONGRATULATIONS": "অভিনন্দন!",

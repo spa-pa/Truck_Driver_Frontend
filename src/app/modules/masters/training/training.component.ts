@@ -176,6 +176,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // Video" link) — used so finishing/continuing sends them straight back
   // to the quiz (at the same question) instead of through the poster step again.
   private returningToQuizFromVideo: boolean = false;
+
+  // Template-facing flag: the "Take Quiz" button on the video card should
+  // only appear when the driver got here via "Watch Video" from an
+  // in-progress quiz — never on the normal first-time video playback,
+  // where completing the video auto-advances to the poster/quiz step.
+  get canTakeQuizFromVideo(): boolean {
+    return this.returningToQuizFromVideo;
+  }
   certificationId: any;
 
   // Forms
@@ -317,6 +325,13 @@ export class TrainingComponent implements OnInit, OnDestroy {
     return this.posters[this.currentPosterIndex] || null;
   }
 
+  // True once the user has navigated to the last poster in the carousel —
+  // used to gate the "Take Quiz" button until all posters have been seen.
+  get isLastPoster(): boolean {
+    if (this.posters.length === 0) return true;
+    return this.currentPosterIndex === this.posters.length - 1;
+  }
+
   nextPoster(): void {
     if (this.posters.length === 0) return;
     this.currentPosterIndex =
@@ -376,6 +391,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
   backToVideoFromPoster(): void {
     this.showPoster = false;
     this.showVideo = true;
+    this.cdr.detectChanges();
+  }
+
+  // Quiz -> Poster ("back to poster" link on the quiz step)
+  backToPosterFromQuiz(): void {
+    this.showQuiz = false;
+    this.showPoster = true;
+    this.currentPosterIndex = 0;
     this.cdr.detectChanges();
   }
 

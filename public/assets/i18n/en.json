@@ -74,7 +74,8 @@
     "OF": "of",
     "PREVIOUS": "Previous Question",
     "NEXT": "Next Question",
-    "GO_TO_VIDEO": "Watch Video"
+    "GO_TO_VIDEO": "Watch Video",
+    "BACK_TO_POSTER": "Back to Poster"
   },
   "MODAL": {
     "CONGRATULATIONS": "Congratulations!",
