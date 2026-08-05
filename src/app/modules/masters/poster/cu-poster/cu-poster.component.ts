@@ -87,7 +87,26 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
     this.subs.add(
       this.posterService.getPosterById(this.routeId).subscribe({
         next: (value) => {
-          this.PosterDetailsData.data = value.data;
+          //this.PosterDetailsData.data = value.data;
+          const posterData = value.data;
+          this.PosterDetailsData.data = posterData;
+          // If the poster has an image path, fetch and convert to Base64
+          if (posterData.poster_path) {
+            this.loadImageAsBase64(posterData.poster_path).then((base64) => {
+              if (base64) {
+                // Update the data object with the Base64 string
+                this.PosterDetailsData.data.poster_image = base64;
+                // Also set a filename (extract from URL or use default)
+                const fileName =
+                  posterData.poster_path.split("/").pop() || "poster.png";
+                this.PosterDetailsData.data.poster_image_name = fileName;
+                // Force form to re‑patch by creating a new reference
+                this.PosterDetailsData.data = {
+                  ...this.PosterDetailsData.data,
+                };
+              }
+            });
+          }
         },
       }),
     );
@@ -112,10 +131,10 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
 
   handleSubmit(event: any) {
     // Validate that we have the file
-    if (!this.base64FileData || !this.base64FileName) {
-      this.toastService.open("Poster image is required", "error");
-      return;
-    }
+    // if (!this.base64FileData || !this.base64FileName) {
+    //   this.toastService.open("Poster image is required", "error");
+    //   return;
+    // }
 
     const formData = new FormData();
     const rawValue = event.formValue;
@@ -129,8 +148,12 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
     });
 
     // Convert Base64 to File and append
-    const file = this.dataURLtoFile(this.base64FileData, this.base64FileName);
-    formData.append("poster_image", file, this.base64FileName);
+    // const file = this.dataURLtoFile(this.base64FileData, this.base64FileName);
+    // formData.append("poster_image", file, this.base64FileName);
+    if (this.base64FileData && this.base64FileName) {
+      const file = this.dataURLtoFile(this.base64FileData, this.base64FileName);
+      formData.append("poster_image", file, this.base64FileName);
+    }
     switch (this.routeName) {
       case "create":
         this.subs.add(
@@ -171,5 +194,31 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
       u8arr[n] = bstr.charCodeAt(n);
     }
     return new File([u8arr], filename, { type: mime });
+  }
+
+  private loadImageAsBase64(url: string): Promise<string> {
+    return fetch(url)
+      .then((response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.blob();
+      })
+      .then((blob) => {
+        return new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            if (typeof reader.result === "string") {
+              resolve(reader.result);
+            } else {
+              reject(new Error("Failed to convert image to base64 string"));
+            }
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to load poster image", err);
+        return Promise.resolve("");
+      });
   }
 }

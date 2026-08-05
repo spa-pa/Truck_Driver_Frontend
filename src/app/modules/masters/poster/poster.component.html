@@ -1,3 +1,8 @@
-<app-table [jsonData]="PosterDetailsData" (handleCreateAction)="handleCreateAction()"
-    (handleDeleteAction)="handleDeleteAction($event)" (handleEditAction)="handleEditAction($event)"
-    (handleViewAction)="handleViewAction($event)" (handleSelectRowAction)="handleEditAction($event)"></app-table>
+<app-table [jsonData]="PosterDetailsData" 
+(handleCreateAction)="handleCreateAction()"
+(handleDeleteAction)="handleDeleteAction($event)" 
+(handleEditAction)="handleEditAction($event)"
+(handleViewAction)="handleViewAction($event)"
+(handleViewImageActionRowData)="handleViewImage($event)"
+>
+</app-table>

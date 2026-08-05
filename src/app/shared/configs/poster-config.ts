@@ -5,7 +5,7 @@ export const PosterDetailsData: RowData = {
   headers: [
     { label: "Sr.No", key: "SR.NO", type: "autoIncrementNumber", size: "4%" },
     { label: "Terminal", key: "terminal_name", type: "" },
-    { label: "Poster Image", key: "poster_path", type: "" },
+    { label: "Poster Image", key: "poster_path", type: "urlLink" },
     { label: "Poster Sequence", key: "sequence", type: "" },
     {
       label: "Action",

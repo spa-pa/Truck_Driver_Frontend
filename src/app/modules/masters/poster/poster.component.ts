@@ -49,6 +49,13 @@ export class PosterComponent implements OnInit{
   );
 }
 
+handleViewImage(posterId: any) {
+  const poster = this.PosterDetailsData.data.find((p: any) => p.poster_id === posterId);
+  if (poster && poster.poster_path) {
+    window.open(poster.poster_path, '_blank');
+  }
+}
+
 
   handleCreateAction() {
     this.router.navigateByUrl("/poster/create")
