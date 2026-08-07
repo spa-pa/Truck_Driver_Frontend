@@ -79,7 +79,7 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
             this.certification = value.data;
             this.isLoading = false;
             this.updateQRCode();
-             // Force QR to render on mobile by re-triggering after DOM paint
+            // Force QR to render on mobile by re-triggering after DOM paint
             setTimeout(() => this.updateQRCode(), 100);
           },
           error: (err) => {
@@ -159,39 +159,41 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
     this.isDownloading = true;
 
     const original = this.certificationCard?.nativeElement as HTMLElement;
-     if (!original) {
+    if (!original) {
       this.isDownloading = false;
       return;
     }
-    const wrapper = document.createElement('div');
-    wrapper.style.position = 'fixed';
-    wrapper.style.top = '0';
-    wrapper.style.left = '-99999px'; // off-screen, but still laid out/rendered
+    const wrapper = document.createElement("div");
+    wrapper.style.position = "fixed";
+    wrapper.style.top = "0";
+    wrapper.style.left = "-99999px"; // off-screen, but still laid out/rendered
     wrapper.style.width = `${this.PDF_WIDTH}px`;
-    wrapper.style.background = '#ffffff';
-    wrapper.style.zIndex = '-1';
-    wrapper.style.pointerEvents = 'none';
+    wrapper.style.background = "#ffffff";
+    wrapper.style.zIndex = "-1";
+    wrapper.style.pointerEvents = "none";
 
     const clone = original.cloneNode(true) as HTMLElement;
-    clone.classList.add('pdf-export');
+    clone.classList.add("pdf-export");
     clone.style.width = `${this.PDF_WIDTH}px`;
     clone.style.maxWidth = `${this.PDF_WIDTH}px`;
-    clone.style.margin = '0';
-    clone.style.animation = 'none';
-    clone.style.transform = 'none';
-    clone.style.setProperty('box-shadow', 'none', 'important');
+    clone.style.margin = "0";
+    clone.style.animation = "none";
+    clone.style.transform = "none";
+    clone.style.setProperty("box-shadow", "none", "important");
 
     // Buttons shouldn't appear in the PDF
-    clone.querySelectorAll('.btn-download, .btn-print').forEach((btn) => btn.remove());
+    clone
+      .querySelectorAll(".btn-download, .btn-print")
+      .forEach((btn) => btn.remove());
 
-    const originalCanvases = original.querySelectorAll('canvas');
-    const clonedCanvases = clone.querySelectorAll('canvas');
+    const originalCanvases = original.querySelectorAll("canvas");
+    const clonedCanvases = clone.querySelectorAll("canvas");
     originalCanvases.forEach((srcCanvas, i) => {
       const destCanvas = clonedCanvases[i] as HTMLCanvasElement;
       if (destCanvas) {
         destCanvas.width = srcCanvas.width;
         destCanvas.height = srcCanvas.height;
-        destCanvas.getContext('2d')?.drawImage(srcCanvas, 0, 0);
+        destCanvas.getContext("2d")?.drawImage(srcCanvas, 0, 0);
       }
     });
 
@@ -209,18 +211,18 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
         scale: this.PDF_SCALE,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#ffffff',
+        backgroundColor: "#ffffff",
         logging: false,
         imageTimeout: 0,
         width: this.PDF_WIDTH,
         windowWidth: this.PDF_WIDTH,
       });
 
-      const imageData = canvas.toDataURL('image/jpeg', this.PDF_JPEG_QUALITY);
+      const imageData = canvas.toDataURL("image/jpeg", this.PDF_JPEG_QUALITY);
       const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
         compress: true,
       });
 
@@ -230,7 +232,8 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
 
       const pxToMm = 25.4 / 96;
       const contentWidthMm = this.PDF_WIDTH * pxToMm;
-      const contentHeightMm = (canvas.height / canvas.width) * this.PDF_WIDTH * pxToMm;
+      const contentHeightMm =
+        (canvas.height / canvas.width) * this.PDF_WIDTH * pxToMm;
 
       const availableWidth = pageWidth - margin * 2;
       const availableHeight = pageHeight - margin * 2;
@@ -246,19 +249,19 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
 
       pdf.addImage(
         imageData,
-        'JPEG',
+        "JPEG",
         x,
         y,
         renderWidth,
         renderHeight,
         undefined,
-        'NONE',
+        "NONE",
       );
       pdf.save(
-        `Driver-Certification-${this.certification?.certification_id || 'Unknown'}.pdf`,
+        `Driver-Certification-${this.certification?.certification_id || "Unknown"}.pdf`,
       );
     } catch (error) {
-      console.error('PDF download error:', error);
+      console.error("PDF download error:", error);
     } finally {
       document.body.removeChild(wrapper);
       this.isDownloading = false;
@@ -284,7 +287,9 @@ export class DriverCertificationComponent implements OnInit, OnDestroy {
       <html>
         <head>
           <title>Driver Certification</title>
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+           integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+           crossorigin="anonymous" referrerpolicy="no-referrer" />
           <style>
             body { margin: 0; padding: 20px; background: #ffffff; font-family: Arial, sans-serif; }
             .print-container { max-width: 900px; margin: 0 auto; }

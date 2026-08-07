@@ -5,17 +5,11 @@ import { LoginComponent } from './auth/login/login.component';
 import { ErrorPageComponent } from '@shared/component/error-page/error-page.component';
 import { AdminGuard } from '@shared/guard/admin.guard';
 import { TrainingComponent } from '@modules/masters/training/training.component';
-import { DriverRegistrationComponent } from './driver/driver-registration/driver-registration.component';
 import { DashboardNewComponent } from '@modules/dashboard/dashboard-new/dashboard-new.component';
 import { ChatComponent } from '@modules/chatbot/chat-component/chat-component.component';
 
 
 export const routes: Routes = [
-    {
-        path: 'driver-training',
-        loadComponent: () => import('./driver/driver-registration/driver-registration.component')
-            .then(m => m.DriverRegistrationComponent)
-    },
     {
         path: 'auth/login',
         component: LoginComponent

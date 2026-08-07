@@ -171,7 +171,8 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private generateQRData(): string {
     // Get base URL from environment
-    const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
+    // const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
+    const baseUrl = environment.SACNNING_BASE_URL;
 
     // If custom data is provided, use it
     if (this.config.data && this.config.data !== ' ') {

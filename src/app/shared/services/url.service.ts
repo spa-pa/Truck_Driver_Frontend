@@ -7,7 +7,9 @@ import { environment } from '../../../environments/environment';
 export class UrlService {
 
   getDriverTrainingUrl(terminalId?: number): string {
-    const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
+    //const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
+    const baseUrl = environment.SACNNING_BASE_URL;
+
     let url = `${baseUrl}safety-training`;
 
     // Add terminalId as query parameter if provided
@@ -19,6 +21,8 @@ export class UrlService {
   }
 
   getBaseUrl(): string {
-    return environment.SACNNING_BASE_URL || 'http://localhost:4200';
+    //return environment.SACNNING_BASE_URL || 'http://localhost:4200';
+    return environment.SACNNING_BASE_URL;
+
   }
 }

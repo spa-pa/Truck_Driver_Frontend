@@ -52,6 +52,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -65,13 +71,16 @@
                 }
               ],
               "outputHashing": "all",
+              "sourceMap": false,
               "optimization": {
                 "scripts": true,
                 "styles": {
                   "minify": true,
                   "inlineCritical": false
                 },
-                "fonts": true
+                "fonts": {
+                  "inline": false
+                }
               }
             },
             "development": {
