@@ -74,7 +74,6 @@ export class VideoConfigComponent implements OnInit {
           }
 
           this.isLoading = false;
-          console.log("Languages loaded:", this.languages);
 
           if (this.languages.length > 0) {
             const englishLang = this.languages.find(
@@ -114,7 +113,6 @@ export class VideoConfigComponent implements OnInit {
 
     const langId = Number(languageId);
     this.currentLoadingLanguageId = langId;
-    console.log("Loading videos for language ID:", langId);
     this.isLoading = true;
 
     this.subscriptions.add(
@@ -123,13 +121,10 @@ export class VideoConfigComponent implements OnInit {
           this.isLoading = false;
 
           if (this.currentLoadingLanguageId !== langId) {
-            console.log("Ignoring stale response for language:", langId);
             return;
           }
 
           this.videos = videos.data || [];
-
-          console.log("Videos response for language", langId, ":", this.videos);
 
           if (this.videos && this.videos.path && langId== this.videos?.dataValues?.language_id) {
             const video = this.videos;
@@ -138,14 +133,7 @@ export class VideoConfigComponent implements OnInit {
             this.currentVideoId = video.dataValues.video_id;
             this.isVideoLoaded = true;
             this.videoKey++;
-            console.log(
-              "Video loaded for language",
-              langId,
-              ":",
-              this.currentVideo,
-            );
           } else {
-            console.log("No video found for language ID:", langId);
             this.clearVideo();
           }
         },
@@ -209,7 +197,6 @@ export class VideoConfigComponent implements OnInit {
       },
       () => {
         // On Cancel - do nothing
-        console.log("Delete cancelled");
       },
       "Yes, Delete",
       "Cancel",
@@ -265,7 +252,6 @@ export class VideoConfigComponent implements OnInit {
         },
         () => {
           // On Cancel - do nothing
-          console.log("Replace cancelled");
         },
         "Yes, Replace",
         "Cancel",
@@ -403,8 +389,6 @@ export class VideoConfigComponent implements OnInit {
     const langId =
       this.selectedLanguageId !== null ? Number(this.selectedLanguageId) : null;
     this.selectedLanguageId = langId;
-
-    console.log("Language changed to ID:", this.selectedLanguageId);
 
     // Clear everything when language changes
     this.clearVideo();

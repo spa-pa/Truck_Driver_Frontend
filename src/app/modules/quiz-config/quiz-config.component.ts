@@ -97,8 +97,6 @@ export class QuizConfigComponent implements OnInit {
           }
 
           this.isLoading = false;
-          console.log("Languages loaded:", this.languages);
-
           if (this.languages.length > 0) {
             const englishLang = this.languages.find(
               (lang) =>
@@ -281,7 +279,6 @@ export class QuizConfigComponent implements OnInit {
         });
         // Store with correct index (0-based)
         this.optionImageFiles[index] = file;
-        console.log(`Option ${index} image stored:`, file.name);
       };
       reader.readAsDataURL(file);
     }
@@ -405,16 +402,8 @@ export class QuizConfigComponent implements OnInit {
 
       if (hasImagePreview && hasFile) {
         optionImages[i] = this.optionImageFiles[i];
-        console.log(
-          `✅ Option ${i} has image file:`,
-          this.optionImageFiles[i].name,
-        );
       }
     }
-
-    console.log("=== optionImages to send ===");
-    console.log(optionImages);
-    console.log("Keys:", Object.keys(optionImages));
 
     this.isSaving = true;
 
@@ -536,7 +525,6 @@ export class QuizConfigComponent implements OnInit {
       },
       () => {
         // On Cancel - Do nothing
-        console.log("Delete cancelled");
       },
       "Yes, Delete",
       "Cancel",
@@ -548,7 +536,6 @@ export class QuizConfigComponent implements OnInit {
     const langId =
       this.selectedLanguageId !== null ? Number(this.selectedLanguageId) : null;
     this.selectedLanguageId = langId;
-    console.log("Language changed to:", this.selectedLanguageId);
     this.resetForm();
     this.loadQuestions();
   }

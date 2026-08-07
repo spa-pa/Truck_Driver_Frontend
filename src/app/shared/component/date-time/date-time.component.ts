@@ -40,7 +40,6 @@ export class DateTimeComponent implements AfterViewInit {
   }
 
   onDateChange(selectedDates: Date[], dateStr: string, instance: any) {
-    console.log('Date changed to:', selectedDates[0]);
     const data = {
       selectedDate: selectedDates[0],
       fieldName: this.name

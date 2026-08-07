@@ -33,7 +33,7 @@
         </div>
         <div *ngIf="isFolderUpload">
           <div class="input-group">
-          <input class="form-control" type="file" (change)="handleFolderInput($event)" webkitdirectory directory multiple accept=".zip">
+          <input class="form-control" type="file" [name]="name" (change)="handleFolderInput($event)" webkitdirectory directory multiple accept=".zip">
 
           </div>
         </div>

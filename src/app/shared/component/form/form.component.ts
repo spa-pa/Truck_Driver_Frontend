@@ -249,18 +249,6 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
   onInputChange(event: Event, controlName: string, maxValue: number): void {
     const input = event.target as HTMLInputElement;
     let value = input.value;
-    // console.log(' value = ',value);
-    // if (isNaN(value)) {
-    //   this.dynamicForm.get(controlName)?.setValue(0, { emitEvent: false });
-    //   return;
-    // }
-
-    // if (value > maxValue) {
-    //   value = maxValue;
-    // }
-
-    // this.dynamicForm.get(controlName)?.setValue(Number(value), { emitEvent: false });
-    // console.log(' value = ',value);
 
     let data = {
       value: value,
@@ -287,16 +275,6 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
   // form.component.ts – inside handleFileUpload
   handleFileUpload(event: any, type?: any) {
     if (type === "base64") {
-      // Update the corresponding form control to satisfy required validation
-      const controlName = event?.fieldName;
-      if (controlName) {
-        const control = this.dynamicForm.get(controlName);
-        if (control) {
-          // Set to the file name (non‑empty) when a file is selected
-          control.setValue(event?.imgName || null);
-          control.markAsTouched();
-        }
-      }
       this.photoBase64Uploaded.emit(event);
     } else {
       this.fileUploaded.emit(event);
@@ -389,7 +367,6 @@ export class FormComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   updateFile(data: any) {
-    // console.log("this.dynamicform",this.dynamicForm.patchValue({cd_image_file_name:data?.['EDI Excel File']}))
     if (data?.["EDI Excel File"]) {
       this.dynamicForm.patchValue({
         edi_excel_file_name: data?.["EDI Excel File"],

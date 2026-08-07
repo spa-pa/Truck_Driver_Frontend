@@ -42,7 +42,6 @@ export class ItemDetailDialogComponent {
 
   // Method to determine if the Base64 data URI is a PDF
   isPDF(dataUri: string): boolean {
-    // console.log('dataUri.startsWith',dataUri.startsWith('data:application/pdf;'));
     return dataUri.startsWith('data:application/pdf;');
   }
 }

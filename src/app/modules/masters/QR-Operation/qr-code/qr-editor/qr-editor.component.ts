@@ -80,8 +80,6 @@ export class QREditorComponent implements OnInit {
       next: (response: any) => {
         this.isLoading = false;
 
-        console.log('API Response:', response);
-
         if (response && response.success && response.data) {
           this.originalConfig = response.data;
 
@@ -163,8 +161,6 @@ export class QREditorComponent implements OnInit {
     this.qrConfigApiService.getQrConfig(configId).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-
-        console.log('API Response by ID:', response);
 
         if (response && response.success && response.data) {
           this.originalConfig = response.data;
@@ -414,7 +410,6 @@ export class QREditorComponent implements OnInit {
 
   exportConfig(): void {
     const configJson = this.qrConfigService.exportConfig();
-    console.log('configJson = ', configJson);
     const blob = new Blob([configJson], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');

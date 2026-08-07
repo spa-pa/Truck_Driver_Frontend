@@ -32,6 +32,8 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
   base64FileData: string | null = null;
   base64FileName: string | null = null;
 
+  formData: any = {};
+
   constructor(
     private router: Router,
     private activatedroute: ActivatedRoute,
@@ -87,23 +89,20 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
     this.subs.add(
       this.posterService.getPosterById(this.routeId).subscribe({
         next: (value) => {
-          //this.PosterDetailsData.data = value.data;
           const posterData = value.data;
-          this.PosterDetailsData.data = posterData;
-          // If the poster has an image path, fetch and convert to Base64
+          // Store the whole object in formData
+          this.formData = { ...posterData };
+
+          // If there's an image, load it as base64 for preview
           if (posterData.poster_path) {
             this.loadImageAsBase64(posterData.poster_path).then((base64) => {
               if (base64) {
-                // Update the data object with the Base64 string
-                this.PosterDetailsData.data.poster_image = base64;
-                // Also set a filename (extract from URL or use default)
-                const fileName =
+                this.formData.poster_image = base64;
+                // Also store a filename for display
+                this.formData.poster_image_name =
                   posterData.poster_path.split("/").pop() || "poster.png";
-                this.PosterDetailsData.data.poster_image_name = fileName;
-                // Force form to re‑patch by creating a new reference
-                this.PosterDetailsData.data = {
-                  ...this.PosterDetailsData.data,
-                };
+                // Force change detection if needed (optional)
+                this.formData = { ...this.formData };
               }
             });
           }
@@ -121,9 +120,9 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
   // Keep existing Base64 handler for preview or other purposes
   handleFileUpload(event: any): void {
     if (event?.fieldName === "poster_image") {
-      this.PosterDetailsData.data.poster_image_file = event.base64String;
-      this.PosterDetailsData.data.poster_image = event.imgName;
-      // Store for later use in FormData
+      // Update formData instead of PosterDetailsData.data
+      this.formData.poster_image_file = event.base64String;
+      this.formData.poster_image = event.imgName;
       this.base64FileData = event.base64String;
       this.base64FileName = event.imgName;
     }
@@ -160,7 +159,9 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
           this.posterService.createPoster(formData).subscribe({
             next: (value) => {
               this.toastService.open(value.message, "success");
-              this.router.navigateByUrl("/poster");
+              setTimeout(() => {
+                this.router.navigateByUrl("/poster");
+              }, 300);
             },
             error: (err) => {
               this.toastService.open(err.error.message, "error");
@@ -173,7 +174,9 @@ export class CuPosterComponent implements OnInit, AfterViewInit {
           this.posterService.updatePoster(formData, this.routeId).subscribe({
             next: (value) => {
               this.toastService.open(value.message, "success");
-              this.router.navigateByUrl("/poster");
+              setTimeout(() => {
+                this.router.navigateByUrl("/poster");
+              }, 300);
             },
             error: (err) => {
               this.toastService.open(err.error.message, "error");

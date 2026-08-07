@@ -146,6 +146,7 @@
                                                     </ng-container>
                                                     <ng-container *ngSwitchCase="'upload'">
                                                         <app-upload-file [formControl]="getControl(control.name)"
+                                                            [name]="control.name"
                                                             [formConfig]="control.formConfigUpload ?? []"
                                                             [isUploadMultiDocs]="false"
                                                             [requireBase64]="control?.requireBase64 ?? false"

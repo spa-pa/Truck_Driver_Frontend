@@ -31,7 +31,6 @@ export class SchedulerComponent {
     this.subs.add(this.schedulerservice.getAllScheduler().subscribe({
       next: (value) => {
         this.schedulerDetailsData.data = value.data;
-        console.log(JSON.stringify(this.schedulerDetailsData.data));
       }
     }))
   }

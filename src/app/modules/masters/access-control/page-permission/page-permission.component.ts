@@ -29,7 +29,6 @@ export class PagePermissionComponent implements OnInit, OnDestroy {
   getAllPagePermissions() {
     this.subs.add(this.pagePermissionControllerService.getAllPagePermissions().subscribe({
       next: (value) => {
-        console.log('value = ', value.data);
         this.PagePermissionDetailsData.data = value.data;
       }
     }));

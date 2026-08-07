@@ -95,7 +95,6 @@ export class ModifyPagePermissionComponent implements OnInit, AfterViewInit, OnD
       this.subs.add(this.pagePermissionService.getPagePermission(this.routeId).subscribe({
         next: (value) => {
           this.PagePermissionDetailsData.data = value.data;
-          console.log('this.PagePermissionDetailsData = ', this.PagePermissionDetailsData.data);
           const description = value.data;
 
           // Call the function with the description string instead of an array

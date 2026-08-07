@@ -42,8 +42,6 @@ export class QRScanDriverDetailsComponent {
   searchErrorMessage: string = "";
 
   onScanComplete(data: any): void {
-    console.log("[QRScan] Scan complete:", data);
-
     this.searchError = false;
     this.searchErrorMessage = "";
 

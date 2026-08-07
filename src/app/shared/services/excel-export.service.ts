@@ -107,7 +107,6 @@ export class ExcelExportService {
     private styleHeaderRow(worksheet: ExcelJS.Worksheet, headersToStyle: string[]): void {
         // Get the first row (header row)
         const headerRow = worksheet.getRow(1);
-        console.log('headersToStyle = ', headersToStyle);
 
         // Normalize headersToStyle array to handle case insensitivity
         const normalizedHeadersToStyle = headersToStyle.map(header => header.trim().toLowerCase());

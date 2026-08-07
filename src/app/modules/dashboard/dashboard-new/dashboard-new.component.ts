@@ -367,7 +367,6 @@ export class DashboardNewComponent implements OnInit, AfterViewInit{
   getDashboardCounts(): void {
     this.dashboardService.getDashboardCount().subscribe({
       next: (response) => {
-        console.log("Success:", response);
         if (response && response.success && response.data) {
           this.counts = response.data;
         }
@@ -377,7 +376,6 @@ export class DashboardNewComponent implements OnInit, AfterViewInit{
         // Keep default values if API fails
       },
       complete: () => {
-        console.log("Dashboard counts API call completed");
       },
     });
   }

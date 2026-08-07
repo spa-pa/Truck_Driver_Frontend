@@ -33,7 +33,6 @@ export class RolePagePermissionComponent implements OnInit {
       this.permissionControllerService.getAllRolePermissions().subscribe({
         next: (value) => {
           this.loader.hideLoader()
-          console.log('getAllPageRolesPermission ' , value.data)
           this.roleDetailsData.data = value.data;
         },
         error: (error) => {

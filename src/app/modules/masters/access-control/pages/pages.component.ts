@@ -34,7 +34,6 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.subs.add(this.pageControllerService.getAllPage().subscribe({
       next: (value) => {
         this.loader.hideLoader();
-        console.log('value = ', value.data);
         this.pageDetailsData.data = value.data;
       }, error: () => {
         this.loader.hideLoader();

@@ -23,7 +23,6 @@ export class PermissionsService {
   // hasPermission(pageId: number, action: string): boolean {
   //   const page = this.permissions.find(p => p.page_id === pageId);
   //   if (!page) return false;
-  //   console.log('hasPermission page = ',page);
   //   switch (action) {
   //     case 'create':
   //       return (page.permission & 1) === 1; // Check if 'create' bit is set
@@ -61,7 +60,6 @@ export class PermissionsService {
 
     // const page = this.permissions.find(p => p.page_id === pageId);
     // if (!page) return false;
-    // // console.log('hasPermission page = ', page);
     // const permissionAction = Object.values(PermissionsActions).find(
     //     perm => perm.name === action
     // );
@@ -72,7 +70,6 @@ export class PermissionsService {
 
     const page = this.permissions.find(p => p.page_id === pageId);
     if (!page) return false;
-    console.log('hasPermission page = ', page);
 
     const permissionAction = Object.values(PermissionsActions).find(
       perm => perm.name === action

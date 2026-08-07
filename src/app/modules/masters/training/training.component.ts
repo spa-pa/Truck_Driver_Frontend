@@ -260,7 +260,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
       if (terminalIdParam) {
         this.terminalId = parseInt(terminalIdParam, 10);
-        console.log('Terminal ID captured:', this.terminalId);
 
         // You can use this.terminalId in your API calls or form submissions
         // For example, add it to the registration form
@@ -749,7 +748,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     const formValue = this.registrationForm.value;
-    console.log(this.terminalId);
     const formData = new FormData();
     formData.append("language_id", formValue.language_id);
     formData.append("full_name", formValue.full_name);

@@ -42,7 +42,6 @@ export class QrComponent implements OnInit {
     const user = currentUser();
     if (user && user.terminal_id) {
       this.terminalId = user.terminal_id;
-      console.log('Terminal ID from user:', this.terminalId);
     }
     this.loadQrConfig(this.terminalId);
 
@@ -63,8 +62,6 @@ export class QrComponent implements OnInit {
     this.qrConfigApiService.getQrConfig(1).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-
-        console.log('QR Config API Response:', response);
 
         if (response && response.success && response.data) {
           // Store the full response
@@ -114,8 +111,6 @@ export class QrComponent implements OnInit {
             this.qrModal.terminalId = this.terminalId;
             this.qrModal.qrData = this.qrDataString;
           }
-
-          console.log('QR Config loaded successfully:', this.config);
 
         } else {
           console.warn('No config found for terminal:', terminalId);
@@ -182,6 +177,5 @@ export class QrComponent implements OnInit {
 
   openScanner(): void {
     // Implement scanner logic here
-    console.log('Open scanner');
   }
 }

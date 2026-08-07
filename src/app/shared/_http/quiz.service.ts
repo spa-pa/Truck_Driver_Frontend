@@ -65,7 +65,6 @@ export class QuizService {
         const file = optionImages[parseInt(key)];
         if (file && file instanceof File && file.size > 0) {
           formData.append(`optionMedia${key}`, file, file.name);
-          console.log(`✅ Added optionMedia${key}:`, file.name);
         }
       });
     }
@@ -81,12 +80,9 @@ export class QuizService {
       }
     });
 
-    console.log("=== FINAL FORM DATA ===");
     cleanedFormData.forEach((value, key) => {
       if (value instanceof File) {
-        console.log(`  ${key}: ${value.name} (${value.size} bytes)`);
       } else {
-        console.log(`  ${key}: ${value}`);
       }
     });
 

@@ -170,7 +170,6 @@ export class QRScannerComponent implements OnInit, AfterViewInit, OnDestroy {
 
         track.applyConstraints(constraints)
           .then(() => {
-            console.log('Flash toggled:', this.isFlashOn);
           })
           .catch((err) => {
             console.error('Flash error:', err);
