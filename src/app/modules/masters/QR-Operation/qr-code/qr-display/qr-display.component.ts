@@ -27,9 +27,7 @@ import { environment } from '@environments/environment.prod';
     <div class="qr-display-wrapper" #qrDisplayWrapper>
       <div class="qr-display-container" [class]="'size-' + size">
         <div class="qr-wrapper" #qrWrapper>
-          <div class="qr-frame" [style.border-color]="config.qrColor">
             <div #qrElement class="qr-element-container"></div>
-          </div>
           <div 
             class="qr-text" 
             *ngIf="config.bottomText && showText"
@@ -60,8 +58,12 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private qrCode!: QRCodeStyling;
   private isInitialized = false;
+  private resizeObserver: ResizeObserver | null = null;
+  private currentSize = 0;
+  private qrDataURL: string | null = null;
 
   ngAfterViewInit(): void {
+    this.setupResizeObserver();
     setTimeout(() => {
       this.generateQR();
       this.isInitialized = true;
@@ -69,15 +71,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // IMPORTANT: Regenerate QR when config changes
-    if (this.isInitialized && changes['config']) {
-      setTimeout(() => {
-        this.generateQR();
-      }, 50);
-    }
-
-    // Regenerate when size changes
-    if (this.isInitialized && changes['size']) {
+    if (this.isInitialized && (changes['config'] || changes['size'])) {
       setTimeout(() => {
         this.generateQR();
       }, 50);
@@ -85,6 +79,10 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
     if (this.qrCode) {
       const element = this.qrElement?.nativeElement;
       if (element) {
@@ -94,7 +92,47 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
     }
   }
 
-  // ============ PUBLIC METHODS ============
+  private setupResizeObserver(): void {
+    if (typeof ResizeObserver !== 'undefined' && this.qrWrapper) {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.handleResize();
+      });
+      this.resizeObserver.observe(this.qrWrapper.nativeElement);
+    }
+  }
+
+  private handleResize(): void {
+    if (!this.qrWrapper) return;
+
+    const container = this.qrWrapper.nativeElement;
+    const containerWidth = container.offsetWidth;
+    const newSize = Math.min(containerWidth - 20, this.getMaxSize());
+
+    if (Math.abs(newSize - this.currentSize) > 10) {
+      this.currentSize = newSize;
+      this.generateQR();
+    }
+  }
+
+  private getMaxSize(): number {
+    const sizes = {
+      small: 180,
+      medium: 250,
+      large: 350
+    };
+
+    let baseSize = sizes[this.size] || 250;
+
+    if (window.innerWidth < 480) {
+      baseSize = Math.min(baseSize, 120);
+    } else if (window.innerWidth < 768) {
+      baseSize = Math.min(baseSize, 150);
+    } else if (window.innerWidth < 1024) {
+      baseSize = Math.min(baseSize, 180);
+    }
+
+    return baseSize;
+  }
 
   public generateQR(): void {
     if (!this.qrElement) {
@@ -104,27 +142,17 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
 
     try {
       const element = this.qrElement.nativeElement;
-      // Get the size based on config.qrSize
-      const size = this.config.qrSize || this.getSize();
+      const size = this.getResponsiveSize();
+      this.currentSize = size;
+
       const { cornerType, cornerDotType } = this.getCornerStyles();
-
-      // let qrData = this.config.data || ' ';
-      // Generate QR data - use URL or custom data
       let qrData = this.generateQRData();
-
-
-      // Validate JSON
-      try {
-        JSON.parse(qrData);
-      } catch (e) {
-        // Keep as string if not valid JSON
-      }
 
       const qrOptions: any = {
         width: size,
         height: size,
         data: qrData,
-        margin: 10,
+        margin: 8,
         dotsOptions: {
           color: this.config.qrColor || '#004761',
           type: this.config.dotType || 'rounded'
@@ -145,12 +173,10 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
         }
       };
 
-      // Add logo if present
       if (this.config.logoUrl && this.config.logoUrl.trim() !== '') {
         qrOptions.image = this.config.logoUrl;
       }
 
-      // Clear and regenerate
       element.innerHTML = '';
       this.qrCode = new QRCodeStyling(qrOptions);
       this.qrCode.append(element);
@@ -158,40 +184,116 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
       this.centerLogo();
       this.qrGenerated.emit();
 
+      // Cache the QR data URL after generation
+      setTimeout(() => {
+        this.cacheQRDataURL();
+      }, 300);
+
     } catch (error) {
       console.error('QR Generation Error:', error);
       const element = this.qrElement.nativeElement;
       element.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:center;height:${this.config.qrSize || 250}px;color:#d32f2f;font-size:14px;">
-          Error generating QR code
+        <div style="display:flex;align-items:center;justify-content:center;height:${this.currentSize || 150}px;color:#d32f2f;font-size:12px;">
+          Error
         </div>
       `;
     }
   }
 
+  private cacheQRDataURL(): void {
+    const canvas = this.getQRCanvas();
+    if (canvas && canvas.width > 0 && canvas.height > 0) {
+      try {
+        this.qrDataURL = canvas.toDataURL('image/png');
+        console.log('QR data URL cached, size:', this.qrDataURL.length);
+      } catch (e) {
+        console.warn('Failed to cache QR data URL:', e);
+      }
+    }
+  }
+
+  // Public method to get QR code as data URL
+  public getQRDataURLSync(): string | null {
+    return this.qrDataURL;
+  }
+
+  // Public method to get QR canvas
+  public getQRCanvas(): HTMLCanvasElement | null {
+    const element = this.qrElement?.nativeElement;
+    if (!element) return null;
+
+    const canvas = element.querySelector('canvas');
+    return canvas as HTMLCanvasElement | null;
+  }
+
+  // Public method to get QR as data URL with promise
+  public async getQRDataURLAsync(): Promise<string | null> {
+    // If we have cached data URL, return it
+    if (this.qrDataURL) {
+      return this.qrDataURL;
+    }
+
+    // Try to get from canvas
+    const canvas = this.getQRCanvas();
+    if (canvas && canvas.width > 0 && canvas.height > 0) {
+      try {
+        this.qrDataURL = canvas.toDataURL('image/png');
+        return this.qrDataURL;
+      } catch (e) {
+        console.warn('Failed to get QR data URL from canvas:', e);
+      }
+    }
+
+    // Wait for QR to render
+    await this.delay(500);
+
+    // Try again
+    const canvas2 = this.getQRCanvas();
+    if (canvas2 && canvas2.width > 0 && canvas2.height > 0) {
+      try {
+        this.qrDataURL = canvas2.toDataURL('image/png');
+        return this.qrDataURL;
+      } catch (e) {
+        console.warn('Failed to get QR data URL from canvas on retry:', e);
+      }
+    }
+
+    return null;
+  }
+
+  private getResponsiveSize(): number {
+    const baseSize = this.config.qrSize || this.getSizeFromInput();
+    const viewportWidth = window.innerWidth;
+
+    if (viewportWidth < 480) {
+      return Math.min(baseSize, 100);
+    } else if (viewportWidth < 768) {
+      return Math.min(baseSize, 130);
+    } else if (viewportWidth < 1024) {
+      return Math.min(baseSize, 160);
+    } else {
+      return baseSize;
+    }
+  }
+
+  private getSizeFromInput(): number {
+    const sizes = {
+      small: 180,
+      medium: 250,
+      large: 350
+    };
+    return sizes[this.size] || 250;
+  }
+
   private generateQRData(): string {
-    // Get base URL from environment
     const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
 
-    // If custom data is provided, use it
     if (this.config.data && this.config.data !== ' ') {
       return this.config.data;
     }
 
-    // Generate the full URL for driver-training
     const url = `${baseUrl}/safety-training`;
-
-    console.log('QR Code URL:', url); // For debugging
-
     return url;
-  }
-
-  private getSize(): number {
-    switch (this.size) {
-      case 'small': return 180;
-      case 'large': return 350;
-      default: return 250;
-    }
   }
 
   private getCornerStyles(): { cornerType: string; cornerDotType: string } {
@@ -222,12 +324,16 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
       if (logo) {
         (logo as HTMLElement).style.display = 'block';
         (logo as HTMLElement).style.margin = '0 auto';
+        (logo as HTMLElement).style.maxWidth = '25%';
+        (logo as HTMLElement).style.maxHeight = '25%';
       }
 
       const canvas = element.querySelector('canvas');
       if (canvas) {
         canvas.style.display = 'block';
         canvas.style.margin = '0 auto';
+        canvas.style.maxWidth = '100%';
+        canvas.style.height = 'auto';
       }
     }, 200);
   }

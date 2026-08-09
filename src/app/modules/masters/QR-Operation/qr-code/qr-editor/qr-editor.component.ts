@@ -290,29 +290,29 @@ export class QREditorComponent implements OnInit {
     };
 
     // If we have a qr_config_id, update by ID
-    if (this.qrConfigId) {
-      this.qrConfigApiService.updateQrConfig(payload, this.qrConfigId).subscribe({
-        next: (response: any) => {
-          this.isSaving = false;
+    // if (this.qrConfigId) {
+    this.qrConfigApiService.updateQrConfig(payload, 1).subscribe({
+      next: (response: any) => {
+        this.isSaving = false;
 
-          this.toastService.open('Configuration saved successfully!', 'success')
-          if (response && response.data) {
-            this.originalConfig = response.data;
-            if (response.data.qr_config_id) {
-              this.qrConfigId = response.data.qr_config_id;
-            }
+        this.toastService.open('Configuration saved successfully!', 'success')
+        if (response && response.data) {
+          this.originalConfig = response.data;
+          if (response.data.qr_config_id) {
+            this.qrConfigId = response.data.qr_config_id;
           }
-
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error saving QR config:', err);
-          this.isSaving = false;
-          alert('Failed to save configuration. Please try again.');
-          this.cdr.detectChanges();
         }
-      });
-    }
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error saving QR config:', err);
+        this.isSaving = false;
+        alert('Failed to save configuration. Please try again.');
+        this.cdr.detectChanges();
+      }
+    });
+    // }
   }
 
   // ============================================

@@ -135,9 +135,10 @@ export class DriverEntryListComponent {
   handleViewAction(event: any) {
     this.certificationId = event;
     this.modalRef = this.modalService.open(this.certificationModal, {
-      size: "xl",
       centered: true,
-      backdrop: "static",
+      backdrop: 'static',
+      fullscreen: true,
+      size: 'xl'
     });
   }
   handleExportAction(): void {
