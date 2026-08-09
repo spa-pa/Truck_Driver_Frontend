@@ -4,6 +4,11 @@ $white: #ffffff;
 $border-color: rgba($primary, 0.1);
 $text-secondary: rgba($primary, 0.7);
 
+.terminal-select {
+    width: auto;
+    min-width: 150px;
+  }
+
 // ============ MODAL CONTENT ============
 .modal-content {
     border: none;

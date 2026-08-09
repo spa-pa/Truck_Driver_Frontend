@@ -7,7 +7,7 @@
         <!-- Camera Container -->
         <div class="camera-container">
             <video #video id="video" autoplay playsinline></video>
-            <canvas #canvas id="canvas" style="display: none;"></canvas>
+            <canvas #canvas id="canvas" class="hidden-element"></canvas>
 
             <!-- Scanner Overlay -->
             <div class="scanner-overlay" *ngIf="isCameraOn">
@@ -58,7 +58,7 @@
                 <i class="fa fa-upload"></i>
                 Upload QR Image
             </button>
-            <input type="file" #fileInput accept="image/*" style="display: none" (change)="onImageUpload($event)" />
+            <input type="file" #fileInput accept="image/*" class="hidden-element" (change)="onImageUpload($event)" />
             <button class="btn-flash" (click)="toggleFlash()" *ngIf="hasFlash && isCameraOn">
                 <i class="fa" [class.fa-lightbulb-o]="!isFlashOn" [class.fa-lightbulb]="isFlashOn"></i>
             </button>
@@ -70,7 +70,7 @@
         </div>
 
         <!-- Scanned Data Display -->
-        <div class="scanned-data" *ngIf="scannedData">
+        <!-- <div class="scanned-data" *ngIf="scannedData">
             <div class="data-header">
                 <h3>
                     <i class="fa fa-check-circle" style="color: #4caf50;"></i>
@@ -111,6 +111,6 @@
                     <pre>{{ backendResponse.message | json }}</pre>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>

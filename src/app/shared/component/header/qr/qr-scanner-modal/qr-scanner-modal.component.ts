@@ -43,9 +43,10 @@ export class QRScannerModalComponent {
   }
 
   onScanComplete(data: any): void {
+    this.closeModal();
     this.scanComplete.emit(data);
-    setTimeout(() => {
-      this.closeModal();
-    }, 1500);
+    // setTimeout(() => {
+    //   this.closeModal();
+    // }, 1500);
   }
 }

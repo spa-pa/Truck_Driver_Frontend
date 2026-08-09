@@ -267,6 +267,40 @@ export class QuizConfigComponent implements OnInit {
     }
   }
 
+  //   onFileSelected(event: Event, type: string): void {
+  //   const input = event.target as HTMLInputElement;
+
+  //   if (!input.files?.length) {
+  //     return;
+  //   }
+
+  //   const file = input.files[0];
+
+  //   if (type === "questionImage") {
+  //     const reader = new FileReader();
+
+  //     reader.onload = (e) => {
+  //       this.questionImagePreview = e.target?.result as string;
+  //       this.questionImageFile = file;
+  //     };
+
+  //     reader.readAsDataURL(file);
+
+  //   } else if (type === "questionAudio") {
+
+  //     // Remove previous preview URL
+  //     if (this.questionAudioPreview) {
+  //       URL.revokeObjectURL(this.questionAudioPreview);
+  //     }
+
+  //     // Keep actual File for API upload
+  //     this.questionAudioFile = file;
+
+  //     // Create temporary browser URL for preview
+  //     this.questionAudioPreview = URL.createObjectURL(file);
+  //   }
+  // }
+
   onOptionImageSelected(event: any, index: number) {
     const file = event.target.files[0];
     if (file) {

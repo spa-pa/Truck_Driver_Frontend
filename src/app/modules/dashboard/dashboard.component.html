@@ -12,8 +12,7 @@
           </label>
           <select
             id="terminalSelect"
-            class="form-select form-select-sm"
-            style="width: auto; min-width: 150px"
+            class="form-select form-select-sm terminal-select"
             [(ngModel)]="selectedTerminalId"
             (change)="onTerminalChange()"
           >
@@ -147,8 +146,7 @@
               </div>
               <a
                 (click)="navigateToAllTraining()"
-                class="text-primary small fw-semibold text-decoration-none"
-                style="cursor: pointer"
+                class="text-primary small fw-semibold text-decoration-none cursor-pointer"
               >
                 View All <i class="fas fa-arrow-right ms-1"></i>
               </a>
@@ -215,8 +213,7 @@
               </div>
               <a
                 (click)="navigateToAllCertifications()"
-                class="text-primary small fw-semibold text-decoration-none"
-                style="cursor: pointer"
+                class="text-primary small fw-semibold text-decoration-none cursor-pointer"
               >
                 View All <i class="fas fa-arrow-right ms-1"></i>
               </a>
