@@ -447,9 +447,10 @@ export class DriverRegistrationComponent implements OnInit, OnDestroy {
             if (err.data.certification) {
               this.certificationId = err.data.certification.certification_id;
               this.modalRef = this.modalService.open(this.certificationModal, {
-                size: 'xl',
                 centered: true,
-                backdrop: 'static'
+                backdrop: 'static',
+                fullscreen: true,
+                size: 'xl'
               });
               this.initRegistrationForm();
               this.showRegistration = true;

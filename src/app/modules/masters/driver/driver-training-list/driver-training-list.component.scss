@@ -9,7 +9,7 @@ $text-secondary: rgba($primary, 0.7);
     border: none;
     border-radius: 20px;
     overflow: hidden;
-    max-height: 90vh;
+    max-height: 100vh;
     background: $white;
 }
 
@@ -89,7 +89,7 @@ $text-secondary: rgba($primary, 0.7);
 .modal-body {
     padding: 24px 28px !important;
     background: #f5f6f8;
-    max-height: calc(90vh - 150px);
+    // max-height: calc(90vh - 150px);
     overflow-y: auto;
 
     &::-webkit-scrollbar {

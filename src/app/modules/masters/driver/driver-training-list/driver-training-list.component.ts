@@ -27,7 +27,7 @@ export class DriverTrainingListComponent implements OnInit {
   subs: any;
   certificationId: any;
 
-    // User info
+  // User info
   userRole: string = "";
   userId: number | null = null;
   userTerminalId: number | null = null;
@@ -39,8 +39,8 @@ export class DriverTrainingListComponent implements OnInit {
   private modalRef: NgbModalRef | null = null;
 
   constructor(
-    private router: Router, 
-    private driverCertificationService: DriverCertificationService, 
+    private router: Router,
+    private driverCertificationService: DriverCertificationService,
     private modalService: NgbModal,
     private excelService: ExcelExportService,
     private terminalService: TerminalService,
@@ -53,7 +53,7 @@ export class DriverTrainingListComponent implements OnInit {
     //this.getAllDriverCertification();
   }
 
-    private loadUserFromStorage(): void {
+  private loadUserFromStorage(): void {
     const user = currentUser();
     this.userId = user.role_id;
     this.userRole = user.role_name;
@@ -68,7 +68,7 @@ export class DriverTrainingListComponent implements OnInit {
     }
   }
 
-    private loadTerminals(): void {
+  private loadTerminals(): void {
     this.terminalService.getAllTerminals().subscribe({
       next: (response) => {
         if (response?.success && Array.isArray(response.data)) {
@@ -82,11 +82,11 @@ export class DriverTrainingListComponent implements OnInit {
     });
   }
 
-    onTerminalChange(): void {
+  onTerminalChange(): void {
     this.loadData(this.selectedTerminalId);
   }
 
-    private loadData(terminalId: number | null): void {
+  private loadData(terminalId: number | null): void {
     if (terminalId === null) {
       // No parameter → all terminals
       this.getAllDriverCertification();
@@ -96,7 +96,7 @@ export class DriverTrainingListComponent implements OnInit {
     }
   }
 
-    getAllDriverCertification(terminalId?: number): void {
+  getAllDriverCertification(terminalId?: number): void {
     this.subs.add(
       this.driverCertificationService
         .getAllDriverCertification(terminalId)
@@ -146,13 +146,14 @@ export class DriverTrainingListComponent implements OnInit {
   handleViewAction(event: any) {
     this.certificationId = event;
     this.modalRef = this.modalService.open(this.certificationModal, {
-      size: 'xl',
       centered: true,
-      backdrop: 'static'
+      backdrop: 'static',
+      fullscreen: true,
+      size: 'xl'
     });
   }
 
-   handleExportAction(): void {
+  handleExportAction(): void {
     this.excelService.exportAsExcelFile(this.DriverTrainingDetailsData.data, "driver_training_list", this.DriverTrainingDetailsData.excelKeys);
   }
 
