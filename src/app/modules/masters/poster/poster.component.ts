@@ -64,30 +64,31 @@ export class PosterComponent implements OnInit {
   //   }
   // }
 
-   handleViewImage(posterId: any) {
-    const poster = this.PosterDetailsData.data.find(
-      (p: any) => p.poster_id === posterId,
-    );
-    if (poster && poster.poster_path) {
-      const dialogConfig: MatDialogConfig = {
-        maxWidth: "80vw",
-        maxHeight: "90vh",
-        width: "100%",
-        height: "100%",
-        data: {
-          key: "Poster",
-          value: poster.poster_id,
-          img: poster.poster_path,   // can be a URL or base64 string
-          img_name: poster.poster_name || "poster",
-        },
-        autoFocus: true,
-        disableClose: true,
-        panelClass: "custom-dialog-container",
-      };
+  handleViewImage(posterId: any) {
+  const poster = this.PosterDetailsData.data.find(
+    (p: any) => p.poster_id === posterId,
+  );
+  if (poster && poster.poster_path) {
+    const isMobile = window.innerWidth <= 768;
 
-      this.dialog.open(ItemDetailDialogComponent, dialogConfig);
-    }
+    const dialogConfig: MatDialogConfig = {
+      maxWidth: isMobile ? '95vw' : '80vw',
+      maxHeight: isMobile ? '85vh' : '90vh',
+      width: isMobile ? '95vw' : '100%',
+      height: 'auto',              // let content size the dialog instead of forcing 100%
+      data: {
+        key: "Poster",
+        img: poster.poster_path,
+        img_name: poster.poster_name || "poster",
+      },
+      autoFocus: true,
+      disableClose: true,
+      panelClass: "custom-dialog-container",
+    };
+
+    this.dialog.open(ItemDetailDialogComponent, dialogConfig);
   }
+}
 
   handleCreateAction() {
     this.router.navigateByUrl("/poster/create");

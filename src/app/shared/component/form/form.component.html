@@ -200,6 +200,13 @@
                                     </ng-container>
                                 </ng-container>
                             </div>
+                            <div class="row" *ngIf="actiontype === 'view'">
+                                <div class="col">
+                                    <div class="text-end">
+                                        <a class="btn btn-secondary" (click)="onCancle()">Back</a>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row" *ngIf="actiontype!== 'view'">
                                 <div class="col"
                                     *ngIf="!isNext && !isSubmit && !isAdd && !isButtonHidden && !isSet && !isGenerate && !isSearch">

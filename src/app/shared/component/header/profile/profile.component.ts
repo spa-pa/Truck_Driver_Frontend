@@ -20,7 +20,6 @@ export class ProfileComponent {
 
   ngOnInit(): void {
     this.profileDetails = currentUser();
-    console.log('profileDetails', this.profileDetails);
   }
 
   open() {
