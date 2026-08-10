@@ -49,7 +49,7 @@ export class CuCountryComponent implements OnInit, AfterViewInit {
 
   initialization(): void {
     this.CountryTypeSearchGroupStructure.forEach((ele, index) => {
-
+     if (this.routeName == "view") ele.disable = true;
     })
   }
 

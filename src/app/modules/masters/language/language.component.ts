@@ -4,6 +4,7 @@ import { ApiLanguageService } from '@shared/_http/language.service';
 import { TableComponent } from '@shared/component/table/table.component';
 import { LanguageDetailsData } from '@shared/configs/language-config';
 import { RowData } from '@shared/models/table';
+import { ToastService } from '@shared/services/toast.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,7 +17,7 @@ export class LanguageComponent {
   LanguageDetailsData: RowData = LanguageDetailsData;
   subs: any;
 
-  constructor(private router: Router, private languageService: ApiLanguageService) { }
+  constructor(private router: Router, private languageService: ApiLanguageService, private toastService: ToastService) { }
 
 
   ngOnInit(): void {
@@ -41,12 +42,24 @@ export class LanguageComponent {
   }
 
   handleDeleteAction(event: any) {
-    this.subs.add(this.languageService.deleteLanguage(event).subscribe({
-      next: (value) => {
-        this.getAllLanguage()
+  this.subs.add(
+    this.languageService.deleteLanguage(event).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.toastService.open(response.message, 'success');
+          this.getAllLanguage();
+        } else {
+          this.toastService.open(response.message || 'Deletion failed', 'error');
+        }
+      },
+      error: (err) => {
+        this.toastService.open('An error occurred while deleting the language.', 'error');
       }
-    }))
-  }
+    })
+  );
+}
+
+  
 
   handleEditAction(event: any) {
     this.router.navigateByUrl(`/language/edit/${event}`)

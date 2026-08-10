@@ -41,11 +41,11 @@ export class PermissionControllerService {
     // --------------------------------------
 
     getAllPageByID(pageid: any): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}PageMaster/GetById/${pageid}/`);
+        return this.httpClient.get(`${this.baseUrl}PageMaster/GetById/${pageid}`);
     }
 
     getAllPagePermissionByID(pagepermissionid: any): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}pagePermissionMaster/${pagepermissionid}/`);
+        return this.httpClient.get(`${this.baseUrl}pagePermissionMaster/${pagepermissionid}`);
     }
 
     getAllPagePermissionByPageId(PageId: any): Observable<any> {
@@ -53,12 +53,12 @@ export class PermissionControllerService {
     }
 
     getAllPermissionsByID(permissionId: any): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}PermissionMaster/GetById/${permissionId}/`);
+        return this.httpClient.get(`${this.baseUrl}PermissionMaster/${permissionId}`);
     }
 
 
     getAllRolePermissionsID(rolepagepermissionid: any): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}rolePagePermissionMaster/${rolepagepermissionid}/`);
+        return this.httpClient.get(`${this.baseUrl}rolePagePermissionMaster/${rolepagepermissionid}`);
     }
 
     // --------------------------------------
@@ -66,7 +66,7 @@ export class PermissionControllerService {
     // --------------------------------------
 
     deletePagePermissionById(pagePermissionId: any): Observable<any> {
-        return this.httpClient.delete(`${this.baseUrl}page-permission/${pagePermissionId}/`);
+        return this.httpClient.delete(`${this.baseUrl}page-permission/${pagePermissionId}`);
     }
 
     deletePermissionsById(permissionid: any): Observable<any> {
@@ -74,7 +74,7 @@ export class PermissionControllerService {
     }
 
     deleteRolePermissionById(rolepagepermissionid: any): Observable<any> {
-        return this.httpClient.delete(`${this.baseUrl}group-role-page-permission/${rolepagepermissionid}/`);
+        return this.httpClient.delete(`${this.baseUrl}group-role-page-permission/${rolepagepermissionid}`);
     }
 
     // --------------------------------------

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { StateService } from '@shared/_http/state.service';
 import { StateDetailsData } from '@shared/configs/state-config';
 import { RowData } from '@shared/models/table';
+import { ToastService } from '@shared/services/toast.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,7 +17,7 @@ export class StateComponent implements OnInit {
   StateDetailsData: RowData = StateDetailsData;
   subs: any;
 
-  constructor(private router: Router, private stateService: StateService) { }
+  constructor(private router: Router, private stateService: StateService, private toastService: ToastService) { }
 
 
   ngOnInit(): void {
@@ -42,12 +43,22 @@ export class StateComponent implements OnInit {
   }
 
   handleDeleteAction(event: any) {
-    this.subs.add(this.stateService.deleteState(event).subscribe({
-      next: (value) => {
-        this.getAllState()
+   this.subs.add(
+    this.stateService.deleteState(event).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.toastService.open(response.message, 'success');
+          this.getAllState();
+        } else {
+          this.toastService.open(response.message || 'Deletion failed', 'error');
+        }
+      },
+      error: (err) => {
+        this.toastService.open('An error occurred while deleting the state.', 'error');
       }
-    }))
-  }
+    })
+  );
+}
 
   handleEditAction(event: any) {
     this.router.navigateByUrl(`/state/edit/${event}`)

@@ -140,6 +140,7 @@ export class DriverEntryListComponent {
       backdrop: "static",
     });
   }
+  
   handleExportAction(): void {
     this.excelService.exportAsExcelFile(
       this.DriverEntriesDetailsData.data,

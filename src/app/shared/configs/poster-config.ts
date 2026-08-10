@@ -77,7 +77,7 @@ export const PosterTypeSearchGroup: IFormStructure[] = [
         text: ' <div class="dz-message needsclick"><i class="icon-cloud-up"></i><h6>Upload Poster Image</h6></div>',
         dropzoneConfig: {
           clickable: true,
-          url: "http://65.2.121.80/api/v1/FileUpload/Upload",
+          url: "http://localhost:3000/api/v1/upload/file",
           addRemoveLinks: true,
           parallelUploads: 1,
           acceptedFiles: ".jpg,.jpeg,.png",

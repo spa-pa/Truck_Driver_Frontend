@@ -50,10 +50,7 @@ export class CuStateComponent implements OnInit, AfterViewInit {
 
   initialization(): void {
     this.StateTypeSearchGroupStructure.forEach((ele, index) => {
-      if (ele.type === 'select') {
-        this.setOptionValues(ele);
-      }
-
+      if (this.routeName == "view") ele.disable = true;
       if (ele.type == 'select')
         this.setOptionValues(ele)
     })

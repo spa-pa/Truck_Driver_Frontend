@@ -15,22 +15,22 @@ export class StateService {
     }
 
     getAllState(): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}StateMaster`);
+        return this.httpClient.get(`${this.baseUrl}stateMaster`);
     }
 
     getState(id: any): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}StateMaster/${id}`);
+        return this.httpClient.get(`${this.baseUrl}stateMaster/${id}`);
     }
 
     createState(payload: any): Observable<any> {
-        return this.httpClient.post(`${this.baseUrl}StateMaster/`, payload);
+        return this.httpClient.post(`${this.baseUrl}stateMaster/`, payload);
     }
 
     updateState(payload: any, id: any): Observable<any> {
-        return this.httpClient.put(`${this.baseUrl}StateMaster/${id}`, payload);
+        return this.httpClient.put(`${this.baseUrl}stateMaster/${id}`, payload);
     }
 
     deleteState(id: any): Observable<any> {
-        return this.httpClient.delete(`${this.baseUrl}StateMaster/${id}`);
+        return this.httpClient.delete(`${this.baseUrl}stateMaster/${id}`);
     }
 }

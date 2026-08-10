@@ -12,15 +12,15 @@ export const PageDetails: RowData = {
         { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }
     ],
     "data": [],
-    "dataKey": 'pageId',
+    "dataKey": 'page_id',
     "buttonname": 'Create Page',
     "button": true,
     "statuses": [
         { label: 'false', value: 'danger' },
         { label: 'true', value: 'success' },
     ],
-    "filterfields": ['pageName', 'pageUrl', 'mobileUrl', 'module_name'],
-    "isSearch": true
+    "filterfields": ['page_name', 'page_path'],
+    "isSearch": false
 }
 
 export const PageFormGroup: IFormStructure[] = [

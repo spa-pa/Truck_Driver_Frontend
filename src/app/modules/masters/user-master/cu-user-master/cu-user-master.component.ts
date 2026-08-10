@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RoleService } from '@shared/_http/role.service';
+import { TerminalService } from '@shared/_http/terminal.service';
 import { UserMasterService } from '@shared/_http/user-master.service';
 import { UserMasterDetailsData, UserMasterTypeSearchGroup } from '@shared/configs/user-master-config';
 import { ACTIVE_INACTIVE_LISTDATA, YES_NO_LISTDATA } from '@shared/configs/yesNoSelect-config';
@@ -24,7 +25,14 @@ export class CuUserMasterComponent implements OnInit, AfterViewInit {
   UserMasterTypeSearchGroup!: IFormStructure[];
   UserMasterDetailsData: RowData = UserMasterDetailsData;
 
-  constructor(private router: Router, private activatedroute: ActivatedRoute, private userMasterService: UserMasterService, private toastService: ToastService, private roleService: RoleService) { }
+  constructor(
+    private router: Router, 
+    private activatedroute: ActivatedRoute, 
+    private userMasterService: UserMasterService, 
+    private toastService: ToastService, 
+    private roleService: RoleService,
+    private terminalService: TerminalService) 
+  { }
 
 
   ngOnInit(): void {
@@ -69,7 +77,16 @@ export class CuUserMasterComponent implements OnInit, AfterViewInit {
         break;
       case "yesno":
         ele.listData = ACTIVE_INACTIVE_LISTDATA.activeInactiveBoolean
-        break
+        break;
+        case "terminal":
+        this.subs.add(
+          this.terminalService.getAllTerminals().subscribe({
+            next: (value) => {
+              ele.listData = value.data;
+            },
+          }),
+        );
+        break;
     }
   }
 

@@ -497,6 +497,24 @@ $transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           }
         }
 
+        /* ===== GATE IN BUTTON ===== */
+        .btn-gate-in {
+          background: $success; /* #10b981 */
+          border-color: $success;
+          color: $white;
+
+          &:hover {
+            background: darken($success, 5%);
+            border-color: darken($success, 5%);
+            box-shadow: 0 2px 8px rgba($success, 0.35);
+            transform: translateY(-2px);
+          }
+
+          i {
+            color: $white;
+          }
+        }
+
         /* ===== REFRESH BUTTON ===== */
         .btn-refresh {
           background: rgba($primary, 0.08);

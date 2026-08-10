@@ -14,7 +14,7 @@ export const CountryDetailsData: RowData = {
         { label: 'false', value: 'danger' },
         { label: 'true', value: 'success' },
     ],
-    "filterfields": ['countryName'],
+    "filterfields": ['country_name'],
     "isSearch": false
 }
 

@@ -197,9 +197,13 @@
             <h2>Certification Details</h2>
           </div>
           <div class="header-right">
-            <button class="btn-refresh" (click)="refreshCertification()">
+            <!-- <button class="btn-refresh" (click)="refreshCertification()">
               <i class="fa fa-refresh"></i>
               Refresh
+            </button> -->
+            <button class="btn-gate-in" *ngIf="isManualSearch" (click)="gateIn()">
+              <i class="fa fa-sign-in"></i>
+              Gate In
             </button>
             <button class="btn-close" (click)="clearCertification()">
               <i class="fa fa-times"></i>

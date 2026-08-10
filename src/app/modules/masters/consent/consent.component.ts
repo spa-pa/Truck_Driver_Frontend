@@ -4,6 +4,7 @@ import { ConsentService } from '@shared/_http/consent.service';
 import { TableComponent } from '@shared/component/table/table.component';
 import { ConsentDetailsData } from '@shared/configs/consent-config';
 import { RowData } from '@shared/models/table';
+import { ToastService } from '@shared/services/toast.service';
 import { Subscription } from 'rxjs';
 
 
@@ -17,7 +18,7 @@ export class ConsentComponent implements OnInit{
   ConsentDetailsData: RowData = ConsentDetailsData;
   subs: any;
 
-  constructor(private router: Router, private consentService: ConsentService) { }
+  constructor(private router: Router, private consentService: ConsentService, private toastService: ToastService) { }
 
 
   ngOnInit(): void {
@@ -42,13 +43,24 @@ export class ConsentComponent implements OnInit{
     this.router.navigateByUrl("/consent/create")
   }
 
+
   handleDeleteAction(event: any) {
-    this.subs.add(this.consentService.deleteConsent(event).subscribe({
-      next: (value) => {
-        this.getAllConsents()
+  this.subs.add(
+    this.consentService.deleteConsent(event).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.toastService.open(response.message, 'success');
+          this.getAllConsents();
+        } else {
+          this.toastService.open(response.message || 'Deletion failed', 'error');
+        }
+      },
+      error: (err) => {
+        this.toastService.open('An error occurred while deleting the consent.', 'error');
       }
-    }))
-  }
+    })
+  );
+}
 
   handleEditAction(event: any) {
     this.router.navigateByUrl(`/consent/edit/${event}`)

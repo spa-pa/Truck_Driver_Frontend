@@ -21,6 +21,7 @@ export const DriverEntriesDetailsData: RowData = {
         "SR.NO": "Sr.No",
         "full_name": "Driver Name",
         "mobile_number": "Mobile Number",
+        "driving_license_number": "License Number",
         "driving_license_expiry_date": "License Expiry Date",
         "terminal_name" : "Terminal",
         "certification_expiry_date": "Certification Expiry Date",

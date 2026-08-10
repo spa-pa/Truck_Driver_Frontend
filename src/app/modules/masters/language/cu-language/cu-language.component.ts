@@ -56,7 +56,9 @@ export class CuLanguageComponent implements OnInit, AfterViewInit {
   }
 
   initialization(): void {
-    this.LanguageTypeSearchGroupStructure.forEach((ele, index) => {});
+    this.LanguageTypeSearchGroupStructure.forEach((ele, index) => {
+      if (this.routeName == "view") ele.disable = true;
+    });
   }
 
   getByLanguageId() {

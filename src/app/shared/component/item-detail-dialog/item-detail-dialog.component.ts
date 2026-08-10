@@ -21,9 +21,17 @@ export class ItemDetailDialogComponent {
     this.dialogRef.close();
   }
   // Method to determine if the URL is an image
+  // isImageLink(url: string): boolean {
+  //   return url.startsWith('https://');
+  // }
   isImageLink(url: string): boolean {
-    return url.startsWith('https://');
-  }
+  // Return true if the URL is an image (http/https) and not a PDF
+  if (!url) return false;
+  const isHttp = url.startsWith('http://') || url.startsWith('https://');
+  // Optionally, check for common image extensions
+  const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg|bmp|tiff?)$/i;
+  return isHttp && imageExtensions.test(url);
+}
 
   // Method to determine if the string is a URL
   isURL(string: string): boolean {

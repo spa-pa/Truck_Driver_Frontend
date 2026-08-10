@@ -17,7 +17,7 @@ export const ConsentDetailsData: RowData = {
   data: [],
   dataKey: "consent_id",
   buttonname: "Create Consent",
-  button: false,
+  button: true,
   statuses: [
     { label: "false", value: "danger" },
     { label: "true", value: "success" },

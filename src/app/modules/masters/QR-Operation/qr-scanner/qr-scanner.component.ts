@@ -51,7 +51,11 @@ export class QRScannerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   subs: any;
 
-  constructor(private http: HttpClient, private driverCertificationService: DriverCertificationService, private certificateScannedService: CertificateScannedService, private toastService: ToastService) { }
+  constructor(
+    private http: HttpClient, 
+    private driverCertificationService: DriverCertificationService, 
+    private certificateScannedService: CertificateScannedService, 
+    private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.subs = new Subscription();

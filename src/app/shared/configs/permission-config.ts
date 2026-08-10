@@ -11,15 +11,15 @@ export const PermissionDetails: RowData = {
         { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }
     ],
     "data": [],
-    "dataKey": 'permissionId',
+    "dataKey": 'permission_id',
     "buttonname": 'Create Role Permission',
     "button": true,
     "statuses": [
         { label: 'false', value: 'danger' },
         { label: 'true', value: 'success' },
     ],
-    "filterfields": ['permissionId', 'permissionId'],
-    "isSearch": true
+    "filterfields": ['permission_id', 'permission_name'],
+    "isSearch": false
 }
 
 export const RolePermissionDetails: RowData = {
@@ -41,7 +41,7 @@ export const RolePermissionDetails: RowData = {
         { label: 'true', value: 'success' },
     ],
     "filterfields": ['role_page_permission_id', 'role_name', 'page_name'],
-    "isSearch": true
+    "isSearch": false
 }
 
 export const RoleDetails: RowData = {
@@ -53,15 +53,15 @@ export const RoleDetails: RowData = {
         { label: "Action", key: "action", type: 'action', size: '8%', buttonNames: ['edit', 'view', 'delete'] }
     ],
     "data": [],
-    "dataKey": 'roleId',
+    "dataKey": 'role_id',
     "buttonname": 'Create Role',
     "button": true,
     "statuses": [
         { label: 'false', value: 'danger' },
         { label: 'true', value: 'success' },
     ],
-    "filterfields": ['roleId', 'roleName'],
-    "isSearch": true
+    "filterfields": ['role_id', 'role'],
+    "isSearch": false
 }
 
 export const PagePermissionDetails: RowData = {
@@ -82,7 +82,7 @@ export const PagePermissionDetails: RowData = {
         { label: 'true', value: 'success' },
     ],
     "filterfields": ['page_name', 'permission'],
-    "isSearch": true
+    "isSearch": false
 }
 
 export const RoleFormGroup: IFormStructure[] = [
