@@ -40,7 +40,7 @@ export class DriverEntryListComponent {
     private modalService: NgbModal,
     private excelService: ExcelExportService,
     private terminalService: TerminalService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.subs = new Subscription();
@@ -138,9 +138,10 @@ export class DriverEntryListComponent {
       size: "xl",
       centered: true,
       backdrop: "static",
+      fullscreen: true
     });
   }
-  
+
   handleExportAction(): void {
     this.excelService.exportAsExcelFile(
       this.DriverEntriesDetailsData.data,

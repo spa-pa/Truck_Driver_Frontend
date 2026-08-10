@@ -232,7 +232,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private activatedRoute: ActivatedRoute,
     private consentService: ConsentService,
-    private posterService : PosterService
+    private posterService: PosterService
   ) {
     this.translate.setDefaultLang("en");
     this.translate.use("en");
@@ -648,7 +648,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   private loadTrainingContent(languageId: number): void {
     this.isLoading = true;
 
-      // Poster (now fetched by terminal id instead of language id)
+    // Poster (now fetched by terminal id instead of language id)
     this.loadPostersByTerminalId();
 
     // Video
@@ -783,6 +783,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
                 size: "xl",
                 centered: true,
                 backdrop: "static",
+                fullscreen: true
               });
               this.initRegistrationForm();
               this.licensePhotoPreview = null;

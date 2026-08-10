@@ -48,7 +48,7 @@ $shadow: 0 20px 60px rgba($primary, 0.15);
     border: none;
     border-radius: 20px;
     overflow: hidden;
-    max-height: 90vh;
+    // max-height: 90vh;
 
     .modern-header {
         padding: 20px 28px;
@@ -121,7 +121,7 @@ $shadow: 0 20px 60px rgba($primary, 0.15);
     .modal-body {
         padding: 24px 28px;
         background: $light-bg;
-        max-height: calc(90vh - 150px);
+        // max-height: calc(90vh - 150px);
         overflow-y: auto;
 
         &::-webkit-scrollbar {
