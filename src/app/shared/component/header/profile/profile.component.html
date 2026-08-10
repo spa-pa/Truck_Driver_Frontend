@@ -1,7 +1,7 @@
 <div class="d-flex align-items-center" (click)="open()" (clickOutside)="clickOutside()">
     <img src="assets/images/avatar/admin_2.png" alt="">
     <div class="flex-grow-1">
-        <h5>{{profileDetails?.name}}</h5><span>Admin</span>
+        <h5>{{profileDetails?.name}}</h5><span>{{profileDetails?.role_name}}</span>
     </div>
 </div>
 <div class="custom-menu overflow-hidden" [class.show]="profile">

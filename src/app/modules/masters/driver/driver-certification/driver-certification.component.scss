@@ -1833,19 +1833,19 @@ $shadow: 0 20px 60px rgba($primary, 0.12);
           transform-origin: center;
 
           @media (min-width: 480px) {
-            transform: scale(0.75);
+            transform: scale(0.9);
           }
 
           @media (min-width: 640px) {
-            transform: scale(0.6);
+            transform: scale(0.9);
           }
 
           @media (min-width: 769px) {
-            transform: scale(0.6);
+            transform: scale(0.9);
           }
 
           @media (min-width: 1024px) {
-            transform: scale(0.7);
+            transform: scale(0.9);
           }
         }
       }
