@@ -286,8 +286,8 @@ export class QREditorComponent implements OnInit {
     };
 
     // If we have a qr_config_id, update by ID
-    if (this.qrConfigId) {
-      this.qrConfigApiService.updateQrConfig(payload, this.qrConfigId).subscribe({
+    // if (this.qrConfigId) {
+      this.qrConfigApiService.updateQrConfig(payload, 1).subscribe({
         next: (response: any) => {
           this.isSaving = false;
 
@@ -308,7 +308,7 @@ export class QREditorComponent implements OnInit {
           this.cdr.detectChanges();
         }
       });
-    }
+    // }
   }
 
   // ============================================

@@ -70,11 +70,11 @@ export class PermissionControllerService {
     }
 
     deletePermissionsById(permissionid: any): Observable<any> {
-        return this.httpClient.delete(`${this.baseUrl}PermissionMaster/Delete/${permissionid}`);
+        return this.httpClient.delete(`${this.baseUrl}PermissionMaster/${permissionid}`);
     }
 
     deleteRolePermissionById(rolepagepermissionid: any): Observable<any> {
-        return this.httpClient.delete(`${this.baseUrl}group-role-page-permission/${rolepagepermissionid}`);
+        return this.httpClient.delete(`${this.baseUrl}rolePagePermissionMaster/${rolepagepermissionid}`);
     }
 
     // --------------------------------------
