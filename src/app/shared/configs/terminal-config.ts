@@ -10,7 +10,7 @@ export const TerminalDetailsData: RowData = {
   { label: "Contact Person", key: "contact_person", type: '' },
   { label: "Number", key: "contact_number", type: '' },
   { label: "Email", key: "email", type: '' },
-  { label: "Action", key: "action", type: 'action', size: '12%', buttonNames: ['edit', 'view', 'delete'] }],
+  { label: "Action", key: "action", type: 'action', size: '12%', buttonNames: ['edit', 'view'] }],
   "data": [],
   "dataKey": 'terminal_id',
   "buttonname": 'Create Terminal',

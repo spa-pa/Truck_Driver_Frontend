@@ -804,31 +804,31 @@
             <div
               class="progress-fill"
               [style.width.%]="quizResult.score || 0"
-              [class.success]="(quizResult.score || 0) >= 70"
+              [class.success]="(quizResult.score || 0) >= passingScorePercent"
               [class.warning]="
-                (quizResult.score || 0) >= 50 && (quizResult.score || 0) < 70
+                (quizResult.score || 0) >= 50 && (quizResult.score || 0) < passingScorePercent
               "
               [class.danger]="(quizResult.score || 0) < 50"
             ></div>
           </div>
           <div
             class="score-status"
-            [class.success]="(quizResult.score || 0) >= 70"
+            [class.success]="(quizResult.score || 0) >= passingScorePercent"
             [class.warning]="
-              (quizResult.score || 0) >= 50 && (quizResult.score || 0) < 70
+              (quizResult.score || 0) >= 50 && (quizResult.score || 0) < passingScorePercent
             "
             [class.danger]="(quizResult.score || 0) < 50"
           >
             <i
               class="fas"
-              [class.fa-check-circle]="(quizResult.score || 0) >= 70"
+              [class.fa-check-circle]="(quizResult.score || 0) >= passingScorePercent"
               [class.fa-exclamation-triangle]="
-                (quizResult.score || 0) >= 50 && (quizResult.score || 0) < 70
+                (quizResult.score || 0) >= 50 && (quizResult.score || 0) < passingScorePercent
               "
               [class.fa-times-circle]="(quizResult.score || 0) < 50"
             ></i>
             {{
-              (quizResult.score || 0) >= 70
+              (quizResult.score || 0) >= passingScorePercent
                 ? ("MODAL.PASSED" | translate)
                 : (quizResult.score || 0) >= 50
                   ? ("MODAL.BORDERLINE" | translate)

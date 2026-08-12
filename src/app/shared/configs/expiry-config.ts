@@ -4,13 +4,13 @@ import { RowData } from "@shared/models/table";
 export const ExpiryConfigDetailsData: RowData = {
     "headers": [{ label: "Sr.No", key: "SR.NO", type: 'autoIncrementNumber', size: '4%' },
     { label: "Certificate Expiry (In month)", key: "expiry_month", type: '' },
-    // { label: "State", key: "stateName", type: '' },
+    { label: "Question Passing Count", key: "passing_count", type: '' },
     // { label: "Country", key: "countryName", type: '' },
     { label: "Action", key: "action", type: 'action', size: '10%', buttonNames: ['edit', 'view', 'delete'] }],
     "data": [],
     "dataKey": 'config_id',
     "buttonname": 'Create config ',
-    "button": false,
+    "button": true,
     "statuses": [
         { label: 'false', value: 'danger' },
         { label: 'true', value: 'success' },
@@ -38,31 +38,14 @@ export const ExpiryConfigSearchGroup: IFormStructure[] = [
         required: true,
         disable: false,
     },
-    // {
-    //     name: "stateId",
-    //     label: "State",
-    //     placeholder: "Enter State",
-    //     type: "select",
-    //     value: "",
-    //     required: false,
-    //     disable: false,
-    //     bindValue: 'stateId',
-    //     bindLabel: 'stateName',
-    //     listName: 'state',
-    //     listData: []
-    // },
-    // {
-    //     name: "countryi_Id",
-    //     label: "Country",
-    //     placeholder: "Enter Country",
-    //     type: "select",
-    //     value: "",
-    //     required: true,
-    //     disable: false,
-    //     bindValue: 'countryi_Id',
-    //     bindLabel: 'countryName',
-    //     listName: 'country',
-    //     listData: []
+    {
+        name: "passing_count",
+        label: "Question Passing Count",
+        placeholder: "Enter Count",
+        type: "number",
+        value: "",
+        required: true,
+        disable: false,
+    },
 
-    // }
 ]

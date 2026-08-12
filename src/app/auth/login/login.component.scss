@@ -216,9 +216,11 @@ body {
 
 /* Logo shown only on mobile / small screens (illustration panel is hidden there) */
 .mobile-logo {
-  display: none;
-  margin-top: 8px;
-  margin-bottom: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;   /* left alignment on desktop */
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 
 .mobile-logo img {
@@ -451,8 +453,9 @@ h1.login-title {
   }
 
   .mobile-logo {
-    display: flex;
-    justify-content: center;
+    justify-content: center;     /* center on mobile */
+    margin-top: 8px;
+    margin-bottom: 44px;
   }
 
   .form-panel {

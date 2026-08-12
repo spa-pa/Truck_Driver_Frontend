@@ -30,6 +30,7 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { DriverCertificationComponent } from "../driver/driver-certification/driver-certification.component";
 import { ConsentService } from "@shared/_http/consent.service";
 import { PosterService } from "@shared/_http/poster.service";
+import { ExpiryConfigService } from "@shared/_http/expiry-config.service";
 
 interface Language {
   language_code: string;
@@ -120,6 +121,19 @@ interface Poster {
   is_active: boolean;
 }
 
+interface ExpiryConfig {
+  config_id: number;
+  expiry_month: number;
+  passing_count: number;
+  is_active: boolean;
+  created_by: number;
+  created_at: string;
+  modified_by: number | null;
+  modified_at: string | null;
+  deleted_by: number | null;
+  deleted_at: string | null;
+}
+
 @Component({
   selector: "app-training",
   standalone: true,
@@ -186,6 +200,13 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
   certificationId: any;
 
+  // Certification expiry (months) & quiz passing count - driven by the
+  // Expiry Config master (falls back to the old hardcoded values if the
+  // API hasn't returned anything yet, e.g. request still in flight/failed).
+  certificationExpiryMonths: number = 6;
+  quizPassingCount: number = 0;
+  expiryConfig: ExpiryConfig | null = null;
+
   // Forms
   registrationForm!: FormGroup;
   quizForm!: FormGroup;
@@ -232,7 +253,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private activatedRoute: ActivatedRoute,
     private consentService: ConsentService,
-    private posterService: PosterService
+    private posterService: PosterService,
+    private expiryConfigService: ExpiryConfigService
   ) {
     this.translate.setDefaultLang("en");
     this.translate.use("en");
@@ -241,6 +263,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getTerminalIdFromUrl();
     this.getAllLanguage();
+    this.getExpiryConfig();
     this.initRegistrationForm();
   }
 
@@ -573,6 +596,33 @@ export class TrainingComponent implements OnInit, OnDestroy {
     );
   }
 
+  // ------------------------------------------------------------
+  // Expiry / Passing Count Master
+  // ------------------------------------------------------------
+  // Fetches the certification-expiry (months) and quiz-passing-count
+  // master so those no longer need to be hardcoded in the component.
+  // Falls back to the existing defaults if the API returns nothing/errors.
+  getExpiryConfig(): void {
+    this.subscriptions.add(
+      this.expiryConfigService.getAllExpiryConfig().subscribe({
+        next: (value) => {
+          const activeConfig =
+            value?.data?.find((config: ExpiryConfig) => config.is_active) ||
+            value?.data?.[0];
+
+          if (activeConfig) {
+            this.expiryConfig = activeConfig;
+            this.certificationExpiryMonths = activeConfig.expiry_month;
+            this.quizPassingCount = activeConfig.passing_count;
+          }
+        },
+        error: (err) => {
+          console.error("Error loading expiry config:", err);
+        },
+      }),
+    );
+  }
+
   // Called when the driver taps a language card on the Language Selection step.
   // Loads content for that language, then automatically advances to the
   // Consent step (registration happens only after consent is given).
@@ -868,14 +918,19 @@ export class TrainingComponent implements OnInit, OnDestroy {
     });
 
     const score = Math.round((correct / this.questions.length) * 100);
-    const passed = score >= 70;
+    // Passing criteria now comes from the Expiry Config master
+    // (passing_count = number of correctly answered questions required),
+    // instead of a hardcoded percentage.
+    const passed = correct >= this.quizPassingCount;
 
     const passedMessage =
       this.translate.instant("MODAL.PASSED") ||
       "You have successfully passed the safety training! Your certificate is ready.";
     const failedMessage =
-      this.translate.instant("MODAL.FAILED") ||
-      "You did not meet the passing score of 70%. Please review the material and try again.";
+      this.translate.instant("MODAL.FAILED", {
+        passingCount: this.quizPassingCount,
+      }) ||
+      `You did not meet the required passing score of ${this.quizPassingCount} correct answers. Please review the material and try again.`;
 
     this.quizResult = {
       passed,
@@ -905,7 +960,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     };
     this.subscriptions.add(
       this.driverTrainingService.createdriverTraining(formData).subscribe({
-        next: () => { },
+        next: (value) => { },
         error: () => { },
       }),
     );
@@ -913,7 +968,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     if (passed) {
       const certificationFormData = {
         driver_id: this.driverDetails.driver_id,
-        expiry_date: this.getOneYearExpiryDate(),
+        expiry_date: this.getCertificationExpiryDate(),
       };
       this.subscriptions.add(
         this.driverCertification
@@ -987,6 +1042,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // ------------------------------------------------------------
   // Helpers
   // ------------------------------------------------------------
+  // Equivalent passing percentage (derived from quizPassingCount /
+  // total questions) so the result-modal score bar/labels can use the same
+  // API-driven threshold instead of a hardcoded 70%.
+  get passingScorePercent(): number {
+    if (!this.questions.length) return 70;
+    return Math.round((this.quizPassingCount / this.questions.length) * 100);
+  }
+
   getOptionText(question: MappedQuestion, option: string): string {
     const key = "option_" + option.toLowerCase();
     return (question as any)[key] || "";
@@ -997,10 +1060,13 @@ export class TrainingComponent implements OnInit, OnDestroy {
     return question.option_images[option] || null;
   }
 
-  private getOneYearExpiryDate(): string {
+  // Adds `certificationExpiryMonths` (from the Expiry Config master) to
+  // today's date to get the certificate's expiry date. Previously hardcoded
+  // to add exactly 1 year (12 months).
+  private getCertificationExpiryDate(): string {
     const today = new Date();
     const expiryDate = new Date(today);
-    expiryDate.setFullYear(today.getFullYear() + 1);
+    expiryDate.setMonth(today.getMonth() + this.certificationExpiryMonths);
     const day = String(expiryDate.getDate()).padStart(2, "0");
     const month = String(expiryDate.getMonth() + 1).padStart(2, "0");
     const year = expiryDate.getFullYear();
