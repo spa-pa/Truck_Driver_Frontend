@@ -35,7 +35,7 @@ export class QREditorComponent implements OnInit {
   isDataLoaded: boolean = false;
 
   // Store original config from API
-  originalConfig: any = null;
+  originalConfig: QRConfig ;
 
   constructor(
     private qrConfigService: QRConfigService,
@@ -46,8 +46,9 @@ export class QREditorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loadQrConfigById(1);
     // Get terminal_id from current user
-    this.getTerminalIdFromUser();
+    //this.getTerminalIdFromUser();
   }
 
   // ============================================
@@ -81,7 +82,7 @@ export class QREditorComponent implements OnInit {
         this.isLoading = false;
 
         if (response && response.success && response.data) {
-          this.originalConfig = response.data;
+          this.originalConfig = response.data.json;
 
           // Extract qr_config_id
           this.qrConfigId = response.data.qr_config_id || 0;
@@ -163,7 +164,7 @@ export class QREditorComponent implements OnInit {
         this.isLoading = false;
 
         if (response && response.success && response.data) {
-          this.originalConfig = response.data;
+          this.originalConfig = response.data.json;
 
           // Extract qr_config_id
           this.qrConfigId = response.data.qr_config_id || configId;
@@ -293,7 +294,7 @@ export class QREditorComponent implements OnInit {
 
           this.toastService.open('Configuration saved successfully!', 'success')
           if (response && response.data) {
-            this.originalConfig = response.data;
+            this.originalConfig = response.data.json;
             if (response.data.qr_config_id) {
               this.qrConfigId = response.data.qr_config_id;
             }

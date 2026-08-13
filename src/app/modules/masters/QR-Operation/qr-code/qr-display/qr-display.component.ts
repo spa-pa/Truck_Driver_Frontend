@@ -9,26 +9,28 @@ import {
   Output,
   EventEmitter,
   OnDestroy,
-  HostListener
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import QRCodeStyling from 'qr-code-styling';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { QRConfig } from '@shared/models/qr.model';
-import { environment } from '@environments/environment.prod';
+  HostListener,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import QRCodeStyling from "qr-code-styling";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { QRConfig } from "@shared/models/qr.model";
+import { environment } from "@environments/environment.prod";
+
+import { currentUser } from "@shared/utils/current-user";
 
 @Component({
-  selector: 'app-qr-display',
+  selector: "app-qr-display",
   standalone: true,
   imports: [CommonModule],
   template: `
     <div class="qr-display-wrapper" #qrDisplayWrapper>
       <div class="qr-display-container" [class]="'size-' + size">
         <div class="qr-wrapper" #qrWrapper>
-            <div #qrElement class="qr-element-container"></div>
-          <div 
-            class="qr-text" 
+          <div #qrElement class="qr-element-container"></div>
+          <div
+            class="qr-text"
             *ngIf="config.bottomText && showText"
             [style.font-size.px]="config.textSize"
             [style.color]="config.textColor"
@@ -41,36 +43,39 @@ import { environment } from '@environments/environment.prod';
       </div>
     </div>
   `,
-  styleUrls: ['./qr-display.component.scss']
+  styleUrls: ["./qr-display.component.scss"],
 })
 export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() config!: QRConfig;
-  @Input() size: 'small' | 'medium' | 'large' = 'medium';
+  @Input() size: "small" | "medium" | "large" = "medium";
   @Input() showText: boolean = true;
   @Input() showBorder: boolean = true;
-  @Input() backgroundColor: string = '#ffffff';
+  @Input() backgroundColor: string = "#ffffff";
   @Output() qrGenerated = new EventEmitter<void>();
 
-  @ViewChild('qrElement') qrElement!: ElementRef;
-  @ViewChild('qrWrapper') qrWrapper!: ElementRef;
-  @ViewChild('qrDisplayWrapper') qrDisplayWrapper!: ElementRef;
+  @ViewChild("qrElement") qrElement!: ElementRef;
+  @ViewChild("qrWrapper") qrWrapper!: ElementRef;
+  @ViewChild("qrDisplayWrapper") qrDisplayWrapper!: ElementRef;
 
   private qrCode!: QRCodeStyling;
   private isInitialized = false;
   private resizeObserver: ResizeObserver | null = null;
   private currentSize = 0;
   private qrDataURL: string | null = null;
+  private terminalName = currentUser().terminal_name || "-";
 
-  @HostListener('window:resize')
-onWindowResize(): void {
-  clearTimeout(this.resizeDebounce);
-  this.resizeDebounce = setTimeout(() => this.handleResize(), 150);
-}
+  @HostListener("window:resize")
+  onWindowResize(): void {
+    clearTimeout(this.resizeDebounce);
+    this.resizeDebounce = setTimeout(() => this.handleResize(), 150);
+  }
 
-private resizeDebounce: any;
+  private resizeDebounce: any;
 
   ngAfterViewInit(): void {
     this.setupResizeObserver();
+    //this.generateQR();
+    //this.isInitialized = true;
     setTimeout(() => {
       this.generateQR();
       this.isInitialized = true;
@@ -78,7 +83,7 @@ private resizeDebounce: any;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.isInitialized && (changes['config'] || changes['size'])) {
+    if (this.isInitialized && (changes["config"] || changes["size"])) {
       setTimeout(() => {
         this.generateQR();
       }, 50);
@@ -93,17 +98,20 @@ private resizeDebounce: any;
     if (this.qrCode) {
       const element = this.qrElement?.nativeElement;
       if (element) {
-        element.innerHTML = '';
+        element.innerHTML = "";
       }
       this.qrCode = null as any;
     }
   }
 
   private setupResizeObserver(): void {
-    if (typeof ResizeObserver !== 'undefined' && this.qrWrapper) {
+    if (typeof ResizeObserver !== "undefined" && this.qrWrapper) {
       let firstCallback = true;
       this.resizeObserver = new ResizeObserver(() => {
-        if (firstCallback) { firstCallback = false; return; }
+        if (firstCallback) {
+          firstCallback = false;
+          return;
+        }
         this.handleResize();
       });
       this.resizeObserver.observe(this.qrWrapper.nativeElement);
@@ -127,7 +135,7 @@ private resizeDebounce: any;
     const sizes = {
       small: 180,
       medium: 250,
-      large: 350
+      large: 350,
     };
 
     let baseSize = sizes[this.size] || 250;
@@ -145,7 +153,7 @@ private resizeDebounce: any;
 
   public generateQR(): void {
     if (!this.qrElement) {
-      console.warn('QR element not ready');
+      console.warn("QR element not ready");
       return;
     }
 
@@ -163,30 +171,30 @@ private resizeDebounce: any;
         data: qrData,
         margin: 8,
         dotsOptions: {
-          color: this.config.qrColor || '#004761',
-          type: this.config.dotType || 'rounded'
+          color: this.config.qrColor || "#004761",
+          type: this.config.dotType || "rounded",
         },
         backgroundOptions: {
-          color: this.config.bgColor || '#ffffff'
+          color: this.config.bgColor || "#ffffff",
         },
         cornersSquareOptions: {
-          type: cornerType
+          type: cornerType,
         },
         cornersDotOptions: {
-          type: cornerDotType
+          type: cornerDotType,
         },
         imageOptions: {
-          crossOrigin: 'anonymous',
+          crossOrigin: "anonymous",
           margin: 5,
-          imageSize: 0.25
-        }
+          imageSize: 0.25,
+        },
       };
 
-      if (this.config.logoUrl && this.config.logoUrl.trim() !== '') {
+      if (this.config.logoUrl && this.config.logoUrl.trim() !== "") {
         qrOptions.image = this.config.logoUrl;
       }
 
-      element.innerHTML = '';
+      element.innerHTML = "";
       this.qrCode = new QRCodeStyling(qrOptions);
       this.qrCode.append(element);
 
@@ -197,9 +205,8 @@ private resizeDebounce: any;
       setTimeout(() => {
         this.cacheQRDataURL();
       }, 300);
-
     } catch (error) {
-      console.error('QR Generation Error:', error);
+      console.error("QR Generation Error:", error);
       const element = this.qrElement.nativeElement;
       element.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:center;height:${this.currentSize || 150}px;color:#d32f2f;font-size:12px;">
@@ -213,10 +220,9 @@ private resizeDebounce: any;
     const canvas = this.getQRCanvas();
     if (canvas && canvas.width > 0 && canvas.height > 0) {
       try {
-        this.qrDataURL = canvas.toDataURL('image/png');
-        console.log('QR data URL cached, size:', this.qrDataURL.length);
+        this.qrDataURL = canvas.toDataURL("image/png");
       } catch (e) {
-        console.warn('Failed to cache QR data URL:', e);
+        console.warn("Failed to cache QR data URL:", e);
       }
     }
   }
@@ -231,7 +237,7 @@ private resizeDebounce: any;
     const element = this.qrElement?.nativeElement;
     if (!element) return null;
 
-    const canvas = element.querySelector('canvas');
+    const canvas = element.querySelector("canvas");
     return canvas as HTMLCanvasElement | null;
   }
 
@@ -246,10 +252,10 @@ private resizeDebounce: any;
     const canvas = this.getQRCanvas();
     if (canvas && canvas.width > 0 && canvas.height > 0) {
       try {
-        this.qrDataURL = canvas.toDataURL('image/png');
+        this.qrDataURL = canvas.toDataURL("image/png");
         return this.qrDataURL;
       } catch (e) {
-        console.warn('Failed to get QR data URL from canvas:', e);
+        console.warn("Failed to get QR data URL from canvas:", e);
       }
     }
 
@@ -260,10 +266,10 @@ private resizeDebounce: any;
     const canvas2 = this.getQRCanvas();
     if (canvas2 && canvas2.width > 0 && canvas2.height > 0) {
       try {
-        this.qrDataURL = canvas2.toDataURL('image/png');
+        this.qrDataURL = canvas2.toDataURL("image/png");
         return this.qrDataURL;
       } catch (e) {
-        console.warn('Failed to get QR data URL from canvas on retry:', e);
+        console.warn("Failed to get QR data URL from canvas on retry:", e);
       }
     }
 
@@ -289,16 +295,16 @@ private resizeDebounce: any;
     const sizes = {
       small: 180,
       medium: 250,
-      large: 350
+      large: 350,
     };
     return sizes[this.size] || 250;
   }
 
   private generateQRData(): string {
     //const baseUrl = environment.SACNNING_BASE_URL || 'http://localhost:4200';
-    const baseUrl = environment.SACNNING_BASE_URL
+    const baseUrl = environment.SACNNING_BASE_URL;
 
-    if (this.config.data && this.config.data !== ' ') {
+    if (this.config.data && this.config.data !== " ") {
       return this.config.data;
     }
 
@@ -310,18 +316,21 @@ private resizeDebounce: any;
     const dotType = this.config.dotType;
 
     switch (dotType) {
-      case 'rounded':
-        return { cornerType: 'extra-rounded', cornerDotType: 'dot' };
-      case 'extra-rounded':
-        return { cornerType: 'extra-rounded', cornerDotType: 'dot' };
-      case 'dots':
-        return { cornerType: 'dot', cornerDotType: 'dot' };
-      case 'classy':
-        return { cornerType: 'classy', cornerDotType: 'classy' };
-      case 'classy-rounded':
-        return { cornerType: 'classy-rounded', cornerDotType: 'classy-rounded' };
+      case "rounded":
+        return { cornerType: "extra-rounded", cornerDotType: "dot" };
+      case "extra-rounded":
+        return { cornerType: "extra-rounded", cornerDotType: "dot" };
+      case "dots":
+        return { cornerType: "dot", cornerDotType: "dot" };
+      case "classy":
+        return { cornerType: "classy", cornerDotType: "classy" };
+      case "classy-rounded":
+        return {
+          cornerType: "classy-rounded",
+          cornerDotType: "classy-rounded",
+        };
       default:
-        return { cornerType: 'square', cornerDotType: 'square' };
+        return { cornerType: "square", cornerDotType: "square" };
     }
   }
 
@@ -332,18 +341,18 @@ private resizeDebounce: any;
 
       const logo = element.querySelector('img[src*="data:image"]');
       if (logo) {
-        (logo as HTMLElement).style.display = 'block';
-        (logo as HTMLElement).style.margin = '0 auto';
-        (logo as HTMLElement).style.maxWidth = '25%';
-        (logo as HTMLElement).style.maxHeight = '25%';
+        (logo as HTMLElement).style.display = "block";
+        (logo as HTMLElement).style.margin = "0 auto";
+        (logo as HTMLElement).style.maxWidth = "25%";
+        (logo as HTMLElement).style.maxHeight = "25%";
       }
 
-      const canvas = element.querySelector('canvas');
+      const canvas = element.querySelector("canvas");
       if (canvas) {
-        canvas.style.display = 'block';
-        canvas.style.margin = '0 auto';
-        canvas.style.maxWidth = '100%';
-        canvas.style.height = 'auto';
+        canvas.style.display = "block";
+        canvas.style.margin = "0 auto";
+        canvas.style.maxWidth = "100%";
+        canvas.style.height = "auto";
       }
     }, 200);
   }
@@ -354,12 +363,13 @@ private resizeDebounce: any;
       const canvas = await this.captureQR();
       if (!canvas) return;
 
-      const link = document.createElement('a');
-      link.download = `qr-code-${this.config.terminalId || 'terminal'}.png`;
-      link.href = canvas.toDataURL('image/png');
+      const link = document.createElement("a");
+      //link.download = `qr-code-${this.config.terminalId || "terminal"}.png`;
+      link.download = `${this.terminalName || "terminal"} Terminal QR Code.png`;
+      link.href = canvas.toDataURL("image/png");
       link.click();
     } catch (error) {
-      console.error('PNG download error:', error);
+      console.error("PNG download error:", error);
       throw error;
     }
   }
@@ -369,12 +379,13 @@ private resizeDebounce: any;
       const canvas = await this.captureQR();
       if (!canvas) return;
 
-      const link = document.createElement('a');
-      link.download = `qr-code-${this.config.terminalId || 'terminal'}.jpg`;
-      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      const link = document.createElement("a");
+      //link.download = `qr-code-${this.config.terminalId || "terminal"}.jpg`;
+      link.download = `${this.terminalName || "terminal"} Terminal QR Code.jpg`;
+      link.href = canvas.toDataURL("image/jpeg", 0.95);
       link.click();
     } catch (error) {
-      console.error('JPG download error:', error);
+      console.error("JPG download error:", error);
       throw error;
     }
   }
@@ -384,8 +395,8 @@ private resizeDebounce: any;
       const canvas = await this.captureQR();
       if (!canvas) return;
 
-      const imageData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imageData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
 
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
@@ -404,20 +415,21 @@ private resizeDebounce: any;
       const y = (pageHeight - height) / 2;
 
       pdf.setFontSize(8);
-      pdf.setTextColor('#004761');
-      pdf.text(`Terminal ID: ${this.config.terminalId || 'N/A'}`, 20, 20);
-      pdf.text(`Generated: ${new Date().toLocaleString()}`, 20, 28);
+      pdf.setTextColor("#004761");
+      //pdf.text(`Terminal ID: ${this.config.terminalId || "N/A"}`, 20, 20);
+      pdf.text(`Terminal Name: ${this.terminalName || "N/A"}`, 20, 28);
+      pdf.text(`Generated: ${new Date().toLocaleString()}`, 20, 36);
 
-      pdf.addImage(imageData, 'PNG', x, y, width, height);
+      pdf.addImage(imageData, "PNG", x, y, width, height);
 
-      const footerText = this.config.bottomText || 'Scan to Connect';
+      const footerText = this.config.bottomText || "Scan to Connect";
       pdf.setFontSize(10);
-      pdf.setTextColor('#004761');
-      pdf.text(footerText, pageWidth / 2, pageHeight - 20, { align: 'center' });
+      pdf.setTextColor("#004761");
+      pdf.text(footerText, pageWidth / 2, pageHeight - 20, { align: "center" });
 
-      pdf.save(`qr-code-${this.config.terminalId || 'terminal'}.pdf`);
+      pdf.save(`${this.terminalName || "terminal"} Terminal QR Code.pdf`);
     } catch (error) {
-      console.error('PDF download error:', error);
+      console.error("PDF download error:", error);
       throw error;
     }
   }
@@ -431,21 +443,22 @@ private resizeDebounce: any;
         <svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}">
           <foreignObject width="100%" height="100%">
             <div xmlns="http://www.w3.org/1999/xhtml">
-              <img src="${canvas.toDataURL('image/png')}" width="${canvas.width}" height="${canvas.height}" />
+              <img src="${canvas.toDataURL("image/png")}" width="${canvas.width}" height="${canvas.height}" />
             </div>
           </foreignObject>
         </svg>
       `;
 
-      const blob = new Blob([svg], { type: 'image/svg+xml' });
+      const blob = new Blob([svg], { type: "image/svg+xml" });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.download = `qr-code-${this.config.terminalId || 'terminal'}.svg`;
+      const link = document.createElement("a");
+      //link.download = `qr-code-${this.config.terminalId || "terminal"}.svg`;
+      link.download = `${this.terminalName || "terminal"} Terminal QR Code.svg`;
       link.href = url;
       link.click();
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('SVG download error:', error);
+      console.error("SVG download error:", error);
       throw error;
     }
   }
@@ -455,9 +468,9 @@ private resizeDebounce: any;
       const canvas = await this.captureQR();
       if (!canvas) return;
 
-      const printWindow = window.open('', '_blank', 'width=800,height=600');
+      const printWindow = window.open("", "_blank", "width=800,height=600");
       if (!printWindow) {
-        alert('Please allow popups for printing');
+        alert("Please allow popups for printing");
         return;
       }
 
@@ -506,10 +519,10 @@ private resizeDebounce: any;
           </head>
           <body>
             <div class="print-container">
-              <img src="${canvas.toDataURL('image/png')}" />
-              <div class="print-text">${this.config.bottomText || 'Scan to Connect'}</div>
+              <img src="${canvas.toDataURL("image/png")}" />
+              <div class="print-text">${this.config.bottomText || "Scan to Connect"}</div>
               <div class="print-footer">
-                Terminal ID: ${this.config.terminalId || 'N/A'} | 
+                Terminal Name: ${this.terminalName || "N/A"} | 
                 Generated: ${new Date().toLocaleString()}
               </div>
             </div>
@@ -526,8 +539,8 @@ private resizeDebounce: any;
       printWindow.document.write(html);
       printWindow.document.close();
     } catch (error) {
-      console.error('Print error:', error);
-      alert('Error printing. Please try again.');
+      console.error("Print error:", error);
+      alert("Error printing. Please try again.");
     }
   }
 
@@ -535,31 +548,31 @@ private resizeDebounce: any;
     try {
       const dataUrl = await this.getQRDataURL();
       if (!dataUrl) {
-        throw new Error('Failed to capture QR code');
+        throw new Error("Failed to capture QR code");
       }
 
       const response = await fetch(dataUrl);
       const blob = await response.blob();
       await navigator.clipboard.write([
         new ClipboardItem({
-          [blob.type]: blob
-        })
+          [blob.type]: blob,
+        }),
       ]);
     } catch (error) {
-      console.error('Copy error:', error);
+      console.error("Copy error:", error);
       throw error;
     }
   }
 
   public async getQRDataURL(): Promise<string | null> {
     const canvas = await this.captureQR();
-    return canvas ? canvas.toDataURL('image/png') : null;
+    return canvas ? canvas.toDataURL("image/png") : null;
   }
 
   private async captureQR(): Promise<HTMLCanvasElement | null> {
     const element = this.qrDisplayWrapper?.nativeElement;
     if (!element) {
-      console.error('QR element not found');
+      console.error("QR element not found");
       return null;
     }
 
@@ -569,63 +582,69 @@ private resizeDebounce: any;
       const canvas = await html2canvas(element, {
         scale: 4,
         useCORS: true,
-        backgroundColor: this.backgroundColor || '#ffffff',
+        backgroundColor: this.backgroundColor || "#ffffff",
         logging: false,
         allowTaint: true,
         width: element.scrollWidth,
-        height: element.scrollHeight
+        height: element.scrollHeight,
       });
 
       return canvas;
     } catch (error) {
-      console.error('Capture error:', error);
+      console.error("Capture error:", error);
       return null;
     }
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   // Renders the QR off-DOM at a fixed size, bypassing getResponsiveSize()'s
-// window.innerWidth capping — used only for exports (PDF/print) so the
-// output is identical no matter which device triggered it.
-public async getExportCanvas(exportSize?: number): Promise<HTMLCanvasElement | null> {
-  const size = exportSize || this.config.qrSize || this.getSizeFromInput();
-  const { cornerType, cornerDotType } = this.getCornerStyles();
+  // window.innerWidth capping — used only for exports (PDF/print) so the
+  // output is identical no matter which device triggered it.
+  public async getExportCanvas(
+    exportSize?: number,
+  ): Promise<HTMLCanvasElement | null> {
+    const size = exportSize || this.config.qrSize || this.getSizeFromInput();
+    const { cornerType, cornerDotType } = this.getCornerStyles();
 
-  const qrOptions: any = {
-    width: size,
-    height: size,
-    data: this.generateQRData(),
-    margin: 8,
-    dotsOptions: { color: this.config.qrColor || '#004761', type: this.config.dotType || 'rounded' },
-    backgroundOptions: { color: this.config.bgColor || '#ffffff' },
-    cornersSquareOptions: { type: cornerType },
-    cornersDotOptions: { type: cornerDotType },
-    imageOptions: { crossOrigin: 'anonymous', margin: 5, imageSize: 0.25 }
-  };
-  if (this.config.logoUrl?.trim()) qrOptions.image = this.config.logoUrl;
+    const qrOptions: any = {
+      width: size,
+      height: size,
+      data: this.generateQRData(),
+      margin: 8,
+      dotsOptions: {
+        color: this.config.qrColor || "#004761",
+        type: this.config.dotType || "rounded",
+      },
+      backgroundOptions: { color: this.config.bgColor || "#ffffff" },
+      cornersSquareOptions: { type: cornerType },
+      cornersDotOptions: { type: cornerDotType },
+      imageOptions: { crossOrigin: "anonymous", margin: 5, imageSize: 0.25 },
+    };
+    if (this.config.logoUrl?.trim()) qrOptions.image = this.config.logoUrl;
 
-  const offscreen = document.createElement('div');
-  offscreen.style.position = 'fixed';
-  offscreen.style.left = '-99999px';
-  document.body.appendChild(offscreen);
+    const offscreen = document.createElement("div");
+    offscreen.style.position = "fixed";
+    offscreen.style.left = "-99999px";
+    document.body.appendChild(offscreen);
 
-  try {
-    new QRCodeStyling(qrOptions).append(offscreen);
-    await this.delay(150);
-    const canvas = offscreen.querySelector('canvas') as HTMLCanvasElement | null;
-    if (!canvas) return null;
+    try {
+      new QRCodeStyling(qrOptions).append(offscreen);
+      await this.delay(150);
+      const canvas = offscreen.querySelector(
+        "canvas",
+      ) as HTMLCanvasElement | null;
+      if (!canvas) return null;
 
-    const out = document.createElement('canvas');
-    out.width = canvas.width;
-    out.height = canvas.height;
-    out.getContext('2d')?.drawImage(canvas, 0, 0);
-    return out;
-  } finally {
-    document.body.removeChild(offscreen);
+      const out = document.createElement("canvas");
+      out.width = canvas.width;
+      out.height = canvas.height;
+      out.getContext("2d")?.drawImage(canvas, 0, 0);
+      return out;
+    } finally {
+      document.body.removeChild(offscreen);
+    }
   }
-}
-
 }
