@@ -28,7 +28,11 @@ import { currentUser } from "@shared/utils/current-user";
     <div class="qr-display-wrapper" #qrDisplayWrapper>
       <div class="qr-display-container" [class]="'size-' + size">
         <div class="qr-wrapper" #qrWrapper>
-          <div #qrElement class="qr-element-container"></div>
+          <div
+            #qrElement
+            class="qr-element-container"
+            [class.with-border]="showBorder"
+          ></div>
           <div
             class="qr-text"
             *ngIf="config.bottomText && showText"
@@ -49,7 +53,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() config!: QRConfig;
   @Input() size: "small" | "medium" | "large" = "medium";
   @Input() showText: boolean = true;
-  @Input() showBorder: boolean = true;
+  @Input() showBorder: boolean = false;
   @Input() backgroundColor: string = "#ffffff";
   @Output() qrGenerated = new EventEmitter<void>();
 
@@ -358,15 +362,36 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   // Download methods
+  // public async downloadPNG(): Promise<void> {
+  //   try {
+  //     const canvas = await this.captureQR();
+  //     if (!canvas) return;
+
+  //     const link = document.createElement("a");
+  //     //link.download = `qr-code-${this.config.terminalId || "terminal"}.png`;
+  //     link.download = `${this.terminalName || "terminal"} Terminal QR Code.png`;
+  //     link.href = canvas.toDataURL("image/png");
+  //     link.click();
+  //   } catch (error) {
+  //     console.error("PNG download error:", error);
+  //     throw error;
+  //   }
+  // }
+
   public async downloadPNG(): Promise<void> {
     try {
-      const canvas = await this.captureQR();
-      if (!canvas) return;
+      const qrCanvas = await this.captureQR(this.showBorder);
+
+      if (!qrCanvas) return;
+
+      const canvas = this.createDownloadCanvas(qrCanvas);
 
       const link = document.createElement("a");
-      //link.download = `qr-code-${this.config.terminalId || "terminal"}.png`;
+
       link.download = `${this.terminalName || "terminal"} Terminal QR Code.png`;
+
       link.href = canvas.toDataURL("image/png");
+
       link.click();
     } catch (error) {
       console.error("PNG download error:", error);
@@ -374,15 +399,36 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
     }
   }
 
+  // public async downloadJPG(): Promise<void> {
+  //   try {
+  //     const canvas = await this.captureQR();
+  //     if (!canvas) return;
+
+  //     const link = document.createElement("a");
+  //     //link.download = `qr-code-${this.config.terminalId || "terminal"}.jpg`;
+  //     link.download = `${this.terminalName || "terminal"} Terminal QR Code.jpg`;
+  //     link.href = canvas.toDataURL("image/jpeg", 0.95);
+  //     link.click();
+  //   } catch (error) {
+  //     console.error("JPG download error:", error);
+  //     throw error;
+  //   }
+  // }
+
   public async downloadJPG(): Promise<void> {
     try {
-      const canvas = await this.captureQR();
-      if (!canvas) return;
+      const qrCanvas = await this.captureQR(this.showBorder);
+
+      if (!qrCanvas) return;
+
+      const canvas = this.createDownloadCanvas(qrCanvas);
 
       const link = document.createElement("a");
-      //link.download = `qr-code-${this.config.terminalId || "terminal"}.jpg`;
+
       link.download = `${this.terminalName || "terminal"} Terminal QR Code.jpg`;
+
       link.href = canvas.toDataURL("image/jpeg", 0.95);
+
       link.click();
     } catch (error) {
       console.error("JPG download error:", error);
@@ -392,7 +438,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   public async downloadPDF(): Promise<void> {
     try {
-      const canvas = await this.captureQR();
+      const canvas = await this.captureQR(this.showBorder);
       if (!canvas) return;
 
       const imageData = canvas.toDataURL("image/png");
@@ -412,20 +458,47 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
       const height = imgHeight * ratio;
 
       const x = (pageWidth - width) / 2;
-      const y = (pageHeight - height) / 2;
+      const y = 35;
 
-      pdf.setFontSize(8);
+      pdf.setFontSize(18);
       pdf.setTextColor("#004761");
       //pdf.text(`Terminal ID: ${this.config.terminalId || "N/A"}`, 20, 20);
-      pdf.text(`Terminal Name: ${this.terminalName || "N/A"}`, 20, 28);
-      pdf.text(`Generated: ${new Date().toLocaleString()}`, 20, 36);
+      pdf.setFont("helvetica", "bold");
+
+      pdf.text(
+        `Terminal Name : ${this.terminalName || "N/A"} Terminal`,
+        pageWidth / 2,
+        25,
+        {
+          align: "center",
+        },
+      );
+
+      // Generated time - top right corner
+      pdf.setFontSize(8);
+      pdf.setFont("helvetica", "normal");
+
+      pdf.text(
+        `Generated: ${new Date().toLocaleString()}`,
+        pageWidth - 15,
+        12,
+        {
+          align: "right",
+        },
+      );
 
       pdf.addImage(imageData, "PNG", x, y, width, height);
 
-      const footerText = this.config.bottomText || "Scan to Connect";
-      pdf.setFontSize(10);
+      //const footerText = this.config.bottomText || "Scan to Connect";
+      const footerText = "Truck Driver Safety Training";
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
       pdf.setTextColor("#004761");
-      pdf.text(footerText, pageWidth / 2, pageHeight - 20, { align: "center" });
+      const footerY = y + height + 8;
+
+      pdf.text(footerText, pageWidth / 2, footerY, {
+        align: "center",
+      });
 
       pdf.save(`${this.terminalName || "terminal"} Terminal QR Code.pdf`);
     } catch (error) {
@@ -508,8 +581,9 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
               }
               .print-footer {
                 margin-top: 30px;
-                font-size: 12px;
+                font-size: 18px;
                 color: #666;
+                font-weight: 600;
               }
               @media print {
                 body { padding: 0; }
@@ -520,9 +594,8 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
           <body>
             <div class="print-container">
               <img src="${canvas.toDataURL("image/png")}" />
-              <div class="print-text">${this.config.bottomText || "Scan to Connect"}</div>
               <div class="print-footer">
-                Terminal Name: ${this.terminalName || "N/A"} | 
+                Terminal Name: ${this.terminalName || "N/A"} Terminal | 
                 Generated: ${new Date().toLocaleString()}
               </div>
             </div>
@@ -569,9 +642,39 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
     return canvas ? canvas.toDataURL("image/png") : null;
   }
 
-  private async captureQR(): Promise<HTMLCanvasElement | null> {
-    const element = this.qrDisplayWrapper?.nativeElement;
-    if (!element) {
+  // private async captureQR(): Promise<HTMLCanvasElement | null> {
+  //   const element = this.qrDisplayWrapper?.nativeElement;
+  //   if (!element) {
+  //     console.error("QR element not found");
+  //     return null;
+  //   }
+
+  //   try {
+  //     await this.delay(200);
+
+  //     const canvas = await html2canvas(element, {
+  //       scale: 4,
+  //       useCORS: true,
+  //       backgroundColor: this.backgroundColor || "#ffffff",
+  //       logging: false,
+  //       allowTaint: true,
+  //       width: element.scrollWidth,
+  //       height: element.scrollHeight,
+  //     });
+
+  //     return canvas;
+  //   } catch (error) {
+  //     console.error("Capture error:", error);
+  //     return null;
+  //   }
+  // }
+
+  private async captureQR(
+    addBorder: boolean = false,
+  ): Promise<HTMLCanvasElement | null> {
+    const qrElement = this.qrElement?.nativeElement;
+
+    if (!qrElement) {
       console.error("QR element not found");
       return null;
     }
@@ -579,21 +682,252 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
     try {
       await this.delay(200);
 
-      const canvas = await html2canvas(element, {
-        scale: 4,
-        useCORS: true,
-        backgroundColor: this.backgroundColor || "#ffffff",
-        logging: false,
-        allowTaint: true,
-        width: element.scrollWidth,
-        height: element.scrollHeight,
-      });
+      const qrCanvas = qrElement.querySelector(
+        "canvas",
+      ) as HTMLCanvasElement | null;
 
-      return canvas;
+      if (!qrCanvas) {
+        console.error("QR canvas not found");
+        return null;
+      }
+
+      // Get bottom text
+      const textElement = this.qrWrapper?.nativeElement.querySelector(
+        ".qr-text",
+      ) as HTMLElement | null;
+
+      const text = textElement?.innerText || "";
+
+      /*
+       * These values control the downloaded image.
+       */
+      const borderWidth = 3;
+      const borderRadius = 25;
+
+      // Space between QR and border
+      const qrPadding = 95;
+
+      // Space between image edge and border
+      const outerPadding = 40;
+
+      // Remove whitespace from the original QR canvas
+      const sourceSize = qrCanvas.width;
+
+      // QR content should occupy almost the entire source canvas
+      const cropPadding = Math.round(sourceSize * 0.05);
+
+      const sourceX = cropPadding;
+      const sourceY = cropPadding;
+      const sourceWidth = sourceSize - cropPadding * 2;
+      const sourceHeight = sourceSize - cropPadding * 2;
+
+      // Make the QR itself large
+      const qrSize = 450;
+
+      const boxSize = qrSize + qrPadding * 2;
+
+      // Space between border and bottom text
+      const textMargin = text ? 20 : 0;
+
+      // Text settings
+      const textFontSize = 48;
+      const textHeight = text ? 65 : 0;
+
+      const outputWidth = boxSize + outerPadding * 2;
+
+      const outputHeight = outerPadding + boxSize + textMargin + textHeight;
+
+      const outputCanvas = document.createElement("canvas");
+
+      outputCanvas.width = outputWidth;
+      outputCanvas.height = outputHeight;
+
+      const ctx = outputCanvas.getContext("2d");
+
+      if (!ctx) {
+        console.error("Could not get canvas context");
+        return null;
+      }
+
+      // Background
+      ctx.fillStyle = this.backgroundColor || "#ffffff";
+      ctx.fillRect(0, 0, outputWidth, outputHeight);
+
+      /*
+       * Draw border only when showBorder is true.
+       */
+      if (addBorder) {
+        ctx.strokeStyle = "#004761";
+        ctx.lineWidth = borderWidth;
+
+        const borderX = outerPadding + borderWidth / 2;
+        const borderY = outerPadding + borderWidth / 2;
+
+        this.roundRect(
+          ctx,
+          borderX,
+          borderY,
+          boxSize - borderWidth,
+          boxSize - borderWidth,
+          borderRadius,
+        );
+
+        ctx.stroke();
+      }
+
+      /*
+       * Draw QR smaller and centered
+       * inside the bordered area.
+       */
+      const qrX = outerPadding + (boxSize - qrSize) / 2;
+      const qrY = outerPadding + (boxSize - qrSize) / 2;
+
+      ctx.drawImage(
+        qrCanvas,
+        sourceX,
+        sourceY,
+        sourceWidth,
+        sourceHeight,
+        qrX,
+        qrY,
+        qrSize,
+        qrSize,
+      );
+
+      /*
+       * Draw bottom text outside the border.
+       */
+      if (text) {
+        ctx.fillStyle = this.config.textColor || "#004761";
+        ctx.font = `${this.config.textSize || textFontSize}px ${this.config.fontFamily || "Arial"}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.fillText(
+          text,
+          outputWidth / 2,
+          outerPadding + boxSize + textMargin + textHeight / 2,
+        );
+      }
+
+      return outputCanvas;
     } catch (error) {
       console.error("Capture error:", error);
       return null;
     }
+  }
+
+  private createDownloadCanvas(qrCanvas: HTMLCanvasElement): HTMLCanvasElement {
+    const terminalName = `Terminal Name : ${this.terminalName || "N/A"} Terminal`;
+
+    const footerText = "Truck Driver Safety Training";
+
+    // Space above QR
+    const headerHeight = 90;
+
+    // Space between Terminal Name and QR
+    const headerGap = 2;
+
+    // Space between QR and footer
+    const footerGap = 15;
+
+    // Space below footer
+    const bottomPadding = 20;
+
+    const outputWidth = qrCanvas.width;
+
+    const outputHeight =
+      headerHeight +
+      headerGap +
+      qrCanvas.height +
+      footerGap +
+      75 +
+      bottomPadding;
+
+    const outputCanvas = document.createElement("canvas");
+
+    outputCanvas.width = outputWidth;
+    outputCanvas.height = outputHeight;
+
+    const ctx = outputCanvas.getContext("2d");
+
+    if (!ctx) {
+      throw new Error("Could not create canvas context");
+    }
+
+    // Background
+    ctx.fillStyle = this.backgroundColor || "#ffffff";
+
+    ctx.fillRect(0, 0, outputWidth, outputHeight);
+
+    // =====================================
+    // TERMINAL NAME
+    // =====================================
+
+    ctx.fillStyle = "#004761";
+
+    ctx.font = "bold 32px Arial";
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.fillText(terminalName, outputWidth / 2, headerHeight / 2);
+
+    // =====================================
+    // QR CODE
+    // =====================================
+
+    const qrY = headerHeight + headerGap;
+
+    ctx.drawImage(qrCanvas, 0, qrY, qrCanvas.width, qrCanvas.height);
+
+    // =====================================
+    // FOOTER
+    // =====================================
+
+    ctx.fillStyle = "#004761";
+
+    ctx.font = "bold 36px Arial";
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    const footerY = qrY + qrCanvas.height + footerGap + 35;
+
+    ctx.fillText(footerText, outputWidth / 2, footerY);
+
+    return outputCanvas;
+  }
+
+  private roundRect(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    radius: number,
+  ): void {
+    ctx.beginPath();
+
+    ctx.moveTo(x + radius, y);
+
+    ctx.lineTo(x + width - radius, y);
+
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+
+    ctx.lineTo(x + width, y + height - radius);
+
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+
+    ctx.lineTo(x + radius, y + height);
+
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+
+    ctx.lineTo(x, y + radius);
+
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+
+    ctx.closePath();
   }
 
   private delay(ms: number): Promise<void> {
