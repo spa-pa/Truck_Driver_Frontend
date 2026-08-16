@@ -20,15 +20,11 @@
 
     <div class="stage">
       <div class="stage-ring"></div>
-      <img
-        src="assets/images/login/login-page2.png"
-        alt="Truck Driver Safety"
-        class="port-image"
-      />
+      <img src="assets/images/login/login-page2.png" alt="Truck Driver Safety" class="port-image" />
     </div>
 
     <!-- <div class="caption">Port &amp; Terminal Access Portal</div> -->
-      <div class="img-caption">
+    <div class="img-caption">
       <span class="tag">Safety Training</span>
       <h2>Secure access to <em>Port Operations</em></h2>
       <p>Authorized personnel only. All sessions are monitored and logged for compliance.</p>
@@ -38,12 +34,20 @@
   <!-- RIGHT: FORM -->
   <div class="form-panel">
     <!-- Shown only on mobile / small screens, since the illustration panel is hidden there -->
-    <div class="mobile-logo">
-      <img src="assets/images/logo/logo.png" alt="JM Baxi" />
+    <div class="login-header">
+      <div class="brand-section">
+        <img src="assets/images/logo/logo.png" alt="JM BAXI" class="brand-logo" />
+
+        <div class="brand-divider"></div>
+
+        <span class="training-label">SAFETY TRAINING</span>
+      </div>
+
+      <h2>Sign in to account</h2>
     </div>
 
-    <div class="eyebrow">Safety Training</div>
-    <h1 class="login-title">Sign in to account</h1>
+    <!-- <div class="eyebrow">Safety Training</div> -->
+    <!-- <h1 class="login-title">Sign in to account</h1> -->
 
     <form class="theme-form" [formGroup]="loginForm">
       <!-- USERNAME -->
@@ -56,33 +60,21 @@
               <path d="m3.5 6 8.5 7 8.5-7" />
             </svg>
           </span>
-          <input
-            class="form-control login-input"
-            type="text"
-            required
-            placeholder="User Name"
-            formControlName="user_name"
-            id="user_name"
-          />
+          <input class="form-control login-input" type="text" required placeholder="User Name"
+            formControlName="user_name" id="user_name" />
         </div>
         <!-- Error message with fixed height to prevent shift -->
         <div class="error-wrapper">
-          <div
-            *ngIf="
+          <div *ngIf="
               loginForm.controls['user_name'].touched &&
               loginForm.controls['user_name'].errors?.['required']
-            "
-            class="error-text"
-          >
+            " class="error-text">
             <span class="text-danger">Username is required</span>
           </div>
-          <div
-            *ngIf="
+          <div *ngIf="
               loginForm.controls['user_name'].touched &&
               loginForm.controls['user_name'].errors?.['user_name']
-            "
-            class="error-text"
-          >
+            " class="error-text">
             <span class="text-danger">Invalid Username</span>
           </div>
           <!-- Empty placeholder to maintain height -->
@@ -100,61 +92,31 @@
               <path d="M8 11V7a4 4 0 0 1 8 0v4" />
             </svg>
           </span>
-          <input
-            class="form-control login-input"
-            [type]="show ? 'text' : 'password'"
-            required
-            placeholder="*********"
-            formControlName="password"
-            id="password"
-          />
+          <input class="form-control login-input" [type]="show ? 'text' : 'password'" required placeholder="*********"
+            formControlName="password" id="password" />
 
           <!-- FIXED: Show/Hide toggle with proper sizing -->
-          <button
-            type="button"
-            class="toggle-visibility"
-            (click)="showPassword()"
-            aria-label="Toggle password visibility"
-          >
-            <svg
-              *ngIf="!show"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
+          <button type="button" class="toggle-visibility" (click)="showPassword()"
+            aria-label="Toggle password visibility">
+            <svg *ngIf="!show" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" />
               <circle cx="12" cy="12" r="3" />
             </svg>
-            <svg
-              *ngIf="show"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+            <svg *ngIf="show" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
               <line x1="1" y1="1" x2="23" y2="23" />
             </svg>
           </button>
         </div>
 
         <div class="error-wrapper">
-          <div
-            *ngIf="
+          <div *ngIf="
               loginForm.controls['password'].touched &&
               loginForm.controls['password'].errors?.['required']
-            "
-            class="error-text"
-          >
+            " class="error-text">
             <span class="text-danger">Password is required</span>
           </div>
           <div class="error-text empty">&nbsp;</div>
@@ -163,11 +125,8 @@
 
       <!-- LOGIN BUTTON -->
       <div class="text-end mt-3">
-        <button
-          class="btn btn-primary btn-block w-100 text-white btn-login"
-          [disabled]="!loginForm.valid"
-          (click)="login()"
-        >
+        <button class="btn btn-primary btn-block w-100 text-white btn-login" [disabled]="!loginForm.valid"
+          (click)="login()">
           Login
         </button>
       </div>
