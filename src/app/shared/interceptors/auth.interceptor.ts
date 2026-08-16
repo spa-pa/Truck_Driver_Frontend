@@ -56,7 +56,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
         ) {
             modifiedRequest = request.clone({
                 body: {
-                    reqBody: this.encryptionLayer.encryptData(request.body)
+                    payload: this.encryptionLayer.encryptData(request.body)
                 }
             });
         }
@@ -89,10 +89,10 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
             if (
                 environment.ENABLE_ENCRYPTION &&
-                responseBody?.resBody
+                responseBody?.payload
             ) {
                 responseBody = this.encryptionLayer.decryptData(
-                    responseBody.resBody
+                    responseBody.payload
                 );
             }
 
@@ -135,11 +135,11 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
             if (
                 environment.ENABLE_ENCRYPTION &&
-                err?.error?.resBody
+                err?.error?.payload
             ) {
 
                 errorData = this.encryptionLayer.decryptData(
-                    err.error.resBody
+                    err.error.payload
                 );
 
             }
