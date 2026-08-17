@@ -13,6 +13,7 @@ import { FileSizePipe } from "../../shared/pipes/file-size.pipe";
 import { TruncatePipe } from "../../shared/pipes/truncate.pipe";
 import { Subscription } from "rxjs";
 import { ModalService } from "../../shared/services/modal.service";
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: "app-video-config",
@@ -44,6 +45,11 @@ export class VideoConfigComponent implements OnInit {
   // Track current loading language to prevent race conditions
   private currentLoadingLanguageId: number | null = null;
   private subscriptions: Subscription = new Subscription();
+
+  // Max allowed video upload size, driven by environment config (in MB)
+  readonly maxVideoSizeMB: number = environment.maxVideoSizeMB;
+  readonly maxVideoSizeBytes: number =
+    this.maxVideoSizeMB * 1024 * 1024;
 
   constructor(
     private apilanguageService: ApiLanguageService,
@@ -207,6 +213,10 @@ export class VideoConfigComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      if (!this.isFileSizeValid(file)) {
+        event.target.value = "";
+        return;
+      }
       this.selectedFile = file;
       this.uploadProgress = 0;
     }
@@ -227,9 +237,25 @@ export class VideoConfigComponent implements OnInit {
     this.isDragging = false;
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
-      this.selectedFile = files[0];
+      const file = files[0];
+      if (!this.isFileSizeValid(file)) {
+        return;
+      }
+      this.selectedFile = file;
       this.uploadProgress = 0;
     }
+  }
+
+  // Validates the selected file against the max allowed size (from environment config)
+  private isFileSizeValid(file: File): boolean {
+    if (file.size > this.maxVideoSizeBytes) {
+      this.modalService.warning(
+        "File Too Large",
+        `The selected video "${file.name}" is larger than the allowed limit of ${this.maxVideoSizeMB} MB. Please upload a video within the size limit.`,
+      );
+      return false;
+    }
+    return true;
   }
 
   uploadVideo() {
@@ -238,6 +264,11 @@ export class VideoConfigComponent implements OnInit {
         "Missing Information",
         "Please select a language and a video file.",
       );
+      return;
+    }
+
+    // Safety-net check in case selectedFile was set through another path
+    if (!this.isFileSizeValid(this.selectedFile)) {
       return;
     }
 

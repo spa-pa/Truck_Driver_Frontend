@@ -303,13 +303,14 @@ dropzone
 
 
 .dropzone__hint {
-
   margin-top: 16px;
-
   font-size: 12px;
-
   color: #64748b;
 
+  &--highlight {
+    font-weight: 600;
+    color:  #dd0909; // or whatever your accent color is
+  }
 }
 
 
