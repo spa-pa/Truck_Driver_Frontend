@@ -370,4 +370,27 @@
       </section>
     </div>
   </main>
+
+  <!-- Image Preview Modal -->
+  <div
+    *ngIf="previewImageUrl"
+    class="image-preview-overlay"
+    (click)="closeImagePreview()"
+  >
+    <div class="image-preview-modal" (click)="$event.stopPropagation()">
+      <button
+        type="button"
+        class="image-preview-modal__close"
+        (click)="closeImagePreview()"
+        title="Close"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+      <img
+        [src]="previewImageUrl"
+        alt="Preview"
+        class="image-preview-modal__image"
+      />
+    </div>
+  </div>
 </div>

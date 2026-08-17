@@ -1,5 +1,4 @@
-// src/app/modules/quiz-config/quiz-config.component.ts
-import { Component, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
   FormsModule,
@@ -56,6 +55,9 @@ export class QuizConfigComponent implements OnInit {
   isEditing = false;
   editingQuestionId: number | null = null;
 
+  // Image preview modal state
+  previewImageUrl: string | null = null;
+
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -80,6 +82,14 @@ export class QuizConfigComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+    document.body.style.overflow = "";
+  }
+
+  @HostListener("document:keydown.escape")
+  onEscapeKey() {
+    if (this.previewImageUrl) {
+      this.closeImagePreview();
+    }
   }
 
   // ============ LANGUAGE METHODS ============
@@ -607,8 +617,15 @@ export class QuizConfigComponent implements OnInit {
   }
 
   openImage(imageUrl: string) {
-    // Open image in a new tab or modal
-    window.open(imageUrl, "_blank");
+    // Show image in a responsive modal popup instead of a new tab
+    if (!imageUrl) return;
+    this.previewImageUrl = imageUrl;
+    document.body.style.overflow = "hidden";
+  }
+
+  closeImagePreview() {
+    this.previewImageUrl = null;
+    document.body.style.overflow = "";
   }
 
   hasOptionImages(question: any): boolean {

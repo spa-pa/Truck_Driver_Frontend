@@ -144,11 +144,6 @@ export class QRScanDriverDetailsComponent {
   }
 
   gateIn(): void {
-    console.log(
-      "[Gate In] Triggered for Certification ID:",
-      this.certificationId,
-    );
-
     const payload = {
       terminal_id: currentUser().terminal_id,
       certification_id: this.certificationId,

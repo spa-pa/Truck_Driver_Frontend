@@ -109,12 +109,6 @@ export class EncryptionAPILayer {
                 'Unable to decrypt response'
             );
         }
-
-        console.log(
-            'Decrypted UTF-8:',
-            decryptedText
-        );
-
         return JSON.parse(decryptedText);
     }
 }
