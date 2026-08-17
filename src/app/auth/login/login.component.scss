@@ -637,3 +637,43 @@ h1.login-title {
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
   -webkit-text-fill-color: #1c2b3a !important;
 }
+
+.login-header {
+  margin-bottom: 22px;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 23px;
+}
+
+.brand-logo {
+  width: 125px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(20, 70, 90, 0.25);
+}
+
+.training-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #144b63;
+  white-space: nowrap;
+}
+
+.login-header h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  font-weight: 400;
+  color: #0d4058;
+}

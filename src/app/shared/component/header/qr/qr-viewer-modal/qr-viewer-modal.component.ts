@@ -7,6 +7,7 @@ import { QRDisplayComponent } from '@modules/masters/QR-Operation/qr-code/qr-dis
 import { QRConfig, DEFAULT_QR_CONFIG, QRResponse } from '@shared/models/qr.model';
 import { QRConfigService } from '@shared/services/qr-config.service';
 import { UrlService } from '@shared/services/url.service';
+import { QrConfigService } from '@shared/_http/qr-config.service';
 
 
 @Component({
@@ -28,7 +29,7 @@ export class QRViewerModalComponent implements OnInit, AfterViewInit {
   @Input() qrData: string = '';
   @Input() configData: any = null;
 
-  config: QRConfig = { ...DEFAULT_QR_CONFIG };
+  config: QRConfig;
   response: QRResponse | null = null;
   currentDate = new Date();
 
@@ -38,40 +39,106 @@ export class QRViewerModalComponent implements OnInit, AfterViewInit {
   constructor(
     private modalService: NgbModal,
     private qrConfigService: QRConfigService,
-    private urlService:UrlService
+    private urlService: UrlService,
+    private qrConfigApiService: QrConfigService,
+
   ) { }
 
   ngOnInit(): void {
     // Subscribe to config changes
-    this.qrConfigService.config$.subscribe(config => {
-      this.config = { ...config };
-      if (this.isInitialized && this.qrDisplay) {
-        setTimeout(() => {
-          this.qrDisplay.generateQR();
-        }, 100);
+    // this.qrConfigService.config$.subscribe(config => {
+    //   this.config = { ...config };
+    //   if (this.isInitialized && this.qrDisplay) {
+    //     setTimeout(() => {
+    //       this.qrDisplay.generateQR();
+    //     }, 100);
+    //   }
+    // });
+
+    // this.qrConfigService.response$.subscribe(response => {
+    //   this.response = response;
+    // });
+
+    // // Set initial data if provided
+    // if (this.terminalId) {
+    //   this.config.terminalId = this.terminalId;
+    // }
+
+    // // Only set URL if qrData is not provided
+    // if (!this.qrData) {
+    //   this.config.data = this.urlService.getDriverTrainingUrl(this.terminalId);
+    // } else {
+    //   this.config.data = this.qrData;
+    // }
+
+    // // If configData is provided, use it
+    // if (this.configData) {
+    //   this.config = { ...this.config, ...this.configData };
+    // }
+
+    // this.qrConfigApiService.getQrConfig(1).subscribe({
+    //   next: (response: any) => {
+    //     if (response && response.success && response.data) {
+    //       // Store the full response
+    //       this.config = response.data.json;
+
+    //       // Extract json config
+    //       const jsonConfig = response.data.json || {};
+
+    //       // Parse data if it's a string
+    //       let parsedData = jsonConfig.data || '';
+    //       try {
+    //         if (typeof parsedData === 'string') {
+    //           // If it's a valid JSON string, parse it
+    //           JSON.parse(parsedData);
+    //         }
+    //       } catch (e) {
+    //         // If not valid JSON, keep as is
+    //       }
+
+
+    //       debugger
+    //       // Update config with API data
+    //       this.config = {
+    //         ...this.config
+    //       };
+
+    //       // if (!this.qrData) {
+    //       //   this.config.data = this.urlService.getDriverTrainingUrl(this.terminalId);
+    //       // } else {
+    //       //   this.config.data = this.qrData;
+    //       // }
+
+    //       this.cdr?.detectChanges();
+    //     },
+    //     error: (err) => {
+    //       console.error('Error loading QR config:', err);
+    //       this.isLoading = false;
+    //       // Use default URL on error
+    //       this.qrDataString = this.urlService.getDriverTrainingUrl(this.terminalId);
+    //       this.cdr?.detectChanges();
+    //     }
+    //   });
+
+    this.qrConfigApiService.getQrConfig(1).subscribe({
+      next: (response: any) => {
+        if (response && response.success && response.data) {
+          // Store the full response
+          this.config = response.data.json;
+
+          if (this.qrData) {
+            this.config.data = this.urlService.getDriverTrainingUrl(this.terminalId);
+          }
+        } else {
+          console.warn('No config found for terminal:', this.terminalId);
+          // Use default URL
+        }
+
+      },
+      error: (err) => {
+        console.error('Error loading QR config:', err);
       }
     });
-
-    this.qrConfigService.response$.subscribe(response => {
-      this.response = response;
-    });
-
-    // Set initial data if provided
-    if (this.terminalId) {
-      this.config.terminalId = this.terminalId;
-    }
-
-    // Only set URL if qrData is not provided
-    if (!this.qrData) {
-      this.config.data = this.urlService.getDriverTrainingUrl(this.terminalId);
-    } else {
-      this.config.data = this.qrData;
-    }
-
-    // If configData is provided, use it
-    if (this.configData) {
-      this.config = { ...this.config, ...this.configData };
-    }
   }
 
 

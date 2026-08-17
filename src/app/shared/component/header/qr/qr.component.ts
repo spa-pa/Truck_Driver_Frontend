@@ -62,10 +62,9 @@ export class QrComponent implements OnInit {
     this.qrConfigApiService.getQrConfig(1).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-
         if (response && response.success && response.data) {
           // Store the full response
-          this.qrConfig = response.data;
+          this.qrConfig = response.data.json;
 
           // Extract json config
           const jsonConfig = response.data.json || {};
@@ -81,20 +80,21 @@ export class QrComponent implements OnInit {
             // If not valid JSON, keep as is
           }
 
+
           // Update config with API data
           this.config = {
             ...this.config,
             data: parsedData,
-            qrColor: jsonConfig.qrColor || this.config.qrColor,
-            bgColor: jsonConfig.bgColor || this.config.bgColor,
-            qrSize: jsonConfig.qrSize || this.config.qrSize,
-            dotType: jsonConfig.dotType || this.config.dotType,
-            logoUrl: jsonConfig.logoUrl || this.config.logoUrl,
-            bottomText: jsonConfig.bottomText || this.config.bottomText,
-            textSize: jsonConfig.textSize || this.config.textSize,
-            textColor: jsonConfig.textColor || this.config.textColor,
-            fontFamily: jsonConfig.fontFamily || this.config.fontFamily,
-            fontWeight: jsonConfig.fontWeight || this.config.fontWeight,
+            qrColor: jsonConfig.qrColor || this.qrConfig.qrColor,
+            bgColor: jsonConfig.bgColor || this.qrConfig.bgColor,
+            qrSize: jsonConfig.qrSize || this.qrConfig.qrSize,
+            dotType: jsonConfig.dotType || this.qrConfig.dotType,
+            logoUrl: jsonConfig.logoUrl || this.qrConfig.logoUrl,
+            bottomText: jsonConfig.bottomText || this.qrConfig.bottomText,
+            textSize: jsonConfig.textSize || this.qrConfig.textSize,
+            textColor: jsonConfig.textColor || this.qrConfig.textColor,
+            fontFamily: jsonConfig.fontFamily || this.qrConfig.fontFamily,
+            fontWeight: jsonConfig.fontWeight || this.qrConfig.fontWeight,
             terminalId: jsonConfig.terminalId || this.terminalId
           };
 
