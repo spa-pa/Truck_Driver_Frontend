@@ -66,7 +66,8 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   private resizeObserver: ResizeObserver | null = null;
   private currentSize = 0;
   private qrDataURL: string | null = null;
-  private terminalName = currentUser().terminal_name || "-";
+  //private terminalName = currentUser().terminal_name || "-";
+  private terminalName = currentUser()?.terminal_name || null;
 
   @HostListener("window:resize")
   onWindowResize(): void {
