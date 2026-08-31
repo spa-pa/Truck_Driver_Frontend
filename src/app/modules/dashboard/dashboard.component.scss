@@ -2,9 +2,44 @@
   background: #f8f9fa;
   min-height: 100vh;
 
+  // .terminal-select {
+  //   width: auto;
+  //   min-width: 150px;
+  // }
   .terminal-select {
     width: auto;
     min-width: 150px;
+
+    // Font styling
+    font-family: Arial, sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #1c2b3a;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.35rem 0.75rem 0.35rem 0.75rem; /* removed extra right padding */
+    appearance: auto; /* keep native arrow */
+    cursor: pointer;
+    transition: border-color 0.2s;
+
+    // Override Bootstrap's background-image (chevron)
+    background-image: none !important;
+
+    &:focus {
+      border-color: #1c2b3a;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(28, 43, 58, 0.1);
+    }
+
+    option {
+      font-family: inherit;
+      font-weight: inherit;
+      font-size: inherit;
+      color: #1c2b3a;
+      background-color: #ffffff;
+      padding: 4px 8px;
+    }
   }
 
   .cursor-pointer {

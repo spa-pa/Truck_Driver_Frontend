@@ -180,6 +180,12 @@ export class TrainingComponent implements OnInit, OnDestroy {
   selectedLanguageCode: string = "en";
   videoUrl: string = "";
   questions: MappedQuestion[] = [];
+  // Master list in original/API order - never mutated or reordered. Every
+  // quiz start (first attempt, retake after fail, or after re-watching the
+  // video) reshuffles a fresh copy of this into `questions` so the order
+  // shown to the driver changes each time, while answer keys (by q.id)
+  // stay correct regardless of order.
+  private originalQuestions: MappedQuestion[] = [];
   currentQuestionIndex: number = 0;
   quizResult: QuizResult | null = null;
 
@@ -317,12 +323,27 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   private initQuizForm(): void {
+    // Fresh shuffle every time this runs (first load, retake after fail,
+    // or watch-video-again) - form controls are keyed by question id, not
+    // position, so shuffling order never breaks answer binding/scoring.
+    this.questions = this.shuffleArray(this.originalQuestions);
+
     const controls: any = {};
     this.questions.forEach((q) => {
       controls[`question_${q.id}`] = ["", Validators.required];
     });
     this.quizForm = this.fb.group(controls);
     this.currentQuestionIndex = 0;
+  }
+
+  // Fisher-Yates shuffle - returns a new shuffled array, never mutates the input.
+  private shuffleArray<T>(source: T[]): T[] {
+    const arr = [...source];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   }
 
   // ------------------------------------------------------------
@@ -723,7 +744,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
         next: (response) => {
           const questionRes: QuestionHeader[] = response.data;
           if (questionRes && questionRes.length > 0) {
-            this.questions = this.mapQuestions(questionRes);
+            this.originalQuestions = this.mapQuestions(questionRes);
             this.initQuizForm();
           }
           this.isLoading = false;

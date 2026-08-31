@@ -4,7 +4,7 @@ const frontenddomain = 'localhost:4200/';
 
 export const environment = {
     production: false,
-    ENABLE_ENCRYPTION: true,
+    ENABLE_ENCRYPTION: false,
     API_BASE_URL: 'http://' + domain + version,
     SACNNING_BASE_URL: 'http://' + frontenddomain,
     maxVideoSizeMB: 50,
