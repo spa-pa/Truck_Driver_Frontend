@@ -306,3 +306,18 @@
 
     background:#8fa3b1;
 }
+
+
+.rights-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+
+  li {
+    margin-bottom: 0.75rem;
+
+    p {
+      margin: 0.25rem 0 0 0;
+      font-size: 0.95rem;
+    }
+  }
+}

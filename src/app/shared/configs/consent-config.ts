@@ -6,7 +6,8 @@ export const ConsentDetailsData: RowData = {
     { label: "Sr.No", key: "SR.NO", type: "autoIncrementNumber", size: "4%" },
     { label: "Terminal", key: "terminal_name", type: "" },
     { label: "Language", key: "language_name", type: "" },
-    { label: "Description", key: "description", type: "json"},
+    // { label: "Description", key: "description", type: ""},
+    { label: "Description", key: "description", type: "consentDescription"},
     {
       label: "Action",
       key: "action",

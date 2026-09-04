@@ -155,6 +155,12 @@
                     </button>
 
                 </td>
+
+                <td *ngSwitchCase="'consentDescription'">
+                    <button class="btn btn-sm btn-primary" (click)="openConsentDescription(data)">
+                        View Details
+                    </button>
+                </td>
                 <td *ngSwitchDefault>
                     <ng-container *ngIf="data[header.key]; else dash">
                         {{ data[header.key] }}
@@ -294,7 +300,8 @@
 
             <div class="grid">
 
-                <div class="card" *ngFor="let item of selectedJson;" [ngClass]="item.doc_is_ocr ? 'card-ocr' : 'card-normal'">
+                <div class="card" *ngFor="let item of selectedJson;"
+                    [ngClass]="item.doc_is_ocr ? 'card-ocr' : 'card-normal'">
 
                     <!-- Top Row -->
                     <div class="card-top">
@@ -304,8 +311,7 @@
                         </h6>
 
                         <!-- 🔥 Modern Status -->
-                        <span class="status-pill"
-                              [ngClass]="item.status === 'Matched' ? 'success' : 'fail'">
+                        <span class="status-pill" [ngClass]="item.status === 'Matched' ? 'success' : 'fail'">
                             {{ item.status }}
                         </span>
 
@@ -334,8 +340,7 @@
                         </span>
 
                         <!-- 🔥 OCR / TEXT STYLE -->
-                        <span class="chip"
-                              [ngClass]="item.doc_is_ocr ? 'ocr-chip' : 'text-chip'">
+                        <span class="chip" [ngClass]="item.doc_is_ocr ? 'ocr-chip' : 'text-chip'">
                             {{ item.doc_is_ocr ? 'OCR ISSUE' : 'TEXT' }}
                         </span>
 
@@ -355,3 +360,67 @@
     </div>
 
 </div>
+
+
+<ng-template #ConsentDescriptionModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Consent Description</h4>
+        <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body" *ngIf="selectedDescription">
+        <!-- Title & Subtitle -->
+        <h3>{{ selectedDescription.title }}</h3>
+        <h5 class="text-muted">{{ selectedDescription.subtitle }}</h5>
+        <hr>
+
+        <!-- Sections -->
+        <div *ngFor="let section of selectedDescription.sections">
+            <!-- Section Title with number (if available) -->
+            <h4>
+                <span *ngIf="section.id">{{ section.id }}. </span>
+                {{ section.title }}
+            </h4>
+
+            <!-- Paragraphs -->
+            <div *ngIf="section.paragraphs">
+                <p *ngFor="let p of section.paragraphs">{{ p }}</p>
+            </div>
+
+            <!-- Items (bullet list) -->
+            <div *ngIf="section.items">
+                <ul>
+                    <li *ngFor="let item of section.items">{{ item }}</li>
+                </ul>
+            </div>
+
+            <!-- Rights (bullet list with bold title and description) -->
+            <div *ngIf="section.rights">
+                <ul class="rights-list">
+                    <li *ngFor="let right of section.rights">
+                        <strong>{{ right.title }}</strong>
+                        <p>{{ right.description }}</p>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact information -->
+            <div *ngIf="section.contact">
+                <p>
+                    <strong>Contact:</strong>
+                    {{ section.contact.designation }} – {{ section.contact.email }}
+                </p>
+            </div>
+
+            <hr>
+        </div>
+
+        <!-- Agreement -->
+        <div *ngIf="selectedDescription.agreement">
+            <p><em>{{ selectedDescription.agreement.text }}</em></p>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+    </div>
+</ng-template>
