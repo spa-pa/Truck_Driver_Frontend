@@ -701,10 +701,19 @@ export class TrainingComponent implements OnInit, OnDestroy {
       this.subscriptions.add(
         this.consentService.getConsentByLanguageId(languageId).subscribe({
           next: (res) => {
-            if (res?.success && res?.data?.length > 0 && res.data[0]?.description && res.data[0]?.description.trim().length > 0) {
-              const description = res.data[0]?.description;
-              this.termsContent = description;
-              this.parsedConsent = this.parseConsentContent(description);
+            const record: any = res?.data?.[0];
+            const description = record?.description;
+            // The API has been observed returning `description` both as a
+            // JSON-encoded string and (more recently) as an already-parsed
+            // JSON object - accept either.
+            const hasDescription =
+              (typeof description === 'string' && description.trim().length > 0) ||
+              (!!description && typeof description === 'object');
+
+            if (res?.success && res?.data?.length > 0 && hasDescription) {
+              this.termsContent = typeof description === 'string' ? description : '';
+              const terminalName = record?.terminal_name || record?.terminal_code || '';
+              this.parsedConsent = this.parseConsentContent(description, terminalName);
               this.selectedLanguageId = selectedLang.language_id;
               const langCode = selectedLang.language_code.toLowerCase();
               this.selectedLanguageCode = langCode;
@@ -734,7 +743,11 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   // Parses consentMaster.description into the structured ConsentData shape.
-  // NOTE: the API's stored JSON string currently has an escaping bug in the
+  // The API has been seen returning this field two ways: as a JSON-encoded
+  // string, or (more recently) as an already-parsed JSON object - both are
+  // accepted here.
+  //
+  // NOTE: when it's a string, it currently has an escaping bug in the
   // "agreement.text" value - the literal quotes around I Agree
   // (`By clicking "I Agree," you confirm...`) are not escaped as \" inside
   // the JSON string, which makes JSON.parse throw. We first try a straight
@@ -743,25 +756,75 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // text rendering) rather than breaking the consent step. This repair
   // should be treated as a workaround only - the backend should fix the
   // description string to escape embedded quotes properly.
-  private parseConsentContent(raw: string): ConsentData | null {
-    try {
-      return JSON.parse(raw);
-    } catch (e) {
+  private parseConsentContent(raw: string | ConsentData | null | undefined, terminalName?: string): ConsentData | null {
+    if (!raw) {
+      return null;
+    }
+
+    let parsed: ConsentData | null = null;
+
+    if (typeof raw === 'object') {
+      parsed = raw;
+    } else {
       try {
-        const repaired = raw.replace(
-          /"text"\s*:\s*"By clicking\s*"([^"]*)"\s*,?\s*"?\s*you/,
-          (_match, agreeLabel) => `"text": "By clicking \\"${agreeLabel}\\", you`
-        );
-        return JSON.parse(repaired);
-      } catch (e2) {
-        console.error(
-          "Failed to parse consent description as JSON - falling back to plain text rendering. " +
-          "The consentMaster API response likely contains unescaped quotes.",
-          e2
-        );
-        return null;
+        parsed = JSON.parse(raw);
+      } catch (e) {
+        try {
+          const repaired = raw.replace(
+            /"text"\s*:\s*"By clicking\s*"([^"]*)"\s*,?\s*"?\s*you/,
+            (_match, agreeLabel) => `"text": "By clicking \\"${agreeLabel}\\", you`
+          );
+          parsed = JSON.parse(repaired);
+        } catch (e2) {
+          console.error(
+            "Failed to parse consent description as JSON - falling back to plain text rendering. " +
+            "The consentMaster API response likely contains unescaped quotes.",
+            e2
+          );
+          return null;
+        }
       }
     }
+
+    if (!parsed) {
+      return null;
+    }
+
+    // Fill in dynamic placeholders used inside the JSON text, e.g.
+    // "{{terminalName}} will collect and process your personal data...",
+    // with real values from this API response.
+    const vars: Record<string, string> = {
+      terminalName: (terminalName || '').trim() || 'the Terminal',
+    };
+
+    return this.interpolatePlaceholders(parsed, vars);
+  }
+
+  // Recursively walks strings/arrays/objects, replacing {{token}}
+  // placeholders in every string value using the given variable map.
+  // Unknown tokens are left untouched rather than blanked out, so a typo
+  // or a not-yet-supported token is easy to spot rather than silently
+  // disappearing from the consent text.
+  private interpolatePlaceholders<T>(value: T, vars: Record<string, string>): T {
+    if (typeof value === 'string') {
+      return value.replace(/{{\s*([\w]+)\s*}}/g, (match, key) =>
+        vars[key] !== undefined ? vars[key] : match
+      ) as unknown as T;
+    }
+
+    if (Array.isArray(value)) {
+      return value.map(item => this.interpolatePlaceholders(item, vars)) as unknown as T;
+    }
+
+    if (value && typeof value === 'object') {
+      const result: any = {};
+      for (const key of Object.keys(value as any)) {
+        result[key] = this.interpolatePlaceholders((value as any)[key], vars);
+      }
+      return result;
+    }
+
+    return value;
   }
 
   // Legacy fallback used only when the API returns plain text (or the JSON

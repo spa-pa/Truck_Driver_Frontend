@@ -14,6 +14,7 @@ import { Subscription } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { FormComponent } from "@shared/component/form/form.component";
+import { TerminalService } from "@shared/_http/terminal.service";
 
 @Component({
   selector: "app-cu-consent",
@@ -34,6 +35,7 @@ export class CuConsentComponent implements OnInit, AfterViewInit {
     private consentService: ConsentService,
     private apiLanguageService: ApiLanguageService,
     private toastService: ToastService,
+    private terminalService: TerminalService,
   ) {}
 
   ngOnInit(): void {
@@ -75,19 +77,43 @@ export class CuConsentComponent implements OnInit, AfterViewInit {
             ele.listData = value.data
           }
         }))
-        break
+        break;
+        case "terminal":
+        this.subs.add(
+          this.terminalService.getAllTerminals().subscribe({
+            next: (value) => {
+              ele.listData = value.data;
+            },
+          }),
+        );
+        break;
     }
   }
 
+  // getConsentById() {
+  //   this.subs.add(
+  //     this.consentService.getConsentById(this.routeId).subscribe({
+  //       next: (value) => {
+  //         this.ConsentDetailsData.data = value.data;
+  //       },
+  //     }),
+  //   );
+  // }
+
   getConsentById() {
-    this.subs.add(
-      this.consentService.getConsentById(this.routeId).subscribe({
-        next: (value) => {
-          this.ConsentDetailsData.data = value.data;
-        },
-      }),
-    );
-  }
+  this.subs.add(
+    this.consentService.getConsentById(this.routeId).subscribe({
+      next: (value) => {
+        const data = value.data;
+        // Convert description object to pretty JSON string
+        if (data.description && typeof data.description === 'object') {
+          data.description = JSON.stringify(data.description, null, 2);
+        }
+        this.ConsentDetailsData.data = data; // patch this to form
+      },
+    })
+  );
+}
 
   handleSubmit(event: any) {
     let formData = JSON.parse(JSON.stringify(event["formValue"]));
