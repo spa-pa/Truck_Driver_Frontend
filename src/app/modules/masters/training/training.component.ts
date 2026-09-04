@@ -38,6 +38,43 @@ interface Language {
   language_id: number;
 }
 
+// Structured shape of consent.description as returned by the
+// consentMaster API (a JSON string, parsed into this shape) so the
+// consent step can be rendered like a Word document - headings,
+// intro paragraphs, bullet lists, rights blocks and a contact block.
+interface ConsentRight {
+  title: string;
+  description: string;
+}
+
+interface ConsentContact {
+  designation: string;
+  email: string;
+}
+
+interface ConsentSection {
+  id: number;
+  title: string;
+  description?: string;
+  paragraphs?: string[];
+  items?: string[];
+  rights?: ConsentRight[];
+  contact?: ConsentContact;
+}
+
+interface ConsentAgreement {
+  text: string;
+  agreeButtonText?: string;
+  backButtonText?: string;
+}
+
+interface ConsentData {
+  title: string;
+  subtitle?: string;
+  sections: ConsentSection[];
+  agreement?: ConsentAgreement;
+}
+
 interface QuestionOption {
   question_option_id: number;
   question_header_id: number;
@@ -223,6 +260,12 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   terminalId: number | null = null;
   termsContent: string = "";
+  // Parsed, structured version of termsContent (consentMaster.description),
+  // used to render the consent step like a document (headings/paragraphs/
+  // bullets/rights/contact). Null when the API returned plain text or the
+  // JSON could not be parsed - the template falls back to the legacy
+  // period-split rendering in that case.
+  parsedConsent: ConsentData | null = null;
 
   // Driving license photo (camera / upload)
   licensePhotoPreview: string | null = null;
@@ -654,12 +697,14 @@ export class TrainingComponent implements OnInit, OnDestroy {
     if (selectedLang) {
 
       this.termsContent = ''
+      this.parsedConsent = null;
       this.subscriptions.add(
         this.consentService.getConsentByLanguageId(languageId).subscribe({
           next: (res) => {
             if (res?.success && res?.data?.length > 0 && res.data[0]?.description && res.data[0]?.description.trim().length > 0) {
               const description = res.data[0]?.description;
               this.termsContent = description;
+              this.parsedConsent = this.parseConsentContent(description);
               this.selectedLanguageId = selectedLang.language_id;
               const langCode = selectedLang.language_code.toLowerCase();
               this.selectedLanguageCode = langCode;
@@ -688,8 +733,41 @@ export class TrainingComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Parses consentMaster.description into the structured ConsentData shape.
+  // NOTE: the API's stored JSON string currently has an escaping bug in the
+  // "agreement.text" value - the literal quotes around I Agree
+  // (`By clicking "I Agree," you confirm...`) are not escaped as \" inside
+  // the JSON string, which makes JSON.parse throw. We first try a straight
+  // parse, then fall back to a best-effort repair that escapes the inner
+  // quotes of that one field, and finally give up gracefully (legacy plain
+  // text rendering) rather than breaking the consent step. This repair
+  // should be treated as a workaround only - the backend should fix the
+  // description string to escape embedded quotes properly.
+  private parseConsentContent(raw: string): ConsentData | null {
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      try {
+        const repaired = raw.replace(
+          /"text"\s*:\s*"By clicking\s*"([^"]*)"\s*,?\s*"?\s*you/,
+          (_match, agreeLabel) => `"text": "By clicking \\"${agreeLabel}\\", you`
+        );
+        return JSON.parse(repaired);
+      } catch (e2) {
+        console.error(
+          "Failed to parse consent description as JSON - falling back to plain text rendering. " +
+          "The consentMaster API response likely contains unescaped quotes.",
+          e2
+        );
+        return null;
+      }
+    }
+  }
+
+  // Legacy fallback used only when the API returns plain text (or the JSON
+  // above could not be parsed) instead of the structured document format.
   getConsentPoints(): string[] {
-    if (!this.termsContent) {
+    if (!this.termsContent || this.parsedConsent) {
       return [];
     }
 

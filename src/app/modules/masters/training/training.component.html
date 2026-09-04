@@ -36,50 +36,109 @@
 
   <!-- Data Privacy Consent -->
   <div *ngIf="showConsent" class="step-container">
-    <div class="step-card card border-0 consent-card">
-      <!-- Header -->
+    <div class="step-card step-card--fill card border-0 consent-card">
+      <!-- Header: title/subtitle come from the consent JSON itself -->
       <div class="consent-banner">
         <div class="consent-banner__icon">
           <i class="fas fa-shield-alt"></i>
         </div>
         <div class="consent-banner__text">
-          <h4>{{ "CONSENT.HEADER_TITLE" | translate }}</h4>
-          <span>{{ "CONSENT.HEADER_SUBTITLE" | translate }}</span>
+          <h4>{{ parsedConsent?.title || ("CONSENT.HEADER_TITLE" | translate) }}</h4>
+          <span>{{ parsedConsent?.subtitle || ("CONSENT.HEADER_SUBTITLE" | translate) }}</span>
         </div>
       </div>
 
-      <!-- Title -->
-      <h2 class="consent-title">
-        {{ "CONSENT.CONSENT_TITLE" | translate }}
-      </h2>
+      <!-- Scrollable body: everything between the header and the action
+           buttons scrolls together as a single document. -->
+      <div class="consent-body">
+        <!-- Structured Consent Document (headings, paragraphs, bullet
+             points, rights and contact info - rendered word-document style) -->
+        <ng-container *ngIf="parsedConsent; else legacyConsent">
+          <div class="consent-content">
+            <div
+              class="consent-section"
+              *ngFor="let section of parsedConsent.sections; let i = index"
+            >
+              <!-- Section title: the first section is an intro ("Purpose of
+                   Data Collection") and stays unnumbered; numbering starts
+                   at 1 from the section right after it, regardless of the
+                   section's own id in the API response. -->
+              <h2>
+                <ng-container *ngIf="i > 0">{{ i }}. </ng-container>{{ section.title }}
+              </h2>
 
-      <!-- Dynamic Consent Content -->
-      <div class="consent-content" *ngIf="termsContent">
-        <!-- Multiple points -->
-        <ul
-          class="consent-list"
-          *ngIf="getConsentPoints().length > 1; else singleConsent"
-        >
-          <li *ngFor="let point of getConsentPoints()">
-            {{ point }}
-          </li>
-        </ul>
+              <!-- Section description -->
+              <p class="section-description" *ngIf="section.description">
+                {{ section.description }}
+              </p>
 
-        <!-- Single paragraph -->
-        <ng-template #singleConsent>
-          <p class="consent-text">
-            {{ getConsentPoints()[0] }}
-          </p>
+              <!-- Paragraphs -->
+              <div class="paragraph-container" *ngIf="section.paragraphs?.length">
+                <p *ngFor="let paragraph of section.paragraphs">
+                  {{ paragraph }}
+                </p>
+              </div>
+
+              <!-- Normal bullet items -->
+              <ul class="consent-list" *ngIf="section.items?.length">
+                <li *ngFor="let item of section.items">{{ item }}</li>
+              </ul>
+
+              <!-- Rights of data owners -->
+              <ul class="rights-list" *ngIf="section.rights?.length">
+                <li *ngFor="let right of section.rights">
+                  <strong>{{ right.title }}:</strong>
+                  {{ right.description }}
+                </li>
+              </ul>
+
+              <!-- Contact information -->
+              <div class="contact-information" *ngIf="section.contact">
+                <p *ngIf="section.contact.designation">
+                  <strong>{{ section.contact.designation }}</strong>
+                </p>
+                <p *ngIf="section.contact.email">
+                  <strong>Contact:</strong> {{ section.contact.email }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agreement statement -->
+          <div class="agreement-section" *ngIf="parsedConsent.agreement?.text">
+            <p class="agreement-text">{{ parsedConsent.agreement?.text }}</p>
+          </div>
+        </ng-container>
+
+        <!-- Legacy fallback: plain-text consent content (used only when the
+             API does not return the structured JSON document format) -->
+        <ng-template #legacyConsent>
+          <h2 class="consent-title">
+            {{ "CONSENT.CONSENT_TITLE" | translate }}
+          </h2>
+
+          <div class="consent-content" *ngIf="termsContent">
+            <!-- Multiple points -->
+            <ul
+              class="consent-list"
+              *ngIf="getConsentPoints().length > 1; else singleConsent"
+            >
+              <li *ngFor="let point of getConsentPoints()">
+                {{ point }}
+              </li>
+            </ul>
+
+            <!-- Single paragraph -->
+            <ng-template #singleConsent>
+              <p class="consent-text">
+                {{ getConsentPoints()[0] }}
+              </p>
+            </ng-template>
+          </div>
         </ng-template>
       </div>
 
-      <!-- Mandatory Note -->
-      <div class="consent-warning">
-        <i class="fas fa-info-circle"></i>
-        <span>{{ "CONSENT.MANDATORY_NOTE" | translate }}</span>
-      </div>
-
-      <!-- Action Buttons -->
+      <!-- Action Buttons: labels come from the consent JSON when available -->
       <div class="consent-actions">
         <button
           type="button"
@@ -87,7 +146,7 @@
           (click)="backToLanguageSelection()"
         >
           <i class="fas fa-arrow-left"></i>
-          {{ "CONSENT.BACK" | translate }}
+          {{ parsedConsent?.agreement?.backButtonText || ("CONSENT.BACK" | translate) }}
         </button>
 
         <button
@@ -95,13 +154,14 @@
           class="btn-primary"
           (click)="proceedFromConsent()"
         >
-          {{ "CONSENT.PROCEED" | translate }}
+          {{ parsedConsent?.agreement?.agreeButtonText || ("CONSENT.PROCEED" | translate) }}
           <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
   </div>
   <!-- Registration Form -->
+
   <div *ngIf="showRegistration" class="step-container">
     <div class="step-card card border-0 step-card--fill">
       <div class="step-header">

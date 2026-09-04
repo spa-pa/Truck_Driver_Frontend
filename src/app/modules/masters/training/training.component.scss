@@ -1866,6 +1866,22 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 // ------------------------------------------------------------
 .consent-card {
   max-width: 760px;
+  // Guards against the inner content (long title, scrollbar reflow, the
+  // banner's edge-to-edge bleed below) ever pushing this card - and with
+  // it the whole page - wider than the viewport and creating a horizontal
+  // scrollbar. Nothing in this card is meant to scroll sideways.
+  overflow-x: hidden;
+
+  // step-card--fill turns this into a flex column (header / body /
+  // actions) that fills the viewport height; the banner and action
+  // buttons stay put while .consent-body scrolls on its own.
+  > .consent-banner {
+    flex-shrink: 0;
+  }
+
+  > .consent-actions {
+    flex-shrink: 0;
+  }
 }
 
 .consent-banner {
@@ -1906,17 +1922,27 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   }
 
   &__text {
+    // Flex items default to min-width: auto, which stops long, unbroken
+    // text (the JSON title/subtitle) from wrapping and instead pushes the
+    // banner - and the card - wider than the viewport. min-width: 0 lets
+    // it shrink and wrap normally inside the flex row.
+    min-width: 0;
+
     h4 {
       font-size: 16px;
       font-weight: 700;
       color: $white;
       margin: 0 0 2px 0;
       letter-spacing: 0.3px;
+      line-height: 1.35;
+      overflow-wrap: break-word;
     }
 
     span {
       font-size: 12px;
       color: rgba($white, 0.75);
+      line-height: 1.4;
+      overflow-wrap: break-word;
     }
   }
 }
@@ -1929,83 +1955,179 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   margin: 0 0 8px 0;
 }
 
-.consent-intro {
-  font-size: 13px;
+// Legacy fallback (plain-text description, no structured JSON)
+.consent-text {
+  font-size: 13.5px;
   color: $text-secondary;
-  text-align: center;
-  margin: 0 0 22px 0;
-  line-height: 1.5;
+  line-height: 1.7;
+  margin: 0;
 }
 
-.consent-section {
-  display: flex;
-  gap: 14px;
-  padding: 14px 0;
-  border-bottom: 1px solid $border-color;
+// Scrollable body between the (fixed) banner and the (fixed) action
+// buttons - the whole document scrolls here as one unit.
+.consent-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  margin-bottom: 20px;
 
-  &:last-of-type {
-    border-bottom: none;
+  &::-webkit-scrollbar {
+    width: 6px;
   }
 
-  &__icon {
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba($primary, 0.06);
-    border-radius: 50%;
+  &::-webkit-scrollbar-thumb {
+    background: rgba($primary, 0.25);
+    border-radius: 3px;
+  }
+}
 
-    i {
-      font-size: 15px;
-      color: $primary;
+// ------------------------------------------------------------
+// Structured consent document (Word-like: title, section headers,
+// paragraphs, bullet points, rights blocks, contact block)
+// ------------------------------------------------------------
+.consent-content {
+  .consent-section {
+    padding: 16px 0;
+    border-bottom: 1px solid $border-color;
+
+    &:first-child {
+      padding-top: 0;
     }
-  }
 
-  &__body {
-    flex: 1;
-    min-width: 0;
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
 
-    h4 {
-      font-size: 14px;
+    h2 {
+      font-size: 15px;
       font-weight: 700;
       color: $primary;
-      margin: 0 0 4px 0;
+      margin: 0 0 10px 0;
+      line-height: 1.4;
     }
+  }
+
+  .section-description {
+    font-size: 13.5px;
+    color: $text-secondary;
+    line-height: 1.7;
+    margin: 0 0 10px 0;
+  }
+
+  .paragraph-container {
+    p {
+      font-size: 13.5px;
+      color: $text-secondary;
+      line-height: 1.7;
+      margin: 0 0 10px 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .consent-list {
+    // Bullets are drawn manually via ::before rather than relying on the
+    // native `list-style` marker - some global reset in the app's base
+    // styles was zeroing out list-style on <ul>/<li>, which hid the dots
+    // even though list-style-type: disc was set here. This makes the
+    // bullet render regardless of that.
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 4px 0;
+
+    li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 13.5px;
+      color: $text-secondary;
+      line-height: 1.7;
+      margin-bottom: 8px;
+
+      &::before {
+        content: "\2022";
+        position: absolute;
+        left: 4px;
+        top: 0;
+        color: $primary;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .rights-list {
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    li {
+      padding: 10px 14px;
+      background: rgba($primary, 0.04);
+      border-left: 3px solid $primary;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: $text-secondary;
+      line-height: 1.6;
+
+      strong {
+        color: $primary;
+      }
+    }
+  }
+
+  .contact-information {
+    margin-top: 8px;
 
     p {
       font-size: 13px;
       color: $text-secondary;
-      margin: 0;
-      line-height: 1.5;
+      margin: 0 0 4px 0;
+      line-height: 1.6;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      strong {
+        color: $primary;
+      }
     }
   }
 }
 
-.consent-warning {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-top: 20px;
+.agreement-section {
+  margin-top: 4px;
   padding: 14px 16px;
   background: rgba($primary, 0.05);
-  border: 1px solid rgba($primary, 0.12);
+  border: 1px solid rgba($primary, 0.14);
   border-radius: 10px;
-  font-size: 13px;
-  color: $primary;
-  line-height: 1.5;
 
-  i {
-    margin-top: 2px;
+  .agreement-text {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
     color: $primary;
+    line-height: 1.6;
   }
 }
 
 .consent-actions {
   display: flex;
   gap: 12px;
-  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid $border-color;
 
   @media (max-width: 480px) {
     flex-direction: column-reverse;
@@ -2062,32 +2184,4 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 .options-grid .option-label input[type="radio"]:checked ~ .option-body .option-letter {
   background: $primary;
   color: $white;
-}
-
-.consent-content {
-  margin: 24px 0;
-}
-
-.consent-list {
-  list-style-type: disc;
-  list-style-position: outside;
-  padding-left: 24px;
-  margin: 0;
-
-  li {
-    display: list-item;
-    margin-bottom: 14px;
-    color: $primary;
-    font-size: 15px;
-    line-height: 1.7;
-
-    &::marker {
-      color: $primary;
-      font-size: 16px;
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
 }
