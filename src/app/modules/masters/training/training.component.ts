@@ -181,7 +181,7 @@ interface ExpiryConfig {
     ReactiveFormsModule,
     FormsModule,
     TranslateModule,
-    NoRecordFoundComponent,
+    // NoRecordFoundComponent,
     DriverCertificationComponent,
   ],
   templateUrl: "./training.component.html",
