@@ -8,6 +8,7 @@ import { ApiLanguageService } from '@shared/_http/language.service';
 import { VideoService } from '@shared/_http/video.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { DriverTrainingService } from '@shared/_http/driver-training.service';
+import { NoRecordFoundComponent } from '@shared/component/no-record-found/no-record-found.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { DriverTrainingService } from '@shared/_http/driver-training.service';
     CommonModule,
     ReactiveFormsModule,
     TranslateModule,
+    NoRecordFoundComponent,
     TrainingRoutingModule
   ],
   providers: [ApiLanguageService, VideoService, DriverTrainingService]

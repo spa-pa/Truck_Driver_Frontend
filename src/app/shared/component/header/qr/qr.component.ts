@@ -7,6 +7,8 @@ import { UrlService } from '@shared/services/url.service';
 import { QrConfigService } from '@shared/_http/qr-config.service';
 import { currentUser } from '@shared/utils/current-user';
 import { QRConfig, DEFAULT_QR_CONFIG } from '@shared/models/qr.model';
+import { TerminalService } from '@shared/_http/terminal.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-qr',
@@ -24,13 +26,16 @@ export class QrComponent implements OnInit {
   isLoading: boolean = false;
   config: QRConfig = { ...DEFAULT_QR_CONFIG };
 
+  subs: any;
   constructor(
     private urlService: UrlService,
     private qrConfigApiService: QrConfigService,
-    public cdr: ChangeDetectorRef
+    public cdr: ChangeDetectorRef,
+    private terminalService: TerminalService
   ) { }
 
   ngOnInit(): void {
+    this.subs = new Subscription();
     this.getTerminalIdFromUser();
   }
 

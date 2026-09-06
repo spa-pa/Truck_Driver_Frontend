@@ -491,7 +491,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
       pdf.addImage(imageData, "PNG", x, y, width, height);
 
       //const footerText = this.config.bottomText || "Scan to Connect";
-      const footerText = "Truck Driver Safety Training";
+      const footerText = "Visitor Safety Management";
       pdf.setFontSize(16);
       pdf.setFont("helvetica", "bold");
       pdf.setTextColor("#004761");
@@ -821,7 +821,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   private createDownloadCanvas(qrCanvas: HTMLCanvasElement): HTMLCanvasElement {
     const terminalName = `Terminal Name : ${this.terminalName || "N/A"} Terminal`;
 
-    const footerText = "Truck Driver Safety Training";
+    const footerText = "Visitor Safety Management";
 
     // Space above QR
     const headerHeight = 90;

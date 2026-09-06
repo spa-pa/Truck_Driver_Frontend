@@ -32,6 +32,7 @@ import { ConsentService } from "@shared/_http/consent.service";
 import { PosterService } from "@shared/_http/poster.service";
 import { ExpiryConfigService } from "@shared/_http/expiry-config.service";
 import { TerminalService } from "@shared/_http/terminal.service";
+import { NoRecordFoundComponent } from "@shared/component/no-record-found/no-record-found.component";
 
 interface Language {
   language_code: string;
@@ -180,6 +181,7 @@ interface ExpiryConfig {
     ReactiveFormsModule,
     FormsModule,
     TranslateModule,
+    NoRecordFoundComponent,
     DriverCertificationComponent,
   ],
   templateUrl: "./training.component.html",
@@ -292,6 +294,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
   terminalName: string = "";
   terminalNameLoaded: boolean = false;
 
+  subs: any;
+  trainingDetails: any = null;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -317,6 +321,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.subs = new Subscription();
     this.getTerminalIdFromUrl();
     this.getAllLanguage();
     this.getExpiryConfig();
@@ -339,6 +344,24 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
       if (terminalIdParam) {
         this.terminalId = parseInt(terminalIdParam, 10);
+
+        this.subs.add(
+          this.terminalService.getTerminalById(this.terminalId).subscribe({
+            next: (value) => {
+              if (value?.data) {
+                this.trainingDetails = value.data;
+
+              } else {
+                this.trainingDetails = null;
+
+              }
+
+            }, error(err: any) {
+
+
+            }
+          }),
+        );
 
         // You can use this.terminalId in your API calls or form submissions
         // For example, add it to the registration form
@@ -717,55 +740,55 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // Loads content for that language, then automatically advances to the
   // Consent step (registration happens only after consent is given).
   selectLanguage(languageId: number): void {
-  const selectedLang = this.languages.find(l => l.language_id === languageId);
-  if (!selectedLang) return;
+    const selectedLang = this.languages.find(l => l.language_id === languageId);
+    if (!selectedLang) return;
 
-  this.termsContent = '';
-  this.parsedConsent = null;
+    this.termsContent = '';
+    this.parsedConsent = null;
 
-  this.subscriptions.add(
-    this.consentService.getConsentByLanguageId(languageId).subscribe({
-      next: (res) => {
-        const record: any = res?.data?.[0];
-        const description = record?.description;
-        const hasDescription = (typeof description === 'string' && description.trim().length > 0) ||
-                               (!!description && typeof description === 'object');
+    this.subscriptions.add(
+      this.consentService.getConsentByLanguageId(languageId).subscribe({
+        next: (res) => {
+          const record: any = res?.data?.[0];
+          const description = record?.description;
+          const hasDescription = (typeof description === 'string' && description.trim().length > 0) ||
+            (!!description && typeof description === 'object');
 
-        if (res?.success && res?.data?.length > 0 && hasDescription) {
-          this.termsContent = typeof description === 'string' ? description : '';
+          if (res?.success && res?.data?.length > 0 && hasDescription) {
+            this.termsContent = typeof description === 'string' ? description : '';
 
-          // Use the fetched terminal name, fallback to record's or default
-          const terminalName = this.terminalName ||
-                               record?.terminal_name ||
-                               record?.terminal_code ||
-                               'the Terminal';
+            // Use the fetched terminal name, fallback to record's or default
+            const terminalName = this.terminalName ||
+              record?.terminal_name ||
+              record?.terminal_code ||
+              'the Terminal';
 
-          this.parsedConsent = this.parseConsentContent(description, terminalName);
+            this.parsedConsent = this.parseConsentContent(description, terminalName);
 
-          this.selectedLanguageId = selectedLang.language_id;
-          const langCode = selectedLang.language_code.toLowerCase();
-          this.selectedLanguageCode = langCode;
-          this.languageService.setLanguage(langCode);
-          this.languageSelected = true;
+            this.selectedLanguageId = selectedLang.language_id;
+            const langCode = selectedLang.language_code.toLowerCase();
+            this.selectedLanguageCode = langCode;
+            this.languageService.setLanguage(langCode);
+            this.languageSelected = true;
 
-          this.loadTrainingContent(selectedLang.language_id);
-          this.initRegistrationForm();
+            this.loadTrainingContent(selectedLang.language_id);
+            this.initRegistrationForm();
 
-          this.showLanguageSelection = false;
-          this.showConsent = true;
-          this.cdr.detectChanges();
-        } else {
+            this.showLanguageSelection = false;
+            this.showConsent = true;
+            this.cdr.detectChanges();
+          } else {
+            this.toastService.open('Please select other language', 'error');
+            this.cdr.detectChanges();
+          }
+        },
+        error: (err) => {
           this.toastService.open('Please select other language', 'error');
           this.cdr.detectChanges();
         }
-      },
-      error: (err) => {
-        this.toastService.open('Please select other language', 'error');
-        this.cdr.detectChanges();
-      }
-    })
-  );
-}
+      })
+    );
+  }
 
   // Parses consentMaster.description into the structured ConsentData shape.
   // The API has been seen returning this field two ways: as a JSON-encoded
@@ -807,7 +830,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
         } catch (e2) {
           console.error(
             "Failed to parse consent description as JSON - falling back to plain text rendering. " +
-              "The consentMaster API response likely contains unescaped quotes.",
+            "The consentMaster API response likely contains unescaped quotes.",
             e2,
           );
           return null;
@@ -1155,8 +1178,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
     };
     this.subscriptions.add(
       this.driverTrainingService.createdriverTraining(formData).subscribe({
-        next: (value) => {},
-        error: () => {},
+        next: (value) => { },
+        error: () => { },
       }),
     );
 
@@ -1183,7 +1206,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
                 this.showCertification = true;
               }
             },
-            error: () => {},
+            error: () => { },
           }),
       );
     }
@@ -1208,7 +1231,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     const video = this.videoPlayer?.nativeElement;
     if (video) {
       video.currentTime = 0;
-      video.play().catch(() => {});
+      video.play().catch(() => { });
     }
     this.cdr.detectChanges();
   }
@@ -1391,7 +1414,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     // Safety net: some browsers pause a hidden <video>; make sure it's playing
     const video = this.cameraVideo?.nativeElement;
     if (video && video.paused) {
-      video.play().catch(() => {});
+      video.play().catch(() => { });
     }
   }
 

@@ -89,11 +89,11 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     height: calc(100vh - 24px);
   }
 
-  > .step-header {
+  >.step-header {
     flex-shrink: 0;
   }
 
-  > .video-container {
+  >.video-container {
     // Match the container's own box to a 16:9 shape (typical training-video
     // aspect ratio) instead of stretching it to fill the leftover height
     // exactly — that mismatch is what was causing the big black pillarbox
@@ -109,7 +109,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     align-self: center;
   }
 
-  > .poster-carousel {
+  >.poster-carousel {
     flex: 1 1 auto;
     min-height: 0;
   }
@@ -117,7 +117,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   // Registration form: fields stay their natural size, the submit
   // button anchors to the bottom of the available space, and the form
   // scrolls internally on its own if the fields don't fit.
-  > form {
+  >form {
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
@@ -134,10 +134,10 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     }
   }
 
-  > .video-progress,
-  > .poster-dots,
-  > .poster-actions,
-  > .btn-primary {
+  >.video-progress,
+  >.poster-dots,
+  >.poster-actions,
+  >.btn-primary {
     flex-shrink: 0;
   }
 }
@@ -388,8 +388,8 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   .license-photo-actions {
     display: flex;
     gap: 12px;
-    border: 2px solid transparent;       // ← border moved here
-    border-radius: 10px;                   // ← rounded corners for the group
+    border: 2px solid transparent; // ← border moved here
+    border-radius: 10px; // ← rounded corners for the group
     padding: 8px;
 
     @media (max-width: 480px) {
@@ -397,8 +397,8 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     }
 
     &.error {
-        border-color: $danger;
-        box-shadow: 0 0 0 4px rgba($danger, 0.08);   
+      border-color: $danger;
+      box-shadow: 0 0 0 4px rgba($danger, 0.08);
     }
 
     &__btn {
@@ -1066,7 +1066,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     input[type="radio"] {
       display: none;
 
-      &:checked ~ .option-marker {
+      &:checked~.option-marker {
         border-color: $primary;
 
         &::after {
@@ -1074,7 +1074,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
         }
       }
 
-      &:checked ~ .option-body .option-text {
+      &:checked~.option-body .option-text {
         color: $primary;
         font-weight: 600;
       }
@@ -1702,9 +1702,9 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   input[type="date"] {
     -webkit-appearance: none;
     appearance: none;
-    height: 44px; 
-    line-height: 44px; 
-    padding-right: 36px; 
+    height: 44px;
+    line-height: 44px;
+    padding-right: 36px;
 
     // Safari-specific pseudo-elements
     &::-webkit-date-and-time-value {
@@ -1875,11 +1875,11 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   // step-card--fill turns this into a flex column (header / body /
   // actions) that fills the viewport height; the banner and action
   // buttons stay put while .consent-body scrolls on its own.
-  > .consent-banner {
+  >.consent-banner {
     flex-shrink: 0;
   }
 
-  > .consent-actions {
+  >.consent-actions {
     flex-shrink: 0;
   }
 }
@@ -2181,7 +2181,64 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   }
 }
 
-.options-grid .option-label input[type="radio"]:checked ~ .option-body .option-letter {
+.options-grid .option-label input[type="radio"]:checked~.option-body .option-letter {
   background: $primary;
   color: $white;
+}
+
+
+.no-record-found {
+  text-align: center;
+  margin: 20px;
+  padding: 20px;
+  /* Add padding for better spacing */
+  background-color: #f8f9fa;
+  /* Light background color */
+  border: 1px solid #dee2e6;
+  /* Light border */
+  border-radius: 8px;
+  /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* Drop shadow for depth */
+}
+
+.no-record-found img {
+  max-width: 100%;
+  /* Ensure image does not exceed container width */
+  height: auto;
+  /* Maintain aspect ratio */
+  display: block;
+  /* Remove any extra space under the image */
+  margin: 0 auto 10px;
+  /* Center image and add spacing below */
+}
+
+@media (min-width: 576px) {
+  .no-record-found {
+    max-width: 90%;
+    /* Limit width on smaller screens */
+    margin: 20px auto;
+    /* Center horizontally */
+  }
+}
+
+@media (min-width: 768px) {
+  .no-record-found {
+    max-width: 90%;
+    /* Adjust max width for medium screens */
+  }
+}
+
+@media (min-width: 992px) {
+  .no-record-found {
+    max-width: 90%;
+    /* Adjust max width for large screens */
+  }
+}
+
+@media (min-width: 1200px) {
+  .no-record-found {
+    max-width: 90%;
+    /* Adjust max width for extra-large screens */
+  }
 }
