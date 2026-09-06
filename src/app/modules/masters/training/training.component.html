@@ -3,29 +3,29 @@
   <div *ngIf="showLanguageSelection" class="step-container">
     <div class="step-card card border-0 language-select-card">
       <div class="mb-3">
-        <img
-          class="img-fluid for-light"
-          src="assets/images/logo/logo.png"
-          alt="Logo"
-        />
+        <img class="img-fluid for-light" src="assets/images/logo/logo.png" alt="Logo" />
       </div>
       <div class="language-select-heading">
         <h2>Driver Safety Training</h2>
         <p>Choose your preferred language to continue</p>
       </div>
 
-      <div class="language-grid">
-        <div
-          *ngFor="let lang of languages"
-          class="language-grid__card"
-          (click)="selectLanguage(lang.language_id)"
-        >
-          <span class="language-grid__letter">{{
-            lang.language_name.charAt(0).toUpperCase()
-          }}</span>
-          <span class="language-grid__name">{{ lang.language_name }}</span>
+      <div *ngIf="!terminalNameLoaded" class="alert-info">
+        <i class="fas fa-spinner fa-spin"></i> Loading terminal details...
+      </div>
+
+      <div *ngIf="terminalNameLoaded">
+        <!-- language cards -->
+        <div class="language-grid">
+          <div *ngFor="let lang of languages" class="language-grid__card" (click)="selectLanguage(lang.language_id)">
+            <span class="language-grid__letter">{{
+              lang.language_name.charAt(0).toUpperCase()
+              }}</span>
+            <span class="language-grid__name">{{ lang.language_name }}</span>
+          </div>
         </div>
       </div>
+
 
       <div class="alert-info" *ngIf="languages.length === 0">
         <i class="fas fa-info-circle"></i>
@@ -55,10 +55,7 @@
              points, rights and contact info - rendered word-document style) -->
         <ng-container *ngIf="parsedConsent; else legacyConsent">
           <div class="consent-content">
-            <div
-              class="consent-section"
-              *ngFor="let section of parsedConsent.sections; let i = index"
-            >
+            <div class="consent-section" *ngFor="let section of parsedConsent.sections; let i = index">
               <!-- Section title: the first section is an intro ("Purpose of
                    Data Collection") and stays unnumbered; numbering starts
                    at 1 from the section right after it, regardless of the
@@ -119,10 +116,7 @@
 
           <div class="consent-content" *ngIf="termsContent">
             <!-- Multiple points -->
-            <ul
-              class="consent-list"
-              *ngIf="getConsentPoints().length > 1; else singleConsent"
-            >
+            <ul class="consent-list" *ngIf="getConsentPoints().length > 1; else singleConsent">
               <li *ngFor="let point of getConsentPoints()">
                 {{ point }}
               </li>
@@ -140,20 +134,12 @@
 
       <!-- Action Buttons: labels come from the consent JSON when available -->
       <div class="consent-actions">
-        <button
-          type="button"
-          class="btn-outline"
-          (click)="backToLanguageSelection()"
-        >
+        <button type="button" class="btn-outline" (click)="backToLanguageSelection()">
           <i class="fas fa-arrow-left"></i>
           {{ parsedConsent?.agreement?.backButtonText || ("CONSENT.BACK" | translate) }}
         </button>
 
-        <button
-          type="button"
-          class="btn-primary"
-          (click)="proceedFromConsent()"
-        >
+        <button type="button" class="btn-primary" (click)="proceedFromConsent()">
           {{ parsedConsent?.agreement?.agreeButtonText || ("CONSENT.PROCEED" | translate) }}
           <i class="fas fa-arrow-right"></i>
         </button>
@@ -165,20 +151,12 @@
   <div *ngIf="showRegistration" class="step-container">
     <div class="step-card card border-0 step-card--fill">
       <div class="step-header">
-        <button
-          type="button"
-          class="btn-back"
-          (click)="backToLanguageSelection()"
-        >
+        <button type="button" class="btn-back" (click)="backToLanguageSelection()">
           <i class="fas fa-arrow-left"></i>
           {{ "REGISTRATION.BACK" | translate }}
         </button>
         <div class="mb-3">
-          <img
-            class="img-fluid for-light"
-            src="assets/images/logo/logo.png"
-            alt="Logo"
-          />
+          <img class="img-fluid for-light" src="assets/images/logo/logo.png" alt="Logo" />
         </div>
         <h2>{{ "REGISTRATION.TITLE" | translate }}</h2>
         <p>{{ "REGISTRATION.SUBTITLE" | translate }}</p>
@@ -187,117 +165,79 @@
       <form [formGroup]="registrationForm" (ngSubmit)="registerDriver()">
         <div class="form-grid">
           <div class="form-group">
-            <label
-              >{{ "REGISTRATION.FULL_NAME" | translate }}
-              <span class="required">*</span></label
-            >
+            <label>{{ "REGISTRATION.FULL_NAME" | translate }}
+              <span class="required">*</span></label>
             <div class="input-wrapper">
               <i class="fas fa-user input-icon"></i>
-              <input
-                type="text"
-                formControlName="full_name"
-                [placeholder]="'REGISTRATION.FULL_NAME_PLACEHOLDER' | translate"
-                [class.error]="
+              <input type="text" formControlName="full_name"
+                [placeholder]="'REGISTRATION.FULL_NAME_PLACEHOLDER' | translate" [class.error]="
                   registrationForm.get('full_name')?.invalid &&
                   registrationForm.get('full_name')?.touched
-                "
-              />
+                " />
             </div>
-            <div
-              class="error-message"
-              *ngIf="
+            <div class="error-message" *ngIf="
                 registrationForm.get('full_name')?.invalid &&
                 registrationForm.get('full_name')?.touched
-              "
-            >
+              ">
               {{ "REGISTRATION.FULL_NAME_ERROR" | translate }}
             </div>
           </div>
 
           <div class="form-group">
-            <label
-              >{{ "REGISTRATION.MOBILE" | translate }}
-              <span class="required">*</span></label
-            >
+            <label>{{ "REGISTRATION.MOBILE" | translate }}
+              <span class="required">*</span></label>
             <div class="input-wrapper">
               <i class="fas fa-mobile-alt input-icon"></i>
-              <input
-                type="tel"
-                formControlName="mobile_number"
-                maxlength="10"
-                [placeholder]="'REGISTRATION.MOBILE_PLACEHOLDER' | translate"
-                [class.error]="
+              <input type="tel" formControlName="mobile_number" maxlength="10"
+                [placeholder]="'REGISTRATION.MOBILE_PLACEHOLDER' | translate" [class.error]="
                   registrationForm.get('mobile_number')?.invalid &&
                   registrationForm.get('mobile_number')?.touched
-                "
-              />
+                " />
             </div>
-            <div
-              class="error-message"
-              *ngIf="
+            <div class="error-message" *ngIf="
                 registrationForm.get('mobile_number')?.invalid &&
                 registrationForm.get('mobile_number')?.touched
-              "
-            >
+              ">
               {{ "REGISTRATION.MOBILE_ERROR" | translate }}
             </div>
           </div>
 
           <div class="form-group">
-            <label
-              >{{ "REGISTRATION.LICENSE" | translate }}
-              <span class="required">*</span></label
-            >
+            <label>{{ "REGISTRATION.LICENSE" | translate }}
+              <span class="required">*</span></label>
             <div class="input-wrapper">
               <i class="fas fa-id-card input-icon"></i>
-              <input
-                type="text"
-                formControlName="driving_license_number"
-                [placeholder]="'REGISTRATION.LICENSE_PLACEHOLDER' | translate"
-                [class.error]="
+              <input type="text" formControlName="driving_license_number"
+                [placeholder]="'REGISTRATION.LICENSE_PLACEHOLDER' | translate" [class.error]="
                   registrationForm.get('driving_license_number')?.invalid &&
                   registrationForm.get('driving_license_number')?.touched
-                "
-              />
+                " />
             </div>
-            <div
-              class="error-message"
-              *ngIf="
+            <div class="error-message" *ngIf="
                 registrationForm.get('driving_license_number')?.invalid &&
                 registrationForm.get('driving_license_number')?.touched
-              "
-            >
+              ">
               {{ "REGISTRATION.LICENSE_ERROR" | translate }}
             </div>
           </div>
 
           <div class="form-group">
-            <label
-              >{{ "REGISTRATION.LICENSE_EXPIRY" | translate }}
-              <span class="required">*</span></label
-            >
+            <label>{{ "REGISTRATION.LICENSE_EXPIRY" | translate }}
+              <span class="required">*</span></label>
             <div class="input-wrapper">
               <i class="fas fa-truck input-icon"></i>
-              <input
-                type="date"
-                formControlName="driving_license_expiry_date"
-                [placeholder]="
+              <input type="date" formControlName="driving_license_expiry_date" [placeholder]="
                   'REGISTRATION.LICENSE_EXPIRY_PLACEHOLDER' | translate
-                "
-                [class.error]="
+                " [class.error]="
                   registrationForm.get('driving_license_expiry_date')
                     ?.invalid &&
                   registrationForm.get('driving_license_expiry_date')?.touched
-                "
-              />
+                " />
             </div>
-            <div
-              class="error-message"
-              *ngIf="
+            <div class="error-message" *ngIf="
                 registrationForm.get('driving_license_expiry_date')?.invalid &&
                 registrationForm.get('driving_license_expiry_date')?.touched
-              "
-            >
+              ">
               {{ "REGISTRATION.LICENSE_EXPIRY_ERROR" | translate }}
             </div>
           </div>
@@ -308,21 +248,10 @@
             <!-- Fallback input: used only if the live camera (getUserMedia) can't be opened,
                  e.g. permission denied or an older browser. Normal camera capture now happens
                  in the in-page camera modal below, which works on desktop AND mobile. -->
-            <input
-              #cameraInput
-              type="file"
-              accept="image/*"
-              capture="environment"
-              class="visually-hidden-file"
-              (change)="onFileSelected($event, 'license')"
-            />
-            <input
-              #fileInput
-              type="file"
-              accept="image/*"
-              class="visually-hidden-file"
-              (change)="onFileSelected($event, 'license')"
-            />
+            <input #cameraInput type="file" accept="image/*" capture="environment" class="visually-hidden-file"
+              (change)="onFileSelected($event, 'license')" />
+            <input #fileInput type="file" accept="image/*" class="visually-hidden-file"
+              (change)="onFileSelected($event, 'license')" />
 
             <!-- Preview once a photo has been captured/selected -->
             <div class="license-photo-preview" *ngIf="licensePhotoPreview">
@@ -330,12 +259,8 @@
               <div class="license-photo-preview__meta">
                 <span class="license-photo-preview__name">{{
                   licensePhotoFileName
-                }}</span>
-                <button
-                  type="button"
-                  class="license-photo-preview__remove"
-                  (click)="removeLicensePhoto($event)"
-                >
+                  }}</span>
+                <button type="button" class="license-photo-preview__remove" (click)="removeLicensePhoto($event)">
                   <i class="fas fa-times"></i>
                   {{ "REGISTRATION.LICENSE_PHOTO_REMOVE" | translate }}
                 </button>
@@ -344,38 +269,22 @@
 
             <!-- Picker actions: shown until a photo is chosen -->
             <div class="license-photo-actions" *ngIf="!licensePhotoPreview">
-              <button
-                type="button"
-                class="license-photo-actions__btn"
-                (click)="openLiveCamera('license')"
-              >
+              <button type="button" class="license-photo-actions__btn" (click)="openLiveCamera('license')">
                 <i class="fas fa-camera"></i>
                 {{ "REGISTRATION.LICENSE_PHOTO_TAKE" | translate }}
               </button>
-              <button
-                type="button"
-                class="license-photo-actions__btn"
-                (click)="openFileUpload('license')"
-              >
+              <button type="button" class="license-photo-actions__btn" (click)="openFileUpload('license')">
                 <i class="fas fa-upload"></i>
                 {{ "REGISTRATION.LICENSE_PHOTO_UPLOAD" | translate }}
               </button>
             </div>
 
             <!-- Live camera modal: works on desktop webcams AND mobile cameras -->
-            <div
-              class="camera-modal-overlay"
-              *ngIf="showCameraModal"
-              (click)="closeCamera()"
-            >
+            <div class="camera-modal-overlay" *ngIf="showCameraModal" (click)="closeCamera()">
               <div class="camera-modal" (click)="$event.stopPropagation()">
                 <div class="camera-modal__header">
                   <span>{{ cameraCaptureLabelKey | translate }}</span>
-                  <button
-                    type="button"
-                    class="camera-modal__close"
-                    (click)="closeCamera()"
-                  >
+                  <button type="button" class="camera-modal__close" (click)="closeCamera()">
                     <i class="fas fa-times"></i>
                   </button>
                 </div>
@@ -383,33 +292,18 @@
                 <div class="camera-modal__body">
                   <!-- Live preview: kept mounted (hidden, not removed) so the
                        stream's srcObject survives a retake -->
-                  <video
-                    #cameraVideo
-                    [hidden]="capturedFrame"
-                    autoplay
-                    playsinline
-                    muted
-                    class="camera-modal__video"
-                  ></video>
+                  <video #cameraVideo [hidden]="capturedFrame" autoplay playsinline muted
+                    class="camera-modal__video"></video>
 
                   <!-- Snapshot preview before confirming -->
-                  <img
-                    *ngIf="capturedFrame"
-                    [src]="capturedFrame"
-                    alt="Captured photo"
-                    class="camera-modal__video"
-                  />
+                  <img *ngIf="capturedFrame" [src]="capturedFrame" alt="Captured photo" class="camera-modal__video" />
 
                   <canvas #cameraCanvas class="visually-hidden-file"></canvas>
 
                   <div class="camera-modal__error" *ngIf="cameraError">
                     <i class="fas fa-exclamation-triangle"></i>
                     {{ cameraError }}
-                    <button
-                      type="button"
-                      class="camera-modal__fallback-link"
-                      (click)="openCameraFallback()"
-                    >
+                    <button type="button" class="camera-modal__fallback-link" (click)="openCameraFallback()">
                       {{ cameraUploadLabelKey | translate }}
                     </button>
                   </div>
@@ -417,31 +311,21 @@
 
                 <div class="camera-modal__footer">
                   <ng-container *ngIf="!capturedFrame">
-                    <button
-                      type="button"
-                      class="camera-modal__btn camera-modal__btn--capture"
-                      [disabled]="!cameraStreamActive"
-                      (click)="capturePhoto()"
-                    >
+                    <button type="button" class="camera-modal__btn camera-modal__btn--capture"
+                      [disabled]="!cameraStreamActive" (click)="capturePhoto()">
                       <i class="fas fa-camera"></i>
                       {{ cameraCaptureLabelKey | translate }}
                     </button>
                   </ng-container>
 
                   <ng-container *ngIf="capturedFrame">
-                    <button
-                      type="button"
-                      class="camera-modal__btn camera-modal__btn--secondary"
-                      (click)="retakePhoto()"
-                    >
+                    <button type="button" class="camera-modal__btn camera-modal__btn--secondary"
+                      (click)="retakePhoto()">
                       <i class="fas fa-redo"></i>
                       {{ cameraRetakeLabelKey | translate }}
                     </button>
-                    <button
-                      type="button"
-                      class="camera-modal__btn camera-modal__btn--capture"
-                      (click)="confirmCapturedPhoto()"
-                    >
+                    <button type="button" class="camera-modal__btn camera-modal__btn--capture"
+                      (click)="confirmCapturedPhoto()">
                       <i class="fas fa-check"></i>
                       {{ cameraUseLabelKey | translate }}
                     </button>
@@ -457,21 +341,10 @@
             <!-- Fallback input: used only if the live camera (getUserMedia) can't be opened,
                  e.g. permission denied or an older browser. Normal camera capture now happens
                  in the in-page camera modal below, which works on desktop AND mobile. -->
-            <input
-              #driverPhotoCameraInput
-              type="file"
-              accept="image/*"
-              capture="user"
-              class="visually-hidden-file"
-              (change)="onFileSelected($event, 'driving_img')"
-            />
-            <input
-              #driverPhotoFileInput
-              type="file"
-              accept="image/*"
-              class="visually-hidden-file"
-              (change)="onFileSelected($event, 'driving_img')"
-            />
+            <input #driverPhotoCameraInput type="file" accept="image/*" capture="user" class="visually-hidden-file"
+              (change)="onFileSelected($event, 'driving_img')" />
+            <input #driverPhotoFileInput type="file" accept="image/*" class="visually-hidden-file"
+              (change)="onFileSelected($event, 'driving_img')" />
 
             <!-- Preview once a photo has been captured/selected -->
             <div class="license-photo-preview" *ngIf="driverPhotoPreview">
@@ -479,12 +352,8 @@
               <div class="license-photo-preview__meta">
                 <span class="license-photo-preview__name">{{
                   driverPhotoFileName
-                }}</span>
-                <button
-                  type="button"
-                  class="license-photo-preview__remove"
-                  (click)="removeDriverPhoto($event)"
-                >
+                  }}</span>
+                <button type="button" class="license-photo-preview__remove" (click)="removeDriverPhoto($event)">
                   <i class="fas fa-times"></i>
                   {{ "REGISTRATION.DRIVER_PHOTO_REMOVE" | translate }}
                 </button>
@@ -493,19 +362,11 @@
 
             <!-- Picker actions: shown until a photo is chosen -->
             <div class="license-photo-actions" *ngIf="!driverPhotoPreview">
-              <button
-                type="button"
-                class="license-photo-actions__btn"
-                (click)="openLiveCamera('driving_img')"
-              >
+              <button type="button" class="license-photo-actions__btn" (click)="openLiveCamera('driving_img')">
                 <i class="fas fa-camera"></i>
                 {{ "REGISTRATION.DRIVER_PHOTO_TAKE" | translate }}
               </button>
-              <button
-                type="button"
-                class="license-photo-actions__btn"
-                (click)="openFileUpload('driving_img')"
-              >
+              <button type="button" class="license-photo-actions__btn" (click)="openFileUpload('driving_img')">
                 <i class="fas fa-upload"></i>
                 {{ "REGISTRATION.DRIVER_PHOTO_UPLOAD" | translate }}
               </button>
@@ -513,17 +374,13 @@
           </div>
         </div>
 
-        <button
-          type="submit"
-          class="btn-primary btn-full"
-          [disabled]="registrationForm.invalid || isLoading"
-        >
+        <button type="submit" class="btn-primary btn-full" [disabled]="registrationForm.invalid || isLoading">
           <span *ngIf="isLoading" class="spinner"></span>
           <i class="fas fa-play" *ngIf="!isLoading"></i>
           {{
-            isLoading
-              ? ("REGISTRATION.REGISTERING" | translate)
-              : ("REGISTRATION.START" | translate)
+          isLoading
+          ? ("REGISTRATION.REGISTERING" | translate)
+          : ("REGISTRATION.START" | translate)
           }}
         </button>
       </form>
@@ -546,14 +403,8 @@
       </div>
 
       <div class="video-container">
-        <video
-          #videoPlayer
-          controls
-          autoplay
-          class="video-player"
-          (timeupdate)="onVideoProgress()"
-          (ended)="onVideoComplete()"
-        >
+        <video #videoPlayer controls autoplay class="video-player" (timeupdate)="onVideoProgress()"
+          (ended)="onVideoComplete()">
           <source [src]="videoUrl" type="video/mp4" />
           {{ "VIDEO.NOT_SUPPORTED" | translate }}
         </video>
@@ -563,18 +414,12 @@
         <div class="progress-track">
           <div class="progress-fill" [style.width.%]="videoProgress"></div>
         </div>
-        <span class="progress-text"
-          >{{ videoProgress | number: "1.0-0" }}%
-          {{ "VIDEO.COMPLETED" | translate }}</span
-        >
+        <span class="progress-text">{{ videoProgress | number: "1.0-0" }}%
+          {{ "VIDEO.COMPLETED" | translate }}</span>
       </div>
 
-      <button
-        class="btn-primary btn-full"
-        *ngIf="canTakeQuizFromVideo"
-        [disabled]="videoProgress < 90"
-        (click)="proceedToQuiz()"
-      >
+      <button class="btn-primary btn-full" *ngIf="canTakeQuizFromVideo" [disabled]="videoProgress < 90"
+        (click)="proceedToQuiz()">
         <i class="fas fa-question-circle"></i>
         {{ "VIDEO.TAKE_QUIZ" | translate }}
       </button>
@@ -593,13 +438,8 @@
       </div>
 
       <div class="poster-carousel" *ngIf="currentPoster as poster">
-        <button
-          type="button"
-          class="poster-nav poster-nav--prev"
-          (click)="prevPoster()"
-          *ngIf="posters.length > 1"
-          [attr.aria-label]="'POSTER.PREV' | translate"
-        >
+        <button type="button" class="poster-nav poster-nav--prev" (click)="prevPoster()" *ngIf="posters.length > 1"
+          [attr.aria-label]="'POSTER.PREV' | translate">
           <i class="fas fa-chevron-left"></i>
         </button>
 
@@ -607,26 +447,16 @@
           <img [src]="poster.poster_path" alt="Poster" class="poster-image" />
         </div>
 
-        <button
-          type="button"
-          class="poster-nav poster-nav--next"
-          (click)="nextPoster()"
-          *ngIf="posters.length > 1"
-          [attr.aria-label]="'POSTER.NEXT' | translate"
-        >
+        <button type="button" class="poster-nav poster-nav--next" (click)="nextPoster()" *ngIf="posters.length > 1"
+          [attr.aria-label]="'POSTER.NEXT' | translate">
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
 
       <div class="poster-dots" *ngIf="posters.length > 1">
-        <button
-          type="button"
-          class="poster-dot"
-          *ngFor="let p of posters; let i = index"
-          [class.active]="i === currentPosterIndex"
-          (click)="goToPoster(i)"
-          [attr.aria-label]="'Go to poster ' + (i + 1)"
-        ></button>
+        <button type="button" class="poster-dot" *ngFor="let p of posters; let i = index"
+          [class.active]="i === currentPosterIndex" (click)="goToPoster(i)"
+          [attr.aria-label]="'Go to poster ' + (i + 1)"></button>
       </div>
 
       <div class="poster-actions">
@@ -635,11 +465,7 @@
           {{ "POSTER.BACK_TO_VIDEO" | translate }}
         </button>
 
-        <button
-          class="btn-primary btn-full"
-          *ngIf="isLastPoster"
-          (click)="proceedToQuizFromPoster()"
-        >
+        <button class="btn-primary btn-full" *ngIf="isLastPoster" (click)="proceedToQuizFromPoster()">
           <i class="fas fa-question-circle"></i>
           {{ "POSTER.TAKE_QUIZ" | translate }}
         </button>
@@ -657,12 +483,7 @@
           {{ "QUIZ.GO_TO_VIDEO" | translate }}
         </button>
 
-        <button
-          type="button"
-          class="btn-link-back"
-          *ngIf="posters.length > 0"
-          (click)="backToPosterFromQuiz()"
-        >
+        <button type="button" class="btn-link-back" *ngIf="posters.length > 0" (click)="backToPosterFromQuiz()">
           <i class="fas fa-arrow-left"></i>
           {{ "QUIZ.BACK_TO_POSTER" | translate }}
         </button>
@@ -672,18 +493,11 @@
       <div class="quiz-progress-header" *ngIf="questions.length > 0">
         <div class="quiz-progress-header__top">
           <span class="quiz-progress-header__label">Progress</span>
-          <span class="quiz-progress-header__count"
-            >Question {{ currentQuestionIndex + 1 }} of
-            {{ questions.length }}</span
-          >
+          <span class="quiz-progress-header__count">Question {{ currentQuestionIndex + 1 }} of
+            {{ questions.length }}</span>
         </div>
-        <div
-          class="progress quiz-progress-bar"
-          role="progressbar"
-          [attr.aria-valuenow]="quizProgressPercent"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        >
+        <div class="progress quiz-progress-bar" role="progressbar" [attr.aria-valuenow]="quizProgressPercent"
+          aria-valuemin="0" aria-valuemax="100">
           <div class="progress-bar" [style.width.%]="quizProgressPercent"></div>
         </div>
       </div>
@@ -696,21 +510,12 @@
       <form [formGroup]="quizForm" *ngIf="currentQuestion as question">
         <div class="row g-3 g-lg-4 question-card">
           <!-- Left: media (image + audio) -->
-          <div
-            class="col-12 col-lg-5"
-            *ngIf="question.image_path || question.audio_path"
-          >
+          <div class="col-12 col-lg-5" *ngIf="question.image_path || question.audio_path">
             <div class="question-media-box">
-              <div
-                class="question-media-box__image"
-                *ngIf="question.image_path"
-              >
+              <div class="question-media-box__image" *ngIf="question.image_path">
                 <img [src]="question.image_path" alt="Question image" />
               </div>
-              <div
-                class="question-media-box__audio"
-                *ngIf="question.audio_path"
-              >
+              <div class="question-media-box__audio" *ngIf="question.audio_path">
                 <audio #audioPlayer controls [src]="question.audio_path">
                   {{ "QUIZ.AUDIO_NOT_SUPPORTED" | translate }}
                 </audio>
@@ -719,14 +524,11 @@
           </div>
 
           <!-- Right: question text + options -->
-          <div
-            class="col-12"
-            [ngClass]="
+          <div class="col-12" [ngClass]="
               question.image_path || question.audio_path
                 ? 'col-lg-7'
                 : 'col-lg-12'
-            "
-          >
+            ">
             <div class="question-content">
               <span class="question-content__accent"></span>
               <div class="question-content__body">
@@ -735,31 +537,17 @@
                 </p>
 
                 <div class="options-grid">
-                  <label
-                    *ngFor="let opt of ['A', 'B', 'C', 'D']"
-                    class="option-label"
-                    (click)="selectOption(question, opt)"
-                  >
-                    <input
-                      type="radio"
-                      [value]="opt"
-                      [checked]="isOptionSelected(question, opt)"
-                      tabindex="-1"
-                    />
+                  <label *ngFor="let opt of ['A', 'B', 'C', 'D']" class="option-label"
+                    (click)="selectOption(question, opt)">
+                    <input type="radio" [value]="opt" [checked]="isOptionSelected(question, opt)" tabindex="-1" />
                     <span class="option-body">
                       <span class="option-letter">{{ opt }}</span>
-                      <span
-                        class="option-thumb"
-                        *ngIf="getOptionImage(question, opt)"
-                      >
-                        <img
-                          [src]="getOptionImage(question, opt)"
-                          alt="Option {{ opt }}"
-                        />
+                      <span class="option-thumb" *ngIf="getOptionImage(question, opt)">
+                        <img [src]="getOptionImage(question, opt)" alt="Option {{ opt }}" />
                       </span>
                       <span class="option-text">{{
                         getOptionText(question, opt)
-                      }}</span>
+                        }}</span>
                     </span>
                     <span class="option-marker"></span>
                   </label>
@@ -770,35 +558,22 @@
         </div>
 
         <div class="quiz-actions">
-          <button
-            type="button"
-            class="btn-outline quiz-prev-btn"
-            *ngIf="!isFirstQuestion"
-            [disabled]="isSubmitting"
-            (click)="previousQuestion()"
-          >
+          <button type="button" class="btn-outline quiz-prev-btn" *ngIf="!isFirstQuestion" [disabled]="isSubmitting"
+            (click)="previousQuestion()">
             <i class="fas fa-arrow-left"></i>
             {{ "QUIZ.PREVIOUS" | translate }}
           </button>
 
-          <button
-            type="button"
-            class="btn-primary quiz-next-btn"
-            [disabled]="!isCurrentQuestionAnswered() || isSubmitting"
-            (click)="nextQuestion()"
-          >
+          <button type="button" class="btn-primary quiz-next-btn"
+            [disabled]="!isCurrentQuestionAnswered() || isSubmitting" (click)="nextQuestion()">
             <span *ngIf="isSubmitting" class="spinner"></span>
             <ng-container *ngIf="!isSubmitting">
               {{
-                isLastQuestion
-                  ? ("QUIZ.SUBMIT" | translate)
-                  : ("QUIZ.NEXT" | translate)
+              isLastQuestion
+              ? ("QUIZ.SUBMIT" | translate)
+              : ("QUIZ.NEXT" | translate)
               }}
-              <i
-                class="fas"
-                [class.fa-certificate]="isLastQuestion"
-                [class.fa-arrow-right]="!isLastQuestion"
-              ></i>
+              <i class="fas" [class.fa-certificate]="isLastQuestion" [class.fa-arrow-right]="!isLastQuestion"></i>
             </ng-container>
           </button>
         </div>
@@ -808,91 +583,55 @@
 
   <!-- Certification -->
   <div *ngIf="showCertification" class="step-container">
-    <app-driver-certification
-      #certification
-      [certificationId]="certificationId"
-      [autoLoad]="true"
-    >
+    <app-driver-certification #certification [certificationId]="certificationId" [autoLoad]="true">
     </app-driver-certification>
   </div>
 </div>
 
 <!-- Result Modal -->
-<div
-  *ngIf="showResultModal"
-  class="modal-overlay"
-  (click)="closeModalOnOverlay($event)"
->
+<div *ngIf="showResultModal" class="modal-overlay" (click)="closeModalOnOverlay($event)">
   <div class="modal-container">
-    <div
-      class="modal-card"
-      [class.success]="quizResult?.passed"
-      [class.failed]="!quizResult?.passed"
-    >
+    <div class="modal-card" [class.success]="quizResult?.passed" [class.failed]="!quizResult?.passed">
       <div class="modal-header">
         <div class="modal-icon">
-          <i
-            class="fas"
-            [class.fa-check-circle]="quizResult?.passed"
-            [class.fa-times-circle]="!quizResult?.passed"
-          ></i>
+          <i class="fas" [class.fa-check-circle]="quizResult?.passed" [class.fa-times-circle]="!quizResult?.passed"></i>
         </div>
         <button class="modal-close" (click)="closeModal()">
           <i class="fas fa-times"></i>
         </button>
       </div>
       <div class="modal-body">
-        <h3
-          [class.text-success]="quizResult?.passed"
-          [class.text-danger]="!quizResult?.passed"
-        >
+        <h3 [class.text-success]="quizResult?.passed" [class.text-danger]="!quizResult?.passed">
           {{
-            quizResult?.passed
-              ? ("MODAL.CONGRATULATIONS" | translate)
-              : ("MODAL.FAILED" | translate)
+          quizResult?.passed
+          ? ("MODAL.CONGRATULATIONS" | translate)
+          : ("MODAL.FAILED" | translate)
           }}
         </h3>
         <p>{{ quizResult?.message }}</p>
 
-        <div
-          *ngIf="quizResult && quizResult.score != null"
-          class="score-section"
-        >
+        <div *ngIf="quizResult && quizResult.score != null" class="score-section">
           <div class="score-label">{{ "MODAL.YOUR_SCORE" | translate }}</div>
           <div class="score-value">{{ quizResult.score }}%</div>
           <div class="progress-track">
-            <div
-              class="progress-fill"
-              [style.width.%]="quizResult.score || 0"
-              [class.success]="(quizResult.score || 0) >= passingScorePercent"
-              [class.warning]="
+            <div class="progress-fill" [style.width.%]="quizResult.score || 0"
+              [class.success]="(quizResult.score || 0) >= passingScorePercent" [class.warning]="
                 (quizResult.score || 0) >= 50 && (quizResult.score || 0) < passingScorePercent
-              "
-              [class.danger]="(quizResult.score || 0) < 50"
-            ></div>
+              " [class.danger]="(quizResult.score || 0) < 50"></div>
           </div>
-          <div
-            class="score-status"
-            [class.success]="(quizResult.score || 0) >= passingScorePercent"
-            [class.warning]="
+          <div class="score-status" [class.success]="(quizResult.score || 0) >= passingScorePercent" [class.warning]="
               (quizResult.score || 0) >= 50 && (quizResult.score || 0) < passingScorePercent
-            "
-            [class.danger]="(quizResult.score || 0) < 50"
-          >
-            <i
-              class="fas"
-              [class.fa-check-circle]="(quizResult.score || 0) >= passingScorePercent"
+            " [class.danger]="(quizResult.score || 0) < 50">
+            <i class="fas" [class.fa-check-circle]="(quizResult.score || 0) >= passingScorePercent"
               [class.fa-exclamation-triangle]="
                 (quizResult.score || 0) >= 50 && (quizResult.score || 0) < passingScorePercent
-              "
-              [class.fa-times-circle]="(quizResult.score || 0) < 50"
-            ></i>
+              " [class.fa-times-circle]="(quizResult.score || 0) < 50"></i>
             {{
-              (quizResult.score || 0) >= passingScorePercent
-                ? ("MODAL.PASSED" | translate)
-                : (quizResult.score || 0) >= 50
-                  ? ("MODAL.BORDERLINE" | translate)
-                  : ("MODAL.FAILED_STATUS" | translate)
+            (quizResult.score || 0) >= passingScorePercent
+            ? ("MODAL.PASSED" | translate)
+            : (quizResult.score || 0) >= 50
+            ? ("MODAL.BORDERLINE" | translate)
+            : ("MODAL.FAILED_STATUS" | translate)
             }}
           </div>
         </div>
@@ -906,11 +645,7 @@
             <i class="fas fa-redo"></i> {{ "MODAL.TAKE_QUIZ" | translate }}
           </button>
         </ng-container>
-        <button
-          *ngIf="quizResult?.passed"
-          class="btn-close-modal"
-          (click)="closeModal()"
-        >
+        <button *ngIf="quizResult?.passed" class="btn-close-modal" (click)="closeModal()">
           <i class="fas fa-times"></i> {{ "MODAL.CLOSE" | translate }}
         </button>
       </div>
@@ -931,11 +666,7 @@
       </button>
     </div>
     <div class="modal-body p-4">
-      <app-driver-certification
-        #certification
-        [certificationId]="certificationId"
-        [autoLoad]="true"
-      >
+      <app-driver-certification #certification [certificationId]="certificationId" [autoLoad]="true">
       </app-driver-certification>
     </div>
   </div>

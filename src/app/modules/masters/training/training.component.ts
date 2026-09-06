@@ -31,6 +31,7 @@ import { DriverCertificationComponent } from "../driver/driver-certification/dri
 import { ConsentService } from "@shared/_http/consent.service";
 import { PosterService } from "@shared/_http/poster.service";
 import { ExpiryConfigService } from "@shared/_http/expiry-config.service";
+import { TerminalService } from "@shared/_http/terminal.service";
 
 interface Language {
   language_code: string;
@@ -189,8 +190,10 @@ export class TrainingComponent implements OnInit, OnDestroy {
   @ViewChild("certificationModal") certificationModal!: TemplateRef<any>;
   @ViewChild("cameraInput") cameraInput!: ElementRef<HTMLInputElement>;
   @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>;
-  @ViewChild("driverPhotoCameraInput") driverPhotoCameraInput!: ElementRef<HTMLInputElement>;
-  @ViewChild("driverPhotoFileInput") driverPhotoFileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("driverPhotoCameraInput")
+  driverPhotoCameraInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("driverPhotoFileInput")
+  driverPhotoFileInput!: ElementRef<HTMLInputElement>;
   @ViewChild("cameraVideo") cameraVideo?: ElementRef<HTMLVideoElement>;
   @ViewChild("cameraCanvas") cameraCanvas?: ElementRef<HTMLCanvasElement>;
   @ViewChild("audioPlayer") audioPlayerRef?: ElementRef<HTMLAudioElement>;
@@ -286,6 +289,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
   capturedFrame: string | null = null;
   private mediaStream: MediaStream | null = null;
 
+  terminalName: string = "";
+  terminalNameLoaded: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -303,7 +309,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private consentService: ConsentService,
     private posterService: PosterService,
-    private expiryConfigService: ExpiryConfigService
+    private expiryConfigService: ExpiryConfigService,
+    private terminalService: TerminalService,
   ) {
     this.translate.setDefaultLang("en");
     this.translate.use("en");
@@ -327,8 +334,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   // Add this method to extract terminalId from URL
   private getTerminalIdFromUrl(): void {
-    this.activatedRoute.queryParams.subscribe(params => {
-      const terminalIdParam = params['terminalId'];
+    this.activatedRoute.queryParams.subscribe((params) => {
+      const terminalIdParam = params["terminalId"];
 
       if (terminalIdParam) {
         this.terminalId = parseInt(terminalIdParam, 10);
@@ -337,13 +344,33 @@ export class TrainingComponent implements OnInit, OnDestroy {
         // For example, add it to the registration form
         if (this.registrationForm) {
           this.registrationForm.patchValue({
-            terminal_id: this.terminalId
+            terminal_id: this.terminalId,
           });
         }
+        this.fetchTerminalName(this.terminalId);
       } else {
-        console.warn('No terminalId found in URL');
+        console.warn("No terminalId found in URL");
       }
     });
+  }
+
+  private fetchTerminalName(terminalId: number): void {
+    this.subscriptions.add(
+      this.terminalService.getTerminalById(terminalId).subscribe({
+        next: (response) => {
+          this.terminalName =
+            response?.data?.terminal_name || response?.terminal_name || "";
+          this.terminalNameLoaded = true;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Error fetching terminal name:", err);
+          this.terminalName = "";
+          this.terminalNameLoaded = true; // proceed even on error
+          this.cdr.detectChanges();
+        },
+      }),
+    );
   }
 
   private initRegistrationForm(): void {
@@ -361,7 +388,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
       ],
       driving_license: [null], // Photo is optional - not required
       driving_img: [null], // Photo is optional - not required
-      terminal_id: [this.terminalId] // Add this field to capture terminalId
+      terminal_id: [this.terminalId], // Add this field to capture terminalId
     });
   }
 
@@ -427,8 +454,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   prevPoster(): void {
     if (this.posters.length === 0) return;
     this.currentPosterIndex =
-      (this.currentPosterIndex - 1 + this.posters.length) %
-      this.posters.length;
+      (this.currentPosterIndex - 1 + this.posters.length) % this.posters.length;
   }
 
   goToPoster(index: number): void {
@@ -691,56 +717,55 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // Loads content for that language, then automatically advances to the
   // Consent step (registration happens only after consent is given).
   selectLanguage(languageId: number): void {
-    const selectedLang = this.languages.find(
-      (l) => l.language_id === languageId,
-    );
-    if (selectedLang) {
+  const selectedLang = this.languages.find(l => l.language_id === languageId);
+  if (!selectedLang) return;
 
-      this.termsContent = ''
-      this.parsedConsent = null;
-      this.subscriptions.add(
-        this.consentService.getConsentByLanguageId(languageId).subscribe({
-          next: (res) => {
-            const record: any = res?.data?.[0];
-            const description = record?.description;
-            // The API has been observed returning `description` both as a
-            // JSON-encoded string and (more recently) as an already-parsed
-            // JSON object - accept either.
-            const hasDescription =
-              (typeof description === 'string' && description.trim().length > 0) ||
-              (!!description && typeof description === 'object');
+  this.termsContent = '';
+  this.parsedConsent = null;
 
-            if (res?.success && res?.data?.length > 0 && hasDescription) {
-              this.termsContent = typeof description === 'string' ? description : '';
-              const terminalName = record?.terminal_name || record?.terminal_code || '';
-              this.parsedConsent = this.parseConsentContent(description, terminalName);
-              this.selectedLanguageId = selectedLang.language_id;
-              const langCode = selectedLang.language_code.toLowerCase();
-              this.selectedLanguageCode = langCode;
-              this.languageService.setLanguage(langCode);
-              this.languageSelected = true;
-              this.loadTrainingContent(selectedLang.language_id);
-              this.initRegistrationForm();
-              // Auto-advance: Language Selection -> Consent
+  this.subscriptions.add(
+    this.consentService.getConsentByLanguageId(languageId).subscribe({
+      next: (res) => {
+        const record: any = res?.data?.[0];
+        const description = record?.description;
+        const hasDescription = (typeof description === 'string' && description.trim().length > 0) ||
+                               (!!description && typeof description === 'object');
 
-              this.showLanguageSelection = false;
-              this.showConsent = true;
-              this.cdr.detectChanges();
+        if (res?.success && res?.data?.length > 0 && hasDescription) {
+          this.termsContent = typeof description === 'string' ? description : '';
 
-            } else {
-              this.toastService.open("Please select other language", "error");
-              this.cdr.detectChanges();
-            }
+          // Use the fetched terminal name, fallback to record's or default
+          const terminalName = this.terminalName ||
+                               record?.terminal_name ||
+                               record?.terminal_code ||
+                               'the Terminal';
 
-          },
-          error: (err) => {
-            this.toastService.open("Please select other language", "error");
-            this.cdr.detectChanges();
-          },
-        }),
-      );
-    }
-  }
+          this.parsedConsent = this.parseConsentContent(description, terminalName);
+
+          this.selectedLanguageId = selectedLang.language_id;
+          const langCode = selectedLang.language_code.toLowerCase();
+          this.selectedLanguageCode = langCode;
+          this.languageService.setLanguage(langCode);
+          this.languageSelected = true;
+
+          this.loadTrainingContent(selectedLang.language_id);
+          this.initRegistrationForm();
+
+          this.showLanguageSelection = false;
+          this.showConsent = true;
+          this.cdr.detectChanges();
+        } else {
+          this.toastService.open('Please select other language', 'error');
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => {
+        this.toastService.open('Please select other language', 'error');
+        this.cdr.detectChanges();
+      }
+    })
+  );
+}
 
   // Parses consentMaster.description into the structured ConsentData shape.
   // The API has been seen returning this field two ways: as a JSON-encoded
@@ -756,14 +781,17 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // text rendering) rather than breaking the consent step. This repair
   // should be treated as a workaround only - the backend should fix the
   // description string to escape embedded quotes properly.
-  private parseConsentContent(raw: string | ConsentData | null | undefined, terminalName?: string): ConsentData | null {
+  private parseConsentContent(
+    raw: string | ConsentData | null | undefined,
+    terminalName?: string,
+  ): ConsentData | null {
     if (!raw) {
       return null;
     }
 
     let parsed: ConsentData | null = null;
 
-    if (typeof raw === 'object') {
+    if (typeof raw === "object") {
       parsed = raw;
     } else {
       try {
@@ -772,14 +800,15 @@ export class TrainingComponent implements OnInit, OnDestroy {
         try {
           const repaired = raw.replace(
             /"text"\s*:\s*"By clicking\s*"([^"]*)"\s*,?\s*"?\s*you/,
-            (_match, agreeLabel) => `"text": "By clicking \\"${agreeLabel}\\", you`
+            (_match, agreeLabel) =>
+              `"text": "By clicking \\"${agreeLabel}\\", you`,
           );
           parsed = JSON.parse(repaired);
         } catch (e2) {
           console.error(
             "Failed to parse consent description as JSON - falling back to plain text rendering. " +
-            "The consentMaster API response likely contains unescaped quotes.",
-            e2
+              "The consentMaster API response likely contains unescaped quotes.",
+            e2,
           );
           return null;
         }
@@ -794,7 +823,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     // "{{terminalName}} will collect and process your personal data...",
     // with real values from this API response.
     const vars: Record<string, string> = {
-      terminalName: (terminalName || '').trim() || 'the Terminal',
+      terminalName: (terminalName || "").trim() || "the Terminal",
     };
 
     return this.interpolatePlaceholders(parsed, vars);
@@ -805,18 +834,23 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // Unknown tokens are left untouched rather than blanked out, so a typo
   // or a not-yet-supported token is easy to spot rather than silently
   // disappearing from the consent text.
-  private interpolatePlaceholders<T>(value: T, vars: Record<string, string>): T {
-    if (typeof value === 'string') {
+  private interpolatePlaceholders<T>(
+    value: T,
+    vars: Record<string, string>,
+  ): T {
+    if (typeof value === "string") {
       return value.replace(/{{\s*([\w]+)\s*}}/g, (match, key) =>
-        vars[key] !== undefined ? vars[key] : match
+        vars[key] !== undefined ? vars[key] : match,
       ) as unknown as T;
     }
 
     if (Array.isArray(value)) {
-      return value.map(item => this.interpolatePlaceholders(item, vars)) as unknown as T;
+      return value.map((item) =>
+        this.interpolatePlaceholders(item, vars),
+      ) as unknown as T;
     }
 
-    if (value && typeof value === 'object') {
+    if (value && typeof value === "object") {
       const result: any = {};
       for (const key of Object.keys(value as any)) {
         result[key] = this.interpolatePlaceholders((value as any)[key], vars);
@@ -836,9 +870,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
     return this.termsContent
       .split(".")
-      .map(point => point.trim())
-      .filter(point => point.length > 0)
-      .map(point => point + ".");
+      .map((point) => point.trim())
+      .filter((point) => point.length > 0)
+      .map((point) => point + ".");
   }
 
   // ------------------------------------------------------------
@@ -898,7 +932,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
         },
       }),
     );
-
   }
 
   private mapQuestions(questionHeaders: QuestionHeader[]): MappedQuestion[] {
@@ -995,7 +1028,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
                 size: "xl",
                 centered: true,
                 backdrop: "static",
-                fullscreen: true
+                fullscreen: true,
               });
               this.initRegistrationForm();
               this.licensePhotoPreview = null;
@@ -1122,8 +1155,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
     };
     this.subscriptions.add(
       this.driverTrainingService.createdriverTraining(formData).subscribe({
-        next: (value) => { },
-        error: () => { },
+        next: (value) => {},
+        error: () => {},
       }),
     );
 
@@ -1150,7 +1183,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
                 this.showCertification = true;
               }
             },
-            error: () => { },
+            error: () => {},
           }),
       );
     }
@@ -1175,7 +1208,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     const video = this.videoPlayer?.nativeElement;
     if (video) {
       video.currentTime = 0;
-      video.play().catch(() => { });
+      video.play().catch(() => {});
     }
     this.cdr.detectChanges();
   }
@@ -1237,14 +1270,15 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
   onFileSelected(
     event: Event,
-    target: "license" | "driving_img" = "license"
+    target: "license" | "driving_img" = "license",
   ): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.setCapturedPhoto(file, target);
     } else {
-      const controlName = target === "driving_img" ? "driving_img" : "driving_license";
+      const controlName =
+        target === "driving_img" ? "driving_img" : "driving_license";
       this.registrationForm.patchValue({ [controlName]: null });
     }
     // Reset the input value so selecting the same file again still fires "change"
@@ -1255,9 +1289,10 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // right form control and builds a preview for whichever field is the target.
   private setCapturedPhoto(
     file: File,
-    target: "license" | "driving_img" = "license"
+    target: "license" | "driving_img" = "license",
   ): void {
-    const controlName = target === "driving_img" ? "driving_img" : "driving_license";
+    const controlName =
+      target === "driving_img" ? "driving_img" : "driving_license";
     this.registrationForm.patchValue({ [controlName]: file });
     this.registrationForm.get(controlName)?.updateValueAndValidity();
     this.registrationForm.get(controlName)?.markAsTouched();
@@ -1286,7 +1321,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // open a live getUserMedia() preview in a modal instead, and only fall
   // back to the hidden file input if getUserMedia isn't available/denied.
   async openLiveCamera(
-    target: "license" | "driving_img" = "license"
+    target: "license" | "driving_img" = "license",
   ): Promise<void> {
     this.activeCameraTarget = target;
     this.cameraError = null;
@@ -1303,7 +1338,8 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
     // License photo uses the rear camera (documents); driver photo is a
     // selfie so it defaults to the front camera.
-    const preferredFacingMode = target === "driving_img" ? "user" : "environment";
+    const preferredFacingMode =
+      target === "driving_img" ? "user" : "environment";
 
     try {
       this.mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -1319,7 +1355,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
         });
       } catch (fallbackErr) {
         this.cameraError = this.translate.instant(
-          "REGISTRATION.LICENSE_PHOTO_CAMERA_DENIED"
+          "REGISTRATION.LICENSE_PHOTO_CAMERA_DENIED",
         );
         this.cameraStreamActive = false;
         this.cdr.detectChanges();
@@ -1355,7 +1391,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
     // Safety net: some browsers pause a hidden <video>; make sure it's playing
     const video = this.cameraVideo?.nativeElement;
     if (video && video.paused) {
-      video.play().catch(() => { });
+      video.play().catch(() => {});
     }
   }
 
@@ -1367,7 +1403,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
       (blob) => {
         if (!blob) return;
         const filePrefix =
-          this.activeCameraTarget === "driving_img" ? "driver-photo" : "license-photo";
+          this.activeCameraTarget === "driving_img"
+            ? "driver-photo"
+            : "license-photo";
         const file = new File([blob], `${filePrefix}-${Date.now()}.jpg`, {
           type: "image/jpeg",
         });
@@ -1375,7 +1413,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
         this.closeCamera();
       },
       "image/jpeg",
-      0.92
+      0.92,
     );
   }
 
@@ -1433,8 +1471,10 @@ export class TrainingComponent implements OnInit, OnDestroy {
     this.driverPhotoFileName = null;
     this.registrationForm.patchValue({ driving_img: null });
     this.registrationForm.get("driving_img")?.updateValueAndValidity();
-    if (this.driverPhotoCameraInput) this.driverPhotoCameraInput.nativeElement.value = "";
-    if (this.driverPhotoFileInput) this.driverPhotoFileInput.nativeElement.value = "";
+    if (this.driverPhotoCameraInput)
+      this.driverPhotoCameraInput.nativeElement.value = "";
+    if (this.driverPhotoFileInput)
+      this.driverPhotoFileInput.nativeElement.value = "";
   }
 
   // ------------------------------------------------------------
@@ -1464,5 +1504,4 @@ export class TrainingComponent implements OnInit, OnDestroy {
       ? "REGISTRATION.DRIVER_PHOTO_UPLOAD"
       : "REGISTRATION.LICENSE_PHOTO_UPLOAD";
   }
-
 }
