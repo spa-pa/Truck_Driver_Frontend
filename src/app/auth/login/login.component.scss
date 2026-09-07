@@ -1,3 +1,16 @@
+/* ---------- FONT: Lato ---------- */
+/* The stylesheet already references "Lato" throughout, but without loading
+   the actual webfont the browser was silently falling back to the system
+   sans-serif (that's why the rendered page didn't look like Lato). */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400;1,700&display=swap');
+
+/* ---------- BRAND PALETTE (from the JM Baxi logo) ---------- */
+$brand-navy: #004761; // "J M BAXI" wordmark
+$brand-navy-dark: #1c2b3a; // near-black navy used for high-contrast text/buttons
+$brand-amber: #f5a623; // top-right dot / accent
+$brand-red: #e0472c; // top-right dot / accent
+$brand-grey: #7c8b96; // "THE PORT SPECIALIST" tagline grey
+
 /* ---------- RESET & BASE ---------- */
 * {
   box-sizing: border-box;
@@ -11,7 +24,7 @@ body {
 }
 
 body {
-  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  font-family: "Lato", sans-serif;
   background: #f0f2f5;
   display: flex;
   align-items: stretch;
@@ -68,18 +81,18 @@ body {
 }
 
 .brand-mark .dot.amber {
-  background: #f5a623;
+  background: $brand-amber;
 }
 
 .brand-mark .dot.hazard {
-  background: #e0472c;
+  background: $brand-red;
 }
 
 .brand-name {
-  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+   font-family: "Lato", sans-serif;
   font-weight: 700;
   letter-spacing: 1px;
-  color: #1c2b3a;
+  color: $brand-navy-dark;
   font-size: 1.05rem;
 }
 
@@ -102,7 +115,7 @@ body {
   position: absolute;
   inset: -18px;
   border-radius: 50%;
-  border: 1.5px dashed rgba(1, 125, 116, 0.25);
+  border: 1.5px dashed rgba($brand-navy, 0.25);
   pointer-events: none;
 }
 
@@ -124,7 +137,7 @@ body {
 .shape.container {
   width: 18px;
   height: 18px;
-  border: 2px solid #00a99d;
+  border: 2px solid $brand-navy;
   border-radius: 3px;
   top: 15%;
   right: 20%;
@@ -134,7 +147,7 @@ body {
 .shape.ring {
   width: 20px;
   height: 20px;
-  border: 3px solid #f5a623;
+  border: 3px solid $brand-amber;
   border-radius: 50%;
   top: 25%;
   left: 18%;
@@ -147,7 +160,7 @@ body {
   height: 0;
   border-top: 9px solid transparent;
   border-bottom: 9px solid transparent;
-  border-left: 14px solid #1c2b3a;
+  border-left: 14px solid $brand-navy-dark;
   top: 50%;
   right: 15%;
   animation: float 5.5s ease-in-out infinite;
@@ -159,7 +172,7 @@ body {
   height: 0;
   border-left: 11px solid transparent;
   border-right: 11px solid transparent;
-  border-bottom: 18px solid #e0472c;
+  border-bottom: 18px solid $brand-red;
   opacity: 0.85;
   bottom: 20%;
   left: 25%;
@@ -171,7 +184,7 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #1c2b3a;
+  background: $brand-navy-dark;
   bottom: 16%;
   right: 16%;
 }
@@ -195,8 +208,8 @@ body {
   right: 0;
   text-align: center;
   z-index: 2;
-  color: #1c2b3a;
-  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  color: $brand-navy-dark;
+  font-family: "Lato", sans-serif;
   font-size: 0.75rem;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -230,20 +243,20 @@ body {
 }
 
 .eyebrow {
-  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  font-family: "Lato", sans-serif;
   font-size: 0.72rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #004761;
+  color: $brand-navy;
   font-weight: 700;
   margin-bottom: 6px;
 }
 
 h1.login-title {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: "Lato", sans-serif;
   font-weight: 600;
   font-size: 2rem;
-  color: #004761;
+  color: $brand-navy;
   font-weight: 400;
   margin: 0 0 30px;
 }
@@ -253,7 +266,7 @@ h1.login-title {
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.4px;
-  color: #1c2b3a;
+  color: $brand-navy-dark;
   margin-bottom: 7px;
 }
 
@@ -297,13 +310,13 @@ h1.login-title {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #017d74;
+  color: $brand-navy;
   margin-right: 10px;
 }
 
 .field-shell .icon-wrap svg {
   display: block;
-  color: #004761 !important;
+  color: $brand-navy !important;
 }
 
 .field-shell input.login-input {
@@ -317,15 +330,15 @@ h1.login-title {
   margin: 0;
   font-size: 0.95rem;
   line-height: normal;
-  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
-  color: #1c2b3a;
+  font-family: "Lato", sans-serif;
+  color: $brand-navy-dark;
   outline: none;
   -webkit-appearance: none;
   appearance: none;
 }
 
 .field-shell input.login-input::placeholder {
-  color: #7c8b96;
+  color: $brand-grey;
 }
 
 /* ---- Show/Hide toggle: a normal flex item now, so it can never clip ---- */
@@ -335,7 +348,7 @@ h1.login-title {
   background: transparent;
   border: none;
   padding: 6px;
-  color: #7c8b96;
+  color: $brand-grey;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -349,12 +362,12 @@ h1.login-title {
 }
 
 .toggle-visibility:hover {
-  color: #1c2b3a;
+  color: $brand-navy-dark;
   background: rgba(0, 0, 0, 0.04);
 }
 
 .toggle-visibility:focus-visible {
-  outline: 2px solid #00a99d;
+  outline: 2px solid $brand-amber;
   outline-offset: 2px;
 }
 
@@ -402,9 +415,9 @@ h1.login-title {
   height: 52px;
   border-radius: 12px;
   border: none;
-  background: #1c2b3a;
+  background: $brand-navy-dark;
   color: #ffffff;
-  font-family: "Noto Sans", system-ui, -apple-system, sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 600;
   letter-spacing: 2px;
   font-size: 1rem;
@@ -417,7 +430,7 @@ h1.login-title {
 }
 
 .btn-login:hover:not(:disabled) {
-  background: #00a99d;
+  background: $brand-navy;
   transform: translateY(-2px);
   // box-shadow: 0 18px 30px -10px rgba(1, 125, 116, 0.6);
 }
@@ -433,7 +446,7 @@ h1.login-title {
 }
 
 .btn-login:focus-visible {
-  outline: 3px solid #f5a623;
+  outline: 3px solid $brand-amber;
   outline-offset: 2px;
 }
 
@@ -597,7 +610,7 @@ h1.login-title {
 
 .img-caption .tag {
   display: inline-block;
-  background: #00c4b7;
+  background: $brand-amber;
   color: #fff;
   font-size: 0.65rem;
   font-weight: 600;
@@ -609,7 +622,7 @@ h1.login-title {
 }
 
 .img-caption h2 {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: "Lato", sans-serif;
   font-size: clamp(1.6rem, 2.4vw, 2.4rem);
   color: #fff;
   font-weight: 400;
@@ -619,7 +632,7 @@ h1.login-title {
 
 .img-caption h2 em {
   font-style: italic;
-  color: #00c4b7;
+  color: $brand-amber;
 }
 
 .img-caption p {
@@ -635,7 +648,7 @@ h1.login-title {
 .field-shell input:-webkit-autofill:hover,
 .field-shell input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
-  -webkit-text-fill-color: #1c2b3a !important;
+  -webkit-text-fill-color: $brand-navy-dark !important;
 }
 
 .login-header {
@@ -672,7 +685,7 @@ h1.login-title {
 
 .login-header h2 {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Lato", sans-serif;
   font-size: 25px;
   font-weight: 400;
   color: #0d4058;
