@@ -1,21 +1,20 @@
-<ng-container *ngIf="trainingDetails; else norecord">
-  <div class="training-container">
-    <!-- Language Selection -->
-    <div *ngIf="showLanguageSelection" class="step-container">
-      <div class="step-card card border-0 language-select-card">
-        <div class="mb-3">
-          <img class="img-fluid for-light" src="assets/images/logo/logo.png" alt="Logo" />
-        </div>
-        <div class="language-select-heading">
-          <h2>Visitor Safety Management</h2>
-          <p>Choose your preferred language to continue</p>
-        </div>
+<!-- Resolving the terminal from the URL: show a spinner card instead of
+     flashing "Terminal Not Found" (or the language screen) before the
+     lookup has actually finished, e.g. right after a page refresh. -->
+<ng-container *ngIf="!isTerminalLoading; else terminalLoading">
+  <ng-container *ngIf="trainingDetails; else norecord">
+    <div class="training-container">
+      <!-- Language Selection -->
+      <div *ngIf="showLanguageSelection" class="step-container">
+        <div class="step-card card border-0 language-select-card">
+          <div class="mb-3">
+            <img class="img-fluid for-light" src="assets/images/logo/logo.png" alt="Logo" />
+          </div>
+          <div class="language-select-heading">
+            <h2>Visitor Safety Management</h2>
+            <p>Choose your preferred language to continue</p>
+          </div>
 
-        <div *ngIf="!terminalNameLoaded" class="alert-info">
-          <i class="fas fa-spinner fa-spin"></i> Loading terminal details...
-        </div>
-
-        <div *ngIf="terminalNameLoaded">
           <!-- language cards -->
           <div class="language-grid">
             <div *ngFor="let lang of languages" class="language-grid__card" (click)="selectLanguage(lang.language_id)">
@@ -25,15 +24,13 @@
               <span class="language-grid__name">{{ lang.language_name }}</span>
             </div>
           </div>
-        </div>
 
-
-        <div class="alert-info" *ngIf="languages.length === 0">
-          <i class="fas fa-info-circle"></i>
-          {{ "LANGUAGE_SELECT.LOADING" | translate }}
+          <div class="alert-info" *ngIf="languages.length === 0">
+            <i class="fas fa-info-circle"></i>
+            {{ "LANGUAGE_SELECT.LOADING" | translate }}
+          </div>
         </div>
       </div>
-    </div>
 
     <!-- Data Privacy Consent -->
     <div *ngIf="showConsent" class="step-container">
@@ -598,9 +595,9 @@
             <i class="fas" [class.fa-check-circle]="quizResult?.passed"
               [class.fa-times-circle]="!quizResult?.passed"></i>
           </div>
-          <button class="modal-close" (click)="closeModal()">
+          <!-- <button class="modal-close" (click)="closeModal()">
             <i class="fas fa-times"></i>
-          </button>
+          </button> -->
         </div>
         <div class="modal-body">
           <h3 [class.text-success]="quizResult?.passed" [class.text-danger]="!quizResult?.passed">
@@ -673,12 +670,26 @@
       </div>
     </div>
   </ng-template>
+  </ng-container>
 </ng-container>
 
-<ng-template #norecord>
-  <div class="no-record-found">
-    <img src="assets/images/no-found-record/terminal-not-found-v2.svg" alt="No Record Found Image">
-    <p>{{'No terminal record found.'}}</p>
+<!-- Spinner shown only while the terminal lookup is in flight -->
+<ng-template #terminalLoading>
+  <div class="training-container training-container--center">
+    <div class="four-dots"></div>
   </div>
+</ng-template>
 
+<!-- Terminal lookup finished and came back empty - same step-card layout
+     as the language select / consent cards. The image itself already
+     contains the heading + description text, so no extra markup needed. -->
+<ng-template #norecord>
+  <div class="training-container training-container--center">
+    <div class="step-container">
+      <div class="step-card card border-0 no-record-card">
+        <img class="no-record-card__img" src="assets/images/no-found-record/terminal_not_found.png"
+          alt="Terminal Not Found - we couldn't find the terminal you are looking for">
+      </div>
+    </div>
+  </div>
 </ng-template>

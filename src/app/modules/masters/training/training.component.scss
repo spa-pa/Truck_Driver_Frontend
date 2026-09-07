@@ -27,6 +27,20 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
   }
 }
 
+// Used only by single-card states (terminal loading spinner / not-found)
+// where there's no multi-step flow to anchor to the top - centers that
+// one card in the middle of the viewport instead of leaving it pinned
+// to the top with empty space below, which is what looked off on mobile.
+.training-container--center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .step-container {
+    width: 100%;
+  }
+}
+
 .step-container {
   animation: fadeSlideUp 0.5s ease;
 }
@@ -2187,58 +2201,52 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
 }
 
 
-.no-record-found {
-  text-align: center;
-  margin: 20px;
-  padding: 20px;
-  /* Add padding for better spacing */
-  background-color: #f8f9fa;
-  /* Light background color */
-  border: 1px solid #dee2e6;
-  /* Light border */
-  border-radius: 8px;
-  /* Rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  /* Drop shadow for depth */
-}
+// ------------------------------------------------------------
+// Terminal lookup - loading spinner + not-found state
+// Both reuse the same .step-card shell as the language-select and
+// consent cards, so they sit identically on desktop and mobile.
+// ------------------------------------------------------------
+// Four-dot spinner: a single animated pseudo-element with a box-shadow
+// trick draws the other three dots, then the whole group rotates.
+// Shown directly on screen (no card) via .training-container--center.
+.four-dots {
+  position: relative;
+  width: 5px;
+  height: 5px;
 
-.no-record-found img {
-  max-width: 100%;
-  /* Ensure image does not exceed container width */
-  height: auto;
-  /* Maintain aspect ratio */
-  display: block;
-  /* Remove any extra space under the image */
-  margin: 0 auto 10px;
-  /* Center image and add spacing below */
-}
-
-@media (min-width: 576px) {
-  .no-record-found {
-    max-width: 90%;
-    /* Limit width on smaller screens */
-    margin: 20px auto;
-    /* Center horizontally */
+  &::before {
+    display: block;
+    height: 5px;
+    width: 5px;
+    content: "";
+    border-radius: 100%;
+    animation: four-dots-spin 1s infinite linear;
+    box-shadow:
+      20px 0 0 5px $primary,
+      0 20px 0 5px $warning,
+      0 -20px 0 5px $warning,
+      -20px 0 0 5px $primary;
   }
 }
 
-@media (min-width: 768px) {
-  .no-record-found {
-    max-width: 90%;
-    /* Adjust max width for medium screens */
+@keyframes four-dots-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-@media (min-width: 992px) {
-  .no-record-found {
-    max-width: 90%;
-    /* Adjust max width for large screens */
-  }
-}
+.no-record-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-@media (min-width: 1200px) {
-  .no-record-found {
-    max-width: 90%;
-    /* Adjust max width for extra-large screens */
+  // Fills the card's content width exactly like the language card's logo
+  // and heading do - height then follows the image's own aspect ratio,
+  // so the card lands at roughly the same footprint as the other steps
+  // instead of shrinking to a tiny centered thumbnail.
+  &__img {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 }

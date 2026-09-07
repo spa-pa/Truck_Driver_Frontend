@@ -292,9 +292,12 @@ export class TrainingComponent implements OnInit, OnDestroy {
   private mediaStream: MediaStream | null = null;
 
   terminalName: string = "";
-  terminalNameLoaded: boolean = false;
+  // True while the terminal lookup (by id from the URL) is in flight.
+  // The template shows a spinner during this window so a fast page
+  // refresh never flashes the "Terminal Not Found" state before the
+  // real result (found/not-found) comes back.
+  isTerminalLoading: boolean = true;
 
-  subs: any;
   trainingDetails: any = null;
   constructor(
     private fb: FormBuilder,
@@ -321,7 +324,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subs = new Subscription();
     this.getTerminalIdFromUrl();
     this.getAllLanguage();
     this.getExpiryConfig();
@@ -337,63 +339,58 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // Forms
   // ------------------------------------------------------------
 
-  // Add this method to extract terminalId from URL
+  // Reads terminalId from the URL, then does a single lookup for the
+  // terminal's details/name - no need for two separate calls to the same
+  // endpoint. isTerminalLoading stays true for the whole round trip so the
+  // template can show a spinner instead of flashing "Terminal Not Found"
+  // before the real result comes back.
   private getTerminalIdFromUrl(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
       const terminalIdParam = params["terminalId"];
-
-      if (terminalIdParam) {
-        this.terminalId = parseInt(terminalIdParam, 10);
-
-        this.subs.add(
-          this.terminalService.getTerminalById(this.terminalId).subscribe({
-            next: (value) => {
-              if (value?.data) {
-                this.trainingDetails = value.data;
-
-              } else {
-                this.trainingDetails = null;
-
-              }
-
-            }, error(err: any) {
-
-
-            }
-          }),
-        );
-
-        // You can use this.terminalId in your API calls or form submissions
-        // For example, add it to the registration form
-        if (this.registrationForm) {
-          this.registrationForm.patchValue({
-            terminal_id: this.terminalId,
-          });
-        }
-        this.fetchTerminalName(this.terminalId);
-      } else {
+      if (!terminalIdParam) {
         console.warn("No terminalId found in URL");
+        this.trainingDetails = null;
+        this.terminalName = "";
+        this.isTerminalLoading = false;
+        this.cdr.detectChanges();
+        return;
       }
-    });
-  }
 
-  private fetchTerminalName(terminalId: number): void {
-    this.subscriptions.add(
-      this.terminalService.getTerminalById(terminalId).subscribe({
-        next: (response) => {
-          this.terminalName =
-            response?.data?.terminal_name || response?.terminal_name || "";
-          this.terminalNameLoaded = true;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error("Error fetching terminal name:", err);
-          this.terminalName = "";
-          this.terminalNameLoaded = true; // proceed even on error
-          this.cdr.detectChanges();
-        },
-      }),
-    );
+      this.terminalId = parseInt(terminalIdParam, 10);
+      this.isTerminalLoading = true;
+
+      // Add terminal_id to the registration form as soon as we know it,
+      // regardless of whether the lookup below succeeds.
+      if (this.registrationForm) {
+        this.registrationForm.patchValue({
+          terminal_id: this.terminalId,
+        });
+      }
+
+      this.subscriptions.add(
+        this.terminalService.getTerminalById(this.terminalId).subscribe({
+          next: (response) => {
+            if (response?.data) {
+              this.trainingDetails = response.data;
+              this.terminalName =
+                response.data.terminal_name || response.terminal_name || "";
+            } else {
+              this.trainingDetails = null;
+              this.terminalName = "";
+            }
+            this.isTerminalLoading = false;
+            this.cdr.detectChanges();
+          },
+          error: (err) => {
+            console.error("Error fetching terminal details:", err);
+            this.trainingDetails = null;
+            this.terminalName = "";
+            this.isTerminalLoading = false; // proceed even on error
+            this.cdr.detectChanges();
+          },
+        }),
+      );
+    });
   }
 
   private initRegistrationForm(): void {
