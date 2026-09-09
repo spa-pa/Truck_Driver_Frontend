@@ -389,7 +389,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
 
       const link = document.createElement("a");
 
-      link.download = `${this.terminalName || "terminal"} Terminal QR Code.png`;
+      link.download = `${this.terminalName || "terminal"} QR Code.png`;
 
       link.href = canvas.toDataURL("image/png");
 
@@ -426,7 +426,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
 
       const link = document.createElement("a");
 
-      link.download = `${this.terminalName || "terminal"} Terminal QR Code.jpg`;
+      link.download = `${this.terminalName || "terminal"} QR Code.jpg`;
 
       link.href = canvas.toDataURL("image/jpeg", 0.95);
 
@@ -467,7 +467,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
       pdf.setFont("helvetica", "bold");
 
       pdf.text(
-        `Terminal Name : ${this.terminalName || "N/A"} Terminal`,
+        `Terminal Name : ${this.terminalName || "N/A"}`,
         pageWidth / 2,
         25,
         {
@@ -501,7 +501,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
         align: "center",
       });
 
-      pdf.save(`${this.terminalName || "terminal"} Terminal QR Code.pdf`);
+      pdf.save(`${this.terminalName || "terminal"} QR Code.pdf`);
     } catch (error) {
       console.error("PDF download error:", error);
       throw error;
@@ -527,7 +527,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       //link.download = `qr-code-${this.config.terminalId || "terminal"}.svg`;
-      link.download = `${this.terminalName || "terminal"} Terminal QR Code.svg`;
+      link.download = `${this.terminalName || "terminal"} QR Code.svg`;
       link.href = url;
       link.click();
       URL.revokeObjectURL(url);
@@ -596,7 +596,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
             <div class="print-container">
               <img src="${canvas.toDataURL("image/png")}" />
               <div class="print-footer">
-                Terminal Name: ${this.terminalName || "N/A"} Terminal | 
+                Terminal Name: ${this.terminalName || "N/A"} | 
                 Generated: ${new Date().toLocaleString()}
               </div>
             </div>
@@ -819,7 +819,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   private createDownloadCanvas(qrCanvas: HTMLCanvasElement): HTMLCanvasElement {
-    const terminalName = `Terminal Name : ${this.terminalName || "N/A"} Terminal`;
+    const terminalName = `Terminal Name : ${this.terminalName || "N/A"}`;
 
     const footerText = "Visitor Safety Management";
 
