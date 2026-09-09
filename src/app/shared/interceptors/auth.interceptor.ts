@@ -220,15 +220,15 @@ export class AuthTokenInterceptor implements HttpInterceptor {
             "info"
         );
 
-        this.encryptedStorage.clearAll();
+        // this.encryptedStorage.clearAll();
 
-        this.router.navigate([
-            this.globalConfig.loginRoute
-        ]).then(() => {
+        // this.router.navigate([
+        //     this.globalConfig.loginRoute
+        // ]).then(() => {
 
-            window.location.reload();
+        //     window.location.reload();
 
-        });
+        // });
 
     }
 

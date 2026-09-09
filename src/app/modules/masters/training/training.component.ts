@@ -345,52 +345,54 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // template can show a spinner instead of flashing "Terminal Not Found"
   // before the real result comes back.
   private getTerminalIdFromUrl(): void {
-    this.activatedRoute.queryParams.subscribe((params) => {
-      const terminalIdParam = params["terminalId"];
-      if (!terminalIdParam) {
-        console.warn("No terminalId found in URL");
-        this.trainingDetails = null;
-        this.terminalName = "";
-        this.isTerminalLoading = false;
-        this.cdr.detectChanges();
-        return;
-      }
+    this.subscriptions.add(
+      this.activatedRoute.queryParams.subscribe((params) => {
+        const terminalIdParam = params["terminalId"];
+        if (!terminalIdParam) {
+          console.warn("No terminalId found in URL");
+          this.trainingDetails = null;
+          this.terminalName = "";
+          this.isTerminalLoading = false;
+          this.cdr.detectChanges();
+          return;
+        }
 
-      this.terminalId = parseInt(terminalIdParam, 10);
-      this.isTerminalLoading = true;
+        this.terminalId = parseInt(terminalIdParam, 10);
+        this.isTerminalLoading = true;
 
-      // Add terminal_id to the registration form as soon as we know it,
-      // regardless of whether the lookup below succeeds.
-      if (this.registrationForm) {
-        this.registrationForm.patchValue({
-          terminal_id: this.terminalId,
-        });
-      }
+        // Add terminal_id to the registration form as soon as we know it,
+        // regardless of whether the lookup below succeeds.
+        if (this.registrationForm) {
+          this.registrationForm.patchValue({
+            terminal_id: this.terminalId,
+          });
+        }
 
-      this.subscriptions.add(
-        this.terminalService.getTerminalById(this.terminalId).subscribe({
-          next: (response) => {
-            if (response?.data) {
-              this.trainingDetails = response.data;
-              this.terminalName =
-                response.data.terminal_name || response.terminal_name || "";
-            } else {
+        this.subscriptions.add(
+          this.terminalService.getTerminalById(this.terminalId).subscribe({
+            next: (response) => {
+              if (response?.data) {
+                this.trainingDetails = response.data;
+                this.terminalName =
+                  response.data.terminal_name || response.terminal_name || "";
+              } else {
+                this.trainingDetails = null;
+                this.terminalName = "";
+              }
+              this.isTerminalLoading = false;
+              this.cdr.detectChanges();
+            },
+            error: (err) => {
+              console.error("Error fetching terminal details:", err);
               this.trainingDetails = null;
               this.terminalName = "";
-            }
-            this.isTerminalLoading = false;
-            this.cdr.detectChanges();
-          },
-          error: (err) => {
-            console.error("Error fetching terminal details:", err);
-            this.trainingDetails = null;
-            this.terminalName = "";
-            this.isTerminalLoading = false; // proceed even on error
-            this.cdr.detectChanges();
-          },
-        }),
-      );
-    });
+              this.isTerminalLoading = false; // proceed even on error
+              this.cdr.detectChanges();
+            },
+          }),
+        );
+      }),
+    );
   }
 
   private initRegistrationForm(): void {
@@ -571,17 +573,17 @@ export class TrainingComponent implements OnInit, OnDestroy {
     if (this.isLastQuestion) {
       this.submitQuiz();
     } else {
+      this.resetAudioPlayer();
       this.currentQuestionIndex++;
       this.cdr.detectChanges();
-      this.resetAudioPlayer();
     }
   }
 
   previousQuestion(): void {
     if (this.isFirstQuestion) return;
+    this.resetAudioPlayer();
     this.currentQuestionIndex--;
     this.cdr.detectChanges();
-    this.resetAudioPlayer();
   }
 
   // Jump directly to a specific question index (e.g. from a progress
@@ -589,9 +591,9 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // reuses the same audio-reset logic instead of reintroducing the bug.
   goToQuestion(index: number): void {
     if (index < 0 || index >= this.questions.length) return;
+    this.resetAudioPlayer();
     this.currentQuestionIndex = index;
     this.cdr.detectChanges();
-    this.resetAudioPlayer();
   }
 
   // ------------------------------------------------------------
@@ -599,18 +601,26 @@ export class TrainingComponent implements OnInit, OnDestroy {
   // ------------------------------------------------------------
   // The <audio> element persists across questions (it's never destroyed
   // by *ngIf since currentQuestion stays truthy for the whole quiz), so
-  // simply updating [src] isn't always enough on every browser. This
-  // pauses playback, resets position, and forces the browser to reload
-  // the new question's audio_path.
+  // simply updating [src] isn't always enough on every browser.
+  //
+  // IMPORTANT: this must run and fully take effect BEFORE the question
+  // index changes / before Angular's [src] binding swaps to the next
+  // question's audio_path - not after. iOS Safari has a known WebKit bug
+  // where changing `src` on an <audio> element that is still mid-playback
+  // silently carries playback over onto the new source (so the native
+  // controls show "pause" - because it genuinely is playing - even though
+  // the driver never tapped play for that question). Android's media
+  // stack doesn't have this quirk, which is why pausing afterward looked
+  // fine there. Pausing and fully detaching the src first (removeAttribute,
+  // not just pause()) guarantees there's no "still playing" session for
+  // iOS to hand off when the new src gets written, so every question
+  // reliably starts on the native "play" icon on both platforms.
   private resetAudioPlayer(): void {
-    setTimeout(() => {
-      const audioEl = this.audioPlayerRef?.nativeElement;
-      if (audioEl) {
-        audioEl.pause();
-        audioEl.currentTime = 0;
-        audioEl.load();
-      }
-    });
+    const audioEl = this.audioPlayerRef?.nativeElement;
+    if (!audioEl) return;
+    audioEl.pause();
+    audioEl.removeAttribute("src");
+    audioEl.load();
   }
 
   // ------------------------------------------------------------

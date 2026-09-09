@@ -2250,3 +2250,7 @@ $shadow: 0 20px 60px rgba($primary, 0.08);
     display: block;
   }
 }
+
+input[formControlName="driving_license_expiry_date"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
