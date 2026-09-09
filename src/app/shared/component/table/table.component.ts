@@ -457,7 +457,22 @@ export class TableComponent implements OnInit {
   }
 
   openConsentDescription(row: any) {
-    this.selectedDescription = row.description;
+    const raw = row.description;
+
+    if (raw && typeof raw === "object") {
+      // Already a parsed object (localhost case)
+      this.selectedDescription = raw;
+    } else if (typeof raw === "string") {
+      try {
+        this.selectedDescription = JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse consent description:", e, raw);
+        this.selectedDescription = null;
+      }
+    } else {
+      this.selectedDescription = null;
+    }
+
     this.modalService.open(this.ConsentDescriptionModal, {
       size: "lg",
       scrollable: true,
