@@ -407,7 +407,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)],
       ],
       driving_license: [null], // Photo is optional - not required
-      driving_img: [null], // Photo is optional - not required
+      driving_img: [null, Validators.required], // Photo is mandatory
       terminal_id: [this.terminalId], // Add this field to capture terminalId
     });
   }

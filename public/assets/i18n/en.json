@@ -43,6 +43,7 @@
     "AGREE": "Agree",
     "DECLINE": "Decline",
     "DRIVER_PHOTO": "Driver Photo",
+    "DRIVER_PHOTO_ERROR": "Driver photo is required",
     "DRIVER_PHOTO_TAKE": "Take Photo",
     "DRIVER_PHOTO_UPLOAD": "Upload Photo",
     "DRIVER_PHOTO_REMOVE": "Remove",

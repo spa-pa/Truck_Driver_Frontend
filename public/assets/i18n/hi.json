@@ -43,6 +43,7 @@
     "AGREE": "सहमत",
     "DECLINE": "अस्वीकार",
     "DRIVER_PHOTO": "चालक का फोटो",
+    "DRIVER_PHOTO_ERROR": "ड्राइवर का फोटो आवश्यक है",
     "DRIVER_PHOTO_TAKE": "फोटो लें",
     "DRIVER_PHOTO_UPLOAD": "फोटो अपलोड करें",
     "DRIVER_PHOTO_REMOVE": "हटाएँ",

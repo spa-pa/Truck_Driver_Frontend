@@ -43,6 +43,7 @@
     "AGREE": "ஒப்புக்கொள்",
     "DECLINE": "மறு",
     "DRIVER_PHOTO": "ஓட்டுநரின் புகைப்படம்",
+    "DRIVER_PHOTO_ERROR": "ஓட்டுநரின் புகைப்படம் தேவை",
     "DRIVER_PHOTO_TAKE": "புகைப்படம் எடுக்கவும்",
     "DRIVER_PHOTO_UPLOAD": "புகைப்படத்தை பதிவேற்றவும்",
     "DRIVER_PHOTO_REMOVE": "அகற்று",

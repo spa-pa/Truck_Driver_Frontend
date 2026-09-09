@@ -43,6 +43,7 @@
     "AGREE": "સહમત",
     "DECLINE": "નકારો",
     "DRIVER_PHOTO": "ડ્રાઇવરનો ફોટો",
+    "DRIVER_PHOTO_ERROR": "ડ્રાઇવરનો ફોટો જરૂરી છે",
     "DRIVER_PHOTO_TAKE": "ફોટો લો",
     "DRIVER_PHOTO_UPLOAD": "ફોટો અપલોડ કરો",
     "DRIVER_PHOTO_REMOVE": "દૂર કરો",

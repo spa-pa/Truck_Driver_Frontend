@@ -334,7 +334,8 @@
             </div>
 
             <div class="form-group">
-              <label>{{ "REGISTRATION.DRIVER_PHOTO" | translate }}</label>
+              <label>{{ "REGISTRATION.DRIVER_PHOTO" | translate }}
+                <span class="required">*</span></label>
 
               <!-- Fallback input: used only if the live camera (getUserMedia) can't be opened,
                  e.g. permission denied or an older browser. Normal camera capture now happens
@@ -368,6 +369,13 @@
                   <i class="fas fa-upload"></i>
                   {{ "REGISTRATION.DRIVER_PHOTO_UPLOAD" | translate }}
                 </button>
+              </div>
+
+              <div class="error-message" *ngIf="
+                registrationForm.get('driving_img')?.invalid &&
+                registrationForm.get('driving_img')?.touched
+              ">
+                {{ "REGISTRATION.DRIVER_PHOTO_ERROR" | translate }}
               </div>
             </div>
           </div>
