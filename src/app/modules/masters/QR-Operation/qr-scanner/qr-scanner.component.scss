@@ -648,7 +648,12 @@ $error: #d32f2f;
   }
 
   .scanner-body {
-    padding: 16px 20px;
+    padding: 12px;
+  }
+
+  .camera-container {
+    aspect-ratio: 3/4;
+    max-width: 100%;
   }
 
   .scanner-controls {
@@ -683,8 +688,13 @@ $error: #d32f2f;
 }
 
 @media (max-width: 480px) {
+  .scanner-body {
+    padding: 8px;
+  }
+
   .camera-container {
-    aspect-ratio: 4/3;
+    aspect-ratio: 3/4;
+    border-radius: 12px;
 
     .scanner-overlay {
       .scanner-frame {
