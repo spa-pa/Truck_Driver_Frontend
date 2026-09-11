@@ -38,7 +38,7 @@ import { currentUser } from "@shared/utils/current-user";
             *ngIf="config.bottomText && showText"
             [style.font-size.px]="config.textSize"
             [style.color]="config.textColor"
-            [style.font-family]="config.fontFamily"
+            [style.font-family]="config.fontFamily || 'Lato, sans-serif'"
             [style.font-weight]="config.fontWeight"
           >
             {{ config.bottomText }}
@@ -55,6 +55,11 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() showText: boolean = true;
   @Input() showBorder: boolean = false;
   @Input() backgroundColor: string = "#ffffff";
+  // When true, skips the viewport-based size shrink in getResponsiveSize()
+  // so the QR renders at its full requested size and lets CSS scale it to
+  // fit its container instead. Defaults to false so existing usages (e.g.
+  // the driver certification card) keep their current compact sizing.
+  @Input() fillContainer: boolean = false;
   @Output() qrGenerated = new EventEmitter<void>();
 
   @ViewChild("qrElement") qrElement!: ElementRef;
@@ -284,6 +289,15 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   private getResponsiveSize(): number {
     const baseSize = this.config.qrSize || this.getSizeFromInput();
     const viewportWidth = window.innerWidth;
+
+    // Callers that want the QR to fill its own container (e.g. the QR
+    // viewer modal, which has plenty of room) can opt in via
+    // [fillContainer]="true" to skip this viewport-based shrink entirely.
+    // The CSS `max-width: 100%` on the canvas still shrinks it down to fit
+    // if the container is ever narrower, so this stays safe.
+    if (this.fillContainer) {
+      return baseSize;
+    }
 
     if (viewportWidth < 480) {
       return Math.min(baseSize, 100);
@@ -553,6 +567,9 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
         <html>
           <head>
             <title>QR Code Print</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
             <style>
               body {
                 margin: 0;
@@ -561,7 +578,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
                 justify-content: center;
                 align-items: center;
                 min-height: 100vh;
-                font-family: Arial, sans-serif;
+                font-family: 'Lato', sans-serif;
                 background: #ffffff;
               }
               .print-container {
@@ -683,9 +700,12 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
     try {
       await this.delay(200);
 
-      const qrCanvas = qrElement.querySelector(
-        "canvas",
-      ) as HTMLCanvasElement | null;
+      // Source the QR from a fixed, high-resolution off-DOM render instead
+      // of the live on-screen canvas. The on-screen canvas can be rendered
+      // at a much smaller pixel size on mobile (see getResponsiveSize()),
+      // and stretching that small canvas up to the export dimensions below
+      // is what was causing the downloaded/printed QR to look blurry.
+      const qrCanvas = await this.getExportCanvas(600);
 
       if (!qrCanvas) {
         console.error("QR canvas not found");
@@ -800,7 +820,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
        */
       if (text) {
         ctx.fillStyle = this.config.textColor || "#004761";
-        ctx.font = `${this.config.textSize || textFontSize}px ${this.config.fontFamily || "Arial"}`;
+        ctx.font = `${this.config.textSize || textFontSize}px ${this.config.fontFamily || "Lato, sans-serif"}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
@@ -819,7 +839,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   private createDownloadCanvas(qrCanvas: HTMLCanvasElement): HTMLCanvasElement {
-    const terminalName = `Terminal Name : ${this.terminalName || "N/A"}`;
+    const terminalName = `${this.terminalName || "Terminal"}`;
 
     const footerText = "Visitor Safety Management";
 
@@ -867,7 +887,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
 
     ctx.fillStyle = "#004761";
 
-    ctx.font = "bold 32px Arial";
+    ctx.font = "bold 26px Lato, sans-serif";
 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -888,7 +908,7 @@ export class QRDisplayComponent implements OnChanges, AfterViewInit, OnDestroy {
 
     ctx.fillStyle = "#004761";
 
-    ctx.font = "bold 36px Arial";
+    ctx.font = "bold 26px Lato, sans-serif";
 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";

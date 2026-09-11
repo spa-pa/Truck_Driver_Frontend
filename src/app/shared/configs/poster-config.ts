@@ -1,5 +1,6 @@
 import { IFormStructure } from "@shared/models/form";
 import { RowData } from "@shared/models/table";
+import { environment } from "@environments/environment"
 
 export const PosterDetailsData: RowData = {
   headers: [
@@ -77,7 +78,7 @@ export const PosterTypeSearchGroup: IFormStructure[] = [
         text: ' <div class="dz-message needsclick"><i class="icon-cloud-up"></i><h6>Upload Poster Image</h6></div>',
         dropzoneConfig: {
           clickable: true,
-          url: "http://localhost:3000/api/v1/upload/file",
+          url: `${environment.API_BASE_URL}upload/file`,
           addRemoveLinks: true,
           parallelUploads: 1,
           acceptedFiles: ".jpg,.jpeg,.png",
