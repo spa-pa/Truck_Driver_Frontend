@@ -2,7 +2,7 @@
 
 <div class="qr-editor-container">
     <!-- Header -->
-    <header class="editor-header">
+    <div class="editor-header">
         <div class="header-left">
             <h1>QR Editor</h1>
             <span class="terminal-badge" *ngIf="terminalId">Terminal #{{ terminalId }}</span>
@@ -35,7 +35,7 @@
             </button> -->
             <button class="btn-reset" (click)="resetConfig()">Reset</button>
         </div>
-    </header>
+    </div>
 
     <!-- Loading State -->
     <div class="loading-overlay" *ngIf="isLoading">

@@ -6,6 +6,7 @@ export const UserMasterDetailsData: RowData = {
     { label: "Sr.No", key: "SR.NO", type: "autoIncrementNumber", size: "4%" },
     { label: "Full Name", key: "name", type: "" },
     { label: "User Name", key: "user_name", type: "" },
+    { label: "Role", key: "role_name", type: "" },
     { label: "Email", key: "email", type: "" },
     { label: "Contact Number", key: "contact_number", type: "" },
     { label: "Terminal", key: "terminal_name", type: "" },
